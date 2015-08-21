@@ -1,0 +1,10 @@
+name: very_ui
+version: 0.1.0
+description: >
+  A Dart implementation of the VeryUI concept. Basically, a UI framework with nestable components.
+author: Roman Snitko <roman.snitko@gmail.com>
+homepage: http://veryui.romansnitko.com
+documentation: http://veryui.romansnitko.com/docs
+dependencies:
+dev_dependencies:
+dependency_overrides:
