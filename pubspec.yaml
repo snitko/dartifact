@@ -7,4 +7,5 @@ homepage: http://veryui.romansnitko.com
 documentation: http://veryui.romansnitko.com/docs
 dependencies:
 dev_dependencies:
+  test: '>=0.12.0'
 dependency_overrides:
