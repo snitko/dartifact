@@ -1,6 +1,8 @@
 import '../lib/very_ui.dart';
 import "package:test/test.dart";
 
+@TestOn("browser")
+
 void main() {
 
   group("Component", () {
@@ -13,4 +15,3 @@ void main() {
   });
 
 }
- 
