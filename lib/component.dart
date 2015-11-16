@@ -9,7 +9,6 @@ class Component {
   List roles     = [];
   List <Component> children = [];
 
-
   Component() {
   }
 

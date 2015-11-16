@@ -7,9 +7,27 @@ void main() {
 
   group("Component", () {
 
-    test("dummy test", () {
-      new Component();
-      expect(1, equals(1));
+    group("with children", () {
+
+      test("adds child components", () {
+      });
+
+      test("removes child components by index", () {
+      });
+
+      test("removes child components by roles", () {
+      });
+
+    });
+
+    group("with events", () {
+
+      test("emits events to its parent", () {
+      });
+
+      test("receives events from its children", () {
+      });
+
     });
 
   });
