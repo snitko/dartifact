@@ -1,10 +1,10 @@
-name: very_ui
+name: nest_ui
 version: 0.1.0
 description: >
-  A Dart implementation of the VeryUI concept. Basically, a UI framework with nestable components.
+  A Dart implementation of the NestUI concept. Basically, a UI framework with nestable components.
 author: Roman Snitko <roman.snitko@gmail.com>
-homepage: http://veryui.romansnitko.com
-documentation: http://veryui.romansnitko.com/docs
+homepage: http://nestui.romansnitko.com
+documentation: http://nestui.romansnitko.com/docs
 dependencies:
 dev_dependencies:
   test: '>=0.12.0'

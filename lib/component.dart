@@ -1,4 +1,4 @@
-part of very_ui;
+part of nest_ui;
 
 class Component {
 
