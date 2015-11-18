@@ -12,4 +12,16 @@ class Component {
   Component() {
   }
 
+  addChild(c) {
+    this.children.add(c);
+  }
+
+  removeChild(child_id, [Symbol id_type=#id]) {
+    if(id_type == #id) {
+      this.children.removeAt(child_id);
+    } else {
+      this.children.removeWhere((c) => c.roles.contains(child_id));
+    }
+  }
+
 }
