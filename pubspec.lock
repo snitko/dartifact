@@ -61,6 +61,12 @@ packages:
     description: mime
     source: hosted
     version: "0.9.3"
+  observable_roles:
+    description:
+      path: "../observable_roles"
+      relative: true
+    source: path
+    version: "0.1.0"
   package_config:
     description: package_config
     source: hosted

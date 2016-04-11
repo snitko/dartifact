@@ -5,7 +5,14 @@ description: >
 author: Roman Snitko <roman.snitko@gmail.com>
 homepage: http://nestui.romansnitko.com
 documentation: http://nestui.romansnitko.com/docs
+
 dependencies:
+  observable_roles:
+    path: '../observable_roles'
+  heritage_tree:
+    path: '../heritage_tree'
+
 dev_dependencies:
   test: '>=0.12.0'
+
 dependency_overrides:
