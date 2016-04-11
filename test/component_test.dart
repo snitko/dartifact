@@ -12,8 +12,7 @@ class MyComponent extends Component {
 
   List events_history = [];
   List native_events  = ["click", "mouseover"];
-  MyComponent(HtmlElement el) : super(el);
-
+  MyComponent() : super();
 
 }
 
@@ -23,8 +22,9 @@ void main() {
   var el;
 
   setUp(() {
-    el = new DivElement();
-    c  = new MyComponent(el);
+    el            = new DivElement();
+    c             = new MyComponent();
+    c.dom_element = el;
   });
 
   group("Component", () {
