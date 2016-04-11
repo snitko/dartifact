@@ -10,13 +10,27 @@ packages:
     source: hosted
     version: "0.13.2"
   async:
-    description: async
+    description:
+      name: async
+      url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.0"
+    version: "1.9.0"
+  attributable:
+    description:
+      path: "../attributable"
+      relative: true
+    source: path
+    version: "0.1.0"
   barback:
     description: barback
     source: hosted
     version: "0.15.2+6"
+  boolean_selector:
+    description:
+      name: boolean_selector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   charcode:
     description: charcode
     source: hosted
@@ -25,10 +39,18 @@ packages:
     description: collection
     source: hosted
     version: "1.1.1"
-  crypto:
-    description: crypto
+  convert:
+    description:
+      name: convert
+      url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.0"
+    version: "1.0.1"
+  crypto:
+    description:
+      name: crypto
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   csslib:
     description: csslib
     source: hosted
@@ -37,6 +59,12 @@ packages:
     description: glob
     source: hosted
     version: "1.0.5"
+  heritage_tree:
+    description:
+      path: "../heritage_tree"
+      relative: true
+    source: path
+    version: "0.1.0"
   html:
     description: html
     source: hosted
@@ -46,9 +74,11 @@ packages:
     source: hosted
     version: "1.3.2"
   http_parser:
-    description: http_parser
+    description:
+      name: http_parser
+      url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.2+8"
+    version: "2.2.1"
   logging:
     description: logging
     source: hosted
@@ -80,25 +110,33 @@ packages:
     source: hosted
     version: "0.1.0"
   pool:
-    description: pool
+    description:
+      name: pool
+      url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.3"
   pub_semver:
     description: pub_semver
     source: hosted
     version: "1.2.1"
   shelf:
-    description: shelf
+    description:
+      name: shelf
+      url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.2"
+    version: "0.6.5"
   shelf_static:
-    description: shelf_static
+    description:
+      name: shelf_static
+      url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.3"
+    version: "0.2.3+3"
   shelf_web_socket:
-    description: shelf_web_socket
+    description:
+      name: shelf_web_socket
+      url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1+2"
+    version: "0.2.0"
   source_map_stack_trace:
     description: source_map_stack_trace
     source: hosted
@@ -115,14 +153,28 @@ packages:
     description: stack_trace
     source: hosted
     version: "1.4.1"
+  stream_channel:
+    description:
+      name: stream_channel
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.3.1"
   string_scanner:
     description: string_scanner
     source: hosted
     version: "0.1.3+1"
   test:
-    description: test
+    description:
+      name: test
+      url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.4+6"
+    version: "0.12.13"
+  typed_data:
+    description:
+      name: typed_data
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.2"
   utf:
     description: utf
     source: hosted
@@ -131,7 +183,14 @@ packages:
     description: watcher
     source: hosted
     version: "0.9.7"
+  web_socket_channel:
+    description:
+      name: web_socket_channel
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
   yaml:
     description: yaml
     source: hosted
     version: "2.1.3"
+sdk: ">=1.13.0 <1.17.0"

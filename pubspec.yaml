@@ -11,6 +11,8 @@ dependencies:
     path: '../observable_roles'
   heritage_tree:
     path: '../heritage_tree'
+  attributable:
+    path: '../attributable'
 
 dev_dependencies:
   test: '>=0.12.0'
