@@ -6,8 +6,9 @@ class Component extends Object with observable.Subscriber,
                                     Attributable
 {
 
-  Map behaviors = {};
-
+  Map         behaviors = {}; // 
+  HtmlElement dom_element;    // A DOM element associated with this component
+  
   Component() {
   }
 
