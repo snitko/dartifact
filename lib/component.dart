@@ -6,7 +6,8 @@ class Component extends Object with observable.Subscriber,
                                     Attributable
 {
 
-  Map  behaviors = {};
+  Map behaviors = {};
+
   Component() {
   }
 
