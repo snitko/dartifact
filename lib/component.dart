@@ -6,10 +6,14 @@ class Component extends Object with observable.Subscriber,
                                     Attributable
 {
 
-  Map         behaviors = {}; // 
-  HtmlElement dom_element;    // A DOM element associated with this component
+  List        native_events = [];  // events emitted by the browser that we'd like to handle
+  Map         behaviors     = {};  // 
+  HtmlElement dom_element;         // A DOM element associated with this component
   
-  Component() {
+  Component(HtmlElement this.dom_element) {
+    native_events.forEach((e) {
+      dom_element.on[e].listen((e) => this.captureEvent(e.type, ['self']));
+    });
   }
 
 }
