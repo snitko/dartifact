@@ -7,7 +7,7 @@ import "dart:html";
 class MyComponent extends Component {
 
   Map event_handlers = {
-    'click' : { 'self': (self) => self.events_history.add("self#clicked") }
+    'click' : { #self: (self) => self.events_history.add("self#clicked") }
   };
 
   List events_history = [];

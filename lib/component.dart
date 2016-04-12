@@ -21,7 +21,7 @@ class Component extends Object with observable.Subscriber,
 
   _listen_to_native_events() {
      this.native_events.forEach((e) {
-      dom_element.on[e].listen((e) => this.captureEvent(e.type, ['self']));
+      dom_element.on[e].listen((e) => this.captureEvent(e.type, [#self]));
     }); 
   }
 
