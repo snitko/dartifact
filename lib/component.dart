@@ -28,11 +28,11 @@ class Component extends Object with observable.Subscriber,
   get dom_element => _dom_element;
   set dom_element(HtmlElement el) {
     _dom_element = el;
-    _create_behaviors();
     _listen_to_native_events();
   }
   
   Component() {
+    _create_behaviors();
   }
 
   behave(behavior) {
