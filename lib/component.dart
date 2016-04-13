@@ -12,13 +12,15 @@ class Component extends Object with observable.Subscriber,
   *
   *  native_events_list is a variable defined in native_events_list.dart
   *  and it simply contains a List of all events Dart is capable of catching.
+  *  If you'd like to listen to all of those native events, uncomment it and assign
+  *  native_events to it, however not that it might affect performance.
   */
-  List native_events = native_events_list;  
+  List native_events = []; // native_events_list;  
 
   // a DOM element associated with this component
   HtmlElement _dom_element; 
 
-  Map  behaviors     = {}; 
+  Map behaviors     = {}; 
 
   get dom_element => _dom_element;
   set dom_element(HtmlElement el) {
@@ -31,7 +33,7 @@ class Component extends Object with observable.Subscriber,
 
   _listen_to_native_events() {
      this.native_events.forEach((e) {
-      dom_element.on[e].listen((e) => this.captureEvent(e.type, [#self]));
+       dom_element.on[e].listen((e) => this.captureEvent(e.type, [#self]));
     }); 
   }
 
