@@ -34,6 +34,11 @@ void main() {
       expect(c.events_history[0], equals("self#clicked"));
     });
 
+    test("can behave", () {
+      c.behave('hide');
+      expect(el.style.display, equals('none'));
+    });
+
   });
 
 }

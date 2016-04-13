@@ -18,23 +18,45 @@ class Component extends Object with observable.Subscriber,
   List native_events = []; // native_events_list;  
 
   // a DOM element associated with this component
-  HtmlElement _dom_element; 
+  HtmlElement _dom_element;
 
-  Map behaviors     = {}; 
+  // ... and you can add more, for example [... ButtonBehaviors, LinkBehaviors] 
+  List behaviors  = [BaseComponentBehaviors];
+  // instantiated behavior objects, don't touch it
+  List _behaviors = [];
 
   get dom_element => _dom_element;
   set dom_element(HtmlElement el) {
     _dom_element = el;
+    _create_behaviors();
     _listen_to_native_events();
   }
   
   Component() {
   }
 
+  behave(behavior) {
+    _behaviors.forEach((b) {
+      if(list_of_methods_for(b).contains(behavior)) {
+        var im = reflect(b);
+        im.invoke(new Symbol(behavior), []);
+        return;
+      }
+    });
+  }
+
   _listen_to_native_events() {
      this.native_events.forEach((e) {
        dom_element.on[e].listen((e) => this.captureEvent(e.type, [#self]));
     }); 
+  }
+
+  _create_behaviors() {
+    behaviors.forEach((b) {
+      b = new_instance_of(b.toString(), 'nest_ui');
+      b.component = this;
+      _behaviors.add(b);
+    });
   }
 
 }

@@ -12,5 +12,7 @@ import 'package:attributable/attributable.dart';
 //import 'package:validatable/validatable.dart';
 
 // parts of the current lib
+part 'class_dynamic_operations.dart';
 part 'component.dart';
 part 'native_events_list.dart';
+part 'behaviors/base_component_behaviors.dart';
