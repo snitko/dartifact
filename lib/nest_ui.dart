@@ -1,4 +1,4 @@
-library very_ui;
+library nest_ui;
 
 // vendor libs
 import 'dart:html'   ;
@@ -13,3 +13,4 @@ import 'package:attributable/attributable.dart';
 
 // parts of the current lib
 part 'component.dart';
+part 'native_events_list.dart';

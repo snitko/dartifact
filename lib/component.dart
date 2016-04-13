@@ -6,9 +6,19 @@ class Component extends Object with observable.Subscriber,
                                     Attributable
 {
 
-  List        native_events = [];  // events emitted by the browser that we'd like to handle
-  Map         behaviors     = {};  // 
-  HtmlElement _dom_element;        // A DOM element associated with this component
+  /* Events emitted by the browser that we'd like to handle
+  *  if you prefer to not listen to them all for your component,
+  *  simply list the ones you'd like to listen to, ommiting all the others.
+  *
+  *  native_events_list is a variable defined in native_events_list.dart
+  *  and it simply contains a List of all events Dart is capable of catching.
+  */
+  List native_events = native_events_list;  
+
+  // a DOM element associated with this component
+  HtmlElement _dom_element; 
+
+  Map  behaviors     = {}; 
 
   get dom_element => _dom_element;
   set dom_element(HtmlElement el) {
