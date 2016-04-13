@@ -34,15 +34,15 @@ Object new_instance_of(String class_name, String library) {
 
 }
 
-List<String> list_of_methods_for(object) {
+List<String> methods_of(object) {
   var im = reflect(object);
   List methods = [];
   im.type.instanceMembers.values.forEach((MethodMirror method) {
-    methods.add(symToString(method.simpleName));
+    methods.add(symbol_to_string(method.simpleName));
   });
   return methods;
 }
 
-symToString(s) {
+symbol_to_string(s) {
   return MirrorSystem.getName(s);
 }

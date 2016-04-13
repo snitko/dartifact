@@ -37,7 +37,7 @@ class Component extends Object with observable.Subscriber,
 
   behave(behavior) {
     _behaviors.forEach((b) {
-      if(list_of_methods_for(b).contains(behavior)) {
+      if(methods_of(b).contains(behavior)) {
         var im = reflect(b);
         im.invoke(new Symbol(behavior), []);
         return;
