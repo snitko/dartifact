@@ -50,25 +50,17 @@ class Component extends Object with observable.Subscriber,
   }
 
   // Updates dom element's #text or attribute so it refelects Component's current property value.
-  prvt_update_property_on_node(attr_name) {
-
-    /// We're dealing with the #dom_element itself, no children involved!
-    if(this.dom_element.getAttribute('data-component-property') == attr_name) {
+  prvt_update_property_on_node(property_name) {
+    var property_el = _firstDescendantOrSelfWithAttr(
+        this.dom_element,
+        attr_name: "data-component-property",
+        attr_value: property_name
+    );
+    if(property_el != null) {
       /// Basic case when property is tied to the node's text.
-      this.dom_element.text = this.attributes[attr_name];
+      property_el.text = this.attributes[property_name];
       /// Now deal with properties tied to an element's attribute, rather than it's text.
-      _update_property_on_html_attribute(this.dom_element, attr_name);
-    }
-
-    /// We're dealing with a property which is tied to one of the children of the #dom_element
-    else {
-      var property_el = this.dom_element.querySelector('[data-component-property="${attr_name}"]');
-      if(property_el != null) {
-        /// Basic case when property is tied to the node's text.
-        property_el.text = this.attributes[attr_name];
-        /// Now deal with properties tied to an element's attribute, rather than it's text.
-        _update_property_on_html_attribute(property_el, attr_name);
-      }
+      _update_property_on_html_attribute(property_el, property_name);
     }
   }
 
@@ -90,6 +82,26 @@ class Component extends Object with observable.Subscriber,
     var property_html_attr_name = node.getAttribute('data-component-property-attr-name');
     if(property_html_attr_name != null)
       node.setAttribute(property_html_attr_name, this.attributes[attr_name]);
+  }
+
+  // Finds first DOM descendant with a certain combination of attribute and its value,
+  // or returns the same node if that node has that combination.
+  _firstDescendantOrSelfWithAttr(node, { attr_name: null, attr_value: null }) {
+
+    if(attr_name == null || node.getAttribute(attr_name) == attr_value)
+      return node;
+    else if(node.children.length == 0)
+      return null;
+
+    var el;
+    node.children.forEach((c) {
+      if(c.getAttribute('data-component-id') == null) {
+         el = _firstDescendantOrSelfWithAttr(c, attr_name: attr_name, attr_value: attr_value);
+      }
+    });
+
+    return el;
+
   }
 
   // So far this is only required for Attributable module to work on this class.

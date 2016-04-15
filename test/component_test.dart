@@ -73,6 +73,19 @@ void main() {
         expect(property_node.getAttribute("ok-property2"), equals("new value"));
       });
 
+      test("skips children of the dom_element which are themselves components", () {
+        var property_node   = new DivElement();
+        var child_component = new DivElement();
+        property_node.setAttribute('data-component-property', 'property3');
+        child_component.setAttribute('data-component-property', 'property3');
+        child_component.setAttribute('data-component-id', 'child-component-1');
+        c.dom_element.append(child_component);
+        c.dom_element.append(property_node);
+        c.property3 = "new value";
+        expect(child_component.text, equals(""));
+        expect(property_node.text,   equals("new value"));
+      });
+
     });
 
   });
