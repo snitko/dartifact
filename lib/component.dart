@@ -15,7 +15,7 @@ class Component extends Object with observable.Subscriber,
   *  If you'd like to listen to all of those native events, uncomment it and assign
   *  native_events to it, however not that it might affect performance.
   */
-  List native_events = []; // native_events_list;  
+  List native_events = []; // native_events_list;
 
   // a DOM element associated with this component
   HtmlElement _dom_element;
@@ -24,6 +24,10 @@ class Component extends Object with observable.Subscriber,
   List behaviors  = [BaseComponentBehaviors];
   // instantiated behavior objects, don't touch it
   List _behaviors = [];
+
+  final Map attribute_callbacks = {
+    'default' : (attr_name, self) => self.prvt_update_property_on_node(attr_name)
+  };
 
   get dom_element => _dom_element;
   set dom_element(HtmlElement el) {
@@ -45,9 +49,32 @@ class Component extends Object with observable.Subscriber,
     });
   }
 
+  // Updates dom element's #text or attribute so it refelects Component's current property value.
+  prvt_update_property_on_node(attr_name) {
+
+    /// We're dealing with the #dom_element itself, no children involved!
+    if(this.dom_element.getAttribute('data-component-property') == attr_name) {
+      /// Basic case when property is tied to the node's text.
+      this.dom_element.text = this.attributes[attr_name];
+      /// Now deal with properties tied to an element's attribute, rather than it's text.
+      _update_property_on_html_attribute(this.dom_element, attr_name);
+    }
+
+    /// We're dealing with a property which is tied to one of the children of the #dom_element
+    else {
+      var property_el = this.dom_element.querySelector('[data-component-property="${attr_name}"]');
+      if(property_el != null) {
+        /// Basic case when property is tied to the node's text.
+        property_el.text = this.attributes[attr_name];
+        /// Now deal with properties tied to an element's attribute, rather than it's text.
+        _update_property_on_html_attribute(property_el, attr_name);
+      }
+    }
+  }
+
   _listen_to_native_events() {
      this.native_events.forEach((e) {
-       dom_element.on[e].listen((e) => this.captureEvent(e.type, [#self]));
+       this.dom_element.on[e].listen((e) => this.captureEvent(e.type, [#self]));
     }); 
   }
 
@@ -57,6 +84,21 @@ class Component extends Object with observable.Subscriber,
       b.component = this;
       _behaviors.add(b);
     });
+  }
+
+  _update_property_on_html_attribute(node, attr_name) {
+    var property_html_attr_name = node.getAttribute('data-component-property-attr-name');
+    if(property_html_attr_name != null)
+      node.setAttribute(property_html_attr_name, this.attributes[attr_name]);
+  }
+
+  // So far this is only required for Attributable module to work on this class.
+  noSuchMethod(Invocation i) {  
+    var result = prvt_noSuchGetterOrSetter(i);
+    if(result)
+      return result;
+    else
+      super.noSuchMethod(i);
   }
 
 }
