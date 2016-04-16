@@ -30,11 +30,22 @@ void main() {
   });
 
   group("Component", () {
-    
-    test("streams native browser events and applies component handlers", () {
-      el.click();
-      expect(c.events_history[0], equals("self#clicked"));
+
+    group("native events", () {
+
+      test("streams native browser events and applies component handlers", () {
+        el.click();
+        expect(c.events_history[0], equals("self#clicked"));
+      });
+
+      test("captures and streams native browser events for dom_element children and applies component handlers", () {
+        // add dom_element child
+        // click it
+        // check if handler was called
+      });
+
     });
+
 
     test("can behave", () {
       c.behave('hide');

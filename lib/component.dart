@@ -26,17 +26,17 @@ class Component extends Object with observable.Subscriber,
   List _behaviors = [];
 
   final Map attribute_callbacks = {
-    'default' : (attr_name, self) => self.prvt_update_property_on_node(attr_name)
+    'default' : (attr_name, self) => self.prvt_updatePropertyOnNode(attr_name)
   };
 
   get dom_element => _dom_element;
   set dom_element(HtmlElement el) {
     _dom_element = el;
-    _listen_to_native_events();
+    _listenToNativeEvents();
   }
   
   Component() {
-    _create_behaviors();
+    _createBehaviors();
   }
 
   behave(behavior) {
@@ -50,7 +50,7 @@ class Component extends Object with observable.Subscriber,
   }
 
   // Updates dom element's #text or attribute so it refelects Component's current property value.
-  prvt_update_property_on_node(property_name) {
+  prvt_updatePropertyOnNode(property_name) {
     var property_el = _firstDescendantOrSelfWithAttr(
         this.dom_element,
         attr_name: "data-component-property",
@@ -60,17 +60,17 @@ class Component extends Object with observable.Subscriber,
       /// Basic case when property is tied to the node's text.
       property_el.text = this.attributes[property_name];
       /// Now deal with properties tied to an element's attribute, rather than it's text.
-      _update_property_on_html_attribute(property_el, property_name);
+      _updatePropertyOnHtmlAttribute(property_el, property_name);
     }
   }
 
-  _listen_to_native_events() {
+  _listenToNativeEvents() {
      this.native_events.forEach((e) {
        this.dom_element.on[e].listen((e) => this.captureEvent(e.type, [#self]));
     }); 
   }
 
-  _create_behaviors() {
+  _createBehaviors() {
     behaviors.forEach((b) {
       b = new_instance_of(b.toString(), 'nest_ui');
       b.component = this;
@@ -78,7 +78,7 @@ class Component extends Object with observable.Subscriber,
     });
   }
 
-  _update_property_on_html_attribute(node, attr_name) {
+  _updatePropertyOnHtmlAttribute(node, attr_name) {
     var property_html_attr_name = node.getAttribute('data-component-property-attr-name');
     if(property_html_attr_name != null)
       node.setAttribute(property_html_attr_name, this.attributes[attr_name]);
