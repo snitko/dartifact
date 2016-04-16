@@ -7,13 +7,16 @@ import "dart:html";
 class MyComponent extends Component {
 
   Map event_handlers = {
-    'click' : { #self: (self) => self.events_history.add("self#clicked") }
+    'click' : {
+      #self:             (self) => self.events_history.add("self#clicked"),
+      'self.text_field': (self) => self.events_history.add("self.text_field#clicked")
+    }
   };
 
   final List attribute_names = ['property1', 'property2', 'property3', 'property4'];
 
   List events_history = [];
-  List native_events  = ["click", "mouseover"];
+  List native_events  = ["click", "mouseover", "text_field.click"];
   MyComponent() : super();
 
 }
@@ -39,9 +42,12 @@ void main() {
       });
 
       test("captures and streams native browser events for dom_element children and applies component handlers", () {
-        // add dom_element child
-        // click it
-        // check if handler was called
+        var component_part = new DivElement();
+        component_part.setAttribute('data-component-part', 'text_field');
+        el.append(component_part);
+        c.dom_element = el;
+        component_part.click();
+        expect(c.events_history[0], equals("self.text_field#clicked"));
       });
 
     });

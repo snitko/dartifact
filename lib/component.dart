@@ -65,9 +65,26 @@ class Component extends Object with observable.Subscriber,
   }
 
   _listenToNativeEvents() {
-     this.native_events.forEach((e) {
-       this.dom_element.on[e].listen((e) => this.captureEvent(e.type, [#self]));
-    }); 
+    this.native_events.forEach((e) {
+      /// Event belongs to an html element which is a descendant of our component's dom_element
+      if(e.contains('.')) {
+        e = e.split('.'); // the original string is something like "text_field.click"
+        var part_name  = e[0];
+        var event_name = e[1];
+        var part_el   = _firstDescendantOrSelfWithAttr(
+            this.dom_element,
+            attr_name: 'data-component-part',
+            attr_value: part_name
+        );
+        if(part_el != null) {
+          part_el.on[event_name].listen((e) => this.captureEvent(e.type, ["self.$part_name"]));
+        }
+      }
+      /// Event belongs to our component's dom_element
+      else {
+        this.dom_element.on[e].listen((e) => this.captureEvent(e.type, [#self]));
+      }
+   }); 
   }
 
   _createBehaviors() {
