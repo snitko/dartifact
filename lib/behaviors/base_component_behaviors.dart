@@ -6,9 +6,7 @@ class BaseComponentBehaviors {
 
   BaseComponentBehaviors() {}
 
-  hide() {
-    this.component.dom_element.style..display="none";
-  }
+  hide() => this.component.dom_element.style..display="none";
   show() => this.component.dom_element.style..display="";
 
 }

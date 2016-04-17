@@ -21,6 +21,8 @@ class MyComponent extends Component {
 
 }
 
+class MyChildComponent extends Component {}
+
 void main() {
 
   var c;
@@ -33,6 +35,21 @@ void main() {
   });
 
   group("Component", () {
+
+    test("can behave", () {
+      c.behave('hide');
+      expect(el.style.display, equals('none'));
+    });
+
+    test("creates child components out of the descendant dom elements", () {
+      var child_component_el = new DivElement();
+      child_component_el.setAttribute('data-component-class', 'MyChildComponent');
+      el.append(child_component_el);
+      c.initChildComponents();
+      expect(c.children[0], isNotNull);
+      expect(c.children[0].dom_element, equals(child_component_el));
+      expect(c.children[0].parent, equals(c));
+    });
 
     group("native events", () {
 
@@ -50,12 +67,6 @@ void main() {
         expect(c.events_history[0], equals("self.text_field#clicked"));
       });
 
-    });
-
-
-    test("can behave", () {
-      c.behave('hide');
-      expect(el.style.display, equals('none'));
     });
 
     group("when a property changes", () {

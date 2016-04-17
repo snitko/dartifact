@@ -49,6 +49,19 @@ class Component extends Object with observable.Subscriber,
     });
   }
 
+  initChildComponents() {
+    var elements = _findChildComponentDomElements(this.dom_element);
+    elements.forEach((el) {
+      ['', 'nest_ui'].forEach((l) {
+        var component = new_instance_of(el.getAttribute('data-component-class'), l);
+        if(component != null) {
+          component.dom_element = el;
+          this.addChild(component);
+        }
+      });
+    });
+  }
+
   // Updates dom element's #text or attribute so it refelects Component's current property value.
   prvt_updatePropertyOnNode(property_name) {
     var property_el = _firstDescendantOrSelfWithAttr(
@@ -90,10 +103,10 @@ class Component extends Object with observable.Subscriber,
   _createBehaviors() {
     behaviors.forEach((b) {
       ['', 'nest_ui'].forEach((l) {
-        b = new_instance_of(b.toString(), l);
-        if(b != null) {
-          b.component = this;
-          _behaviors.add(b);
+        var behavior_instance = new_instance_of(b.toString(), l);
+        if(behavior_instance != null) {
+          behavior_instance.component = this;
+          _behaviors.add(behavior_instance);
         }
       });
     });
@@ -123,6 +136,17 @@ class Component extends Object with observable.Subscriber,
 
     return el;
 
+  }
+
+  _findChildComponentDomElements(node) {
+    List component_children = [];
+    node.children.forEach((c) {
+      if(c.getAttribute('data-component-class') == null)
+        component_children.addAll(_findChildComponentDomElements(c));
+      else
+        component_children.add(c);
+    });
+    return component_children;
   }
 
   // So far this is only required for Attributable module to work on this class.
