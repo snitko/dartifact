@@ -20,17 +20,21 @@ List findSubclasses(name) {
 
 }
 
-Object new_instance_of(String class_name, String library) {
-
+Object new_instance_of(String class_name, [String library='']) {
+  
   MirrorSystem mirrors = currentMirrorSystem();
-  LibraryMirror     lm = mirrors.libraries.values.firstWhere(
-    (LibraryMirror lm) => lm.qualifiedName == new Symbol(library)
-  );
+  var lm;
+  if(library == '')
+    lm = mirrors.isolate.rootLibrary;
+  else
+    lm = mirrors.findLibrary(new Symbol(library));
 
   ClassMirror cm = lm.declarations[new Symbol(class_name)];
 
-  InstanceMirror im = cm.newInstance(new Symbol(''), []);
-  return im.reflectee;
+  if(cm != null) {
+    InstanceMirror im = cm.newInstance(new Symbol(''), []);
+    return im.reflectee;
+  }
 
 }
 

@@ -89,9 +89,13 @@ class Component extends Object with observable.Subscriber,
 
   _createBehaviors() {
     behaviors.forEach((b) {
-      b = new_instance_of(b.toString(), 'nest_ui');
-      b.component = this;
-      _behaviors.add(b);
+      ['', 'nest_ui'].forEach((l) {
+        b = new_instance_of(b.toString(), l);
+        if(b != null) {
+          b.component = this;
+          _behaviors.add(b);
+        }
+      });
     });
   }
 
@@ -123,11 +127,11 @@ class Component extends Object with observable.Subscriber,
 
   // So far this is only required for Attributable module to work on this class.
   noSuchMethod(Invocation i) {  
-    var result = prvt_noSuchGetterOrSetter(i);
-    if(result)
-      return result;
-    else
+    try {
+      return prvt_noSuchGetterOrSetter(i);
+    } on NoSuchAttributeException {
       super.noSuchMethod(i);
+    }
   }
 
 }
