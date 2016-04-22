@@ -73,7 +73,7 @@ class Component extends Object with observable.Subscriber,
    *  specified in this attribute. Obviously, you should define such a class beforehand and
    *  inherit from Component.
   */
-  initChildComponents() {
+  initChildComponents({ recursive: true }) {
     var elements = _findChildComponentDomElements(this.dom_element);
     elements.forEach((el) {
       ['', 'nest_ui'].forEach((l) {
@@ -81,6 +81,8 @@ class Component extends Object with observable.Subscriber,
         if(component != null) {
           component.dom_element = el;
           this.addChild(component);
+          if(recursive)
+            component.initChildComponents();
         }
       });
     });
