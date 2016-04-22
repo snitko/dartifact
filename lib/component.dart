@@ -80,6 +80,7 @@ class Component extends Object with observable.Subscriber,
       ['', 'nest_ui'].forEach((l) {
         var component = new_instance_of(el.getAttribute('data-component-class'), l);
         if(component != null) {
+          component.addObservingSubscriber(this);
           component.dom_element = el;
           this.addChild(component);
           if(recursive)
@@ -99,6 +100,8 @@ class Component extends Object with observable.Subscriber,
 
   /** Updates dom element's #text or attribute so it refelects Component's current property value. */
   prvt_updatePropertyOnNode(property_name) {
+    if(this.dom_element == null)
+      return;
     var property_el = _firstDescendantOrSelfWithAttr(
         this.dom_element,
         attr_name: "data-component-property",
