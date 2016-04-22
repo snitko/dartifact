@@ -45,6 +45,7 @@ class Component extends Object with observable.Subscriber,
   get dom_element => _dom_element;
   set dom_element(HtmlElement el) {
     _dom_element = el;
+    _assignRolesFromDomElement();
     _listenToNativeEvents();
   }
   
@@ -171,6 +172,12 @@ class Component extends Object with observable.Subscriber,
     var property_html_attr_name = node.getAttribute('data-component-property-attr-name');
     if(property_html_attr_name != null)
       node.setAttribute(property_html_attr_name, this.attributes[attr_name]);
+  }
+
+  _assignRolesFromDomElement() {
+    var roles_attr = dom_element.getAttribute('data-component-roles');
+    if(roles_attr != null)
+      this.roles = dom_element.getAttribute('data-component-roles').split(new RegExp(r",\s?"));
   }
 
   /** Finds first DOM descendant with a certain combination of attribute and its value,

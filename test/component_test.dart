@@ -56,6 +56,15 @@ void main() {
       expect(c.children[0].parent, equals(c));
     });
 
+    test("assigns child components roles from data-component-role attribute", () {
+      var child_component_el = new DivElement();
+      child_component_el.setAttribute('data-component-class', 'MyChildComponent');
+      child_component_el.setAttribute('data-component-roles', 'role1,role2');
+      el.append(child_component_el);
+      c.initChildComponents();
+      expect(c.children[0].roles, equals(["role1", "role2"]));
+    });
+
     group("native events", () {
 
       test("streams native browser events and applies component handlers", () {
