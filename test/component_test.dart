@@ -27,8 +27,13 @@ void main() {
 
   var c;
   var el;
+  var c_template;
 
   setUp(() {
+    c_template = new DivElement();
+    c_template.setAttribute('data-component-template', 'MyComponent');
+    c_template.className = 'myComponent';
+    document.documentElement.append(c_template);
     el            = new DivElement();
     c             = new MyComponent();
     c.dom_element = el;
@@ -112,6 +117,29 @@ void main() {
         c.property3 = "new value";
         expect(child_component.text, equals(""));
         expect(property_node.text,   equals("new value"));
+      });
+
+    });
+
+    group("templates", () {
+      
+      test("templates are identified in the dom", () {
+        expect(c.template.className, equals('myComponent'));
+      });
+
+      test ("templates are cloned and set as #dom_element, data-component-template attr removed", () {
+        c.initDomElementFromTemplate();
+        expect(c.template.getAttribute('data-component-template'), equals('MyComponent'));
+        expect(c.dom_element.className, equals('myComponent'));
+        expect(c.dom_element.getAttribute('data-component-template'), equals(null));
+        expect(c.dom_element.getAttribute('data-component-name'), equals('MyComponent'));
+      });
+
+      test ("all properties are correctly set to the newly assigned #dom_element created from a template", () {
+        c.template.setAttribute('data-component-property', 'property1');
+        c.property1 = 'hello';
+        c.initDomElementFromTemplate();
+        expect(c.dom_element.text, equals('hello'));
       });
 
     });

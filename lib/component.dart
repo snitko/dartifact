@@ -29,6 +29,10 @@ class Component extends Object with observable.Subscriber,
   /// instantiated behavior objects, don't touch it
   List _behaviors = [];
 
+  /// Contains an element which will later be cloned and assigned to #dom_element
+  /// if needed. Obviously, unless a real element from DOM isn't assigned.
+  HtmlElement template;
+
   final Map attribute_callbacks = {
     'default' : (attr_name, self) => self.prvt_updatePropertyOnNode(attr_name)
   };
@@ -46,6 +50,7 @@ class Component extends Object with observable.Subscriber,
   
   Component() {
     _createBehaviors();
+    _initTemplate();
   }
 
   /** Invokes behaviors which are defined in separate Behavior objects. Those objects are instantiated
@@ -81,6 +86,14 @@ class Component extends Object with observable.Subscriber,
     });
   }
 
+  /** Clones #template and assigns the clone to #dom_element, then sets all the properties */
+  initDomElementFromTemplate() {
+    this.dom_element = template.clone(true);
+    this.dom_element.attributes.remove('data-component-template');
+    this.dom_element.setAttribute('data-component-name', this.runtimeType.toString());
+    attribute_names.forEach((a) => prvt_updatePropertyOnNode(a));
+  }
+
   /** Updates dom element's #text or attribute so it refelects Component's current property value. */
   prvt_updatePropertyOnNode(property_name) {
     var property_el = _firstDescendantOrSelfWithAttr(
@@ -94,6 +107,11 @@ class Component extends Object with observable.Subscriber,
       // Now deal with properties tied to an element's attribute, rather than it's text.
       _updatePropertyOnHtmlAttribute(property_el, property_name);
     }
+  }
+
+  /** Finds the template HtmlElement in the dom and assigns it to #template */
+  _initTemplate() {
+    this.template = querySelector("[data-component-template=${this.runtimeType.toString()}");
   }
 
   /** Starts listening to native events defined in #native_events. It is
