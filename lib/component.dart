@@ -90,7 +90,7 @@ class Component extends Object with observable.Subscriber,
   initDomElementFromTemplate() {
     this.dom_element = template.clone(true);
     this.dom_element.attributes.remove('data-component-template');
-    this.dom_element.setAttribute('data-component-name', this.runtimeType.toString());
+    this.dom_element.setAttribute('data-component-class', this.runtimeType.toString());
     attribute_names.forEach((a) => prvt_updatePropertyOnNode(a));
   }
 

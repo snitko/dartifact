@@ -132,7 +132,7 @@ void main() {
         expect(c.template.getAttribute('data-component-template'), equals('MyComponent'));
         expect(c.dom_element.className, equals('myComponent'));
         expect(c.dom_element.getAttribute('data-component-template'), equals(null));
-        expect(c.dom_element.getAttribute('data-component-name'), equals('MyComponent'));
+        expect(c.dom_element.getAttribute('data-component-class'), equals('MyComponent'));
       });
 
       test ("all properties are correctly set to the newly assigned #dom_element created from a template", () {
