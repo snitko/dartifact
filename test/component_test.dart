@@ -8,8 +8,9 @@ class MyComponent extends Component {
 
   Map event_handlers = {
     'click' : {
-      #self:             (self) => self.events_history.add("self#clicked"),
-      'self.text_field': (self) => self.events_history.add("self.text_field#clicked")
+      #self:             (self,p) => self.events_history.add("self#clicked"),
+      'self.text_field': (self,p) => self.events_history.add("self.text_field#clicked"),
+      'role1':           (self,p) => self.events_history.add("role1#clicked")
     }
   };
 
@@ -21,7 +22,9 @@ class MyComponent extends Component {
 
 }
 
-class MyChildComponent extends Component {}
+class MyChildComponent extends Component {
+  List native_events  = ["click"];
+}
 
 void main() {
 
@@ -41,28 +44,34 @@ void main() {
 
   group("Component", () {
 
+    var child_component_el;
+
+    setUp(() {
+      child_component_el = new DivElement();
+      child_component_el.setAttribute('data-component-class', 'MyChildComponent');
+      child_component_el.setAttribute('data-component-roles', 'role1,role2');
+      el.append(child_component_el);
+      c.initChildComponents();
+    });
+
     test("can behave", () {
       c.behave('hide');
       expect(el.style.display, equals('none'));
     });
 
     test("creates child components out of the descendant dom elements", () {
-      var child_component_el = new DivElement();
-      child_component_el.setAttribute('data-component-class', 'MyChildComponent');
-      el.append(child_component_el);
-      c.initChildComponents();
       expect(c.children[0], isNotNull);
       expect(c.children[0].dom_element, equals(child_component_el));
       expect(c.children[0].parent, equals(c));
     });
 
     test("assigns child components roles from data-component-role attribute", () {
-      var child_component_el = new DivElement();
-      child_component_el.setAttribute('data-component-class', 'MyChildComponent');
-      child_component_el.setAttribute('data-component-roles', 'role1,role2');
-      el.append(child_component_el);
-      c.initChildComponents();
       expect(c.children[0].roles, equals(["role1", "role2"]));
+    });
+
+    test("it propagates events from child to parent", () {
+      child_component_el.click();
+      expect(c.events_history[0], equals("role1#clicked"));
     });
 
     group("native events", () {

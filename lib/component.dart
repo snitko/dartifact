@@ -98,6 +98,25 @@ class Component extends Object with observable.Subscriber,
     attribute_names.forEach((a) => prvt_updatePropertyOnNode(a));
   }
 
+  /** Redefining obervable_roles.Subscriber's method.
+    * 1. call the super() method to make sure the handler is applied.
+    * 2. The actual code that adds new functionality:
+    *    publish event to the parent with the current component roles.
+    *
+    * Only those events that are called on #self or self's parts (prefixed with "self.")
+    * are propagated up to the parent.
+  */
+  captureEvent(name, publisher_roles, [data=null]) {
+    super.captureEvent(name, publisher_roles, [data=null]);
+    var roles_regexp = new RegExp(r"^self.");
+    publisher_roles.forEach((r) {
+      if(r == #self || roles_regexp.hasMatch(r)) {
+        this.publishEvent(name, data);
+        return;
+      }
+    });
+  }
+
   /** Updates dom element's #text or attribute so it refelects Component's current property value. */
   prvt_updatePropertyOnNode(property_name) {
     if(this.dom_element == null)
