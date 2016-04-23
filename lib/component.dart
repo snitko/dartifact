@@ -92,13 +92,15 @@ class Component extends Object with observable.Subscriber,
 
   /** Clones #template and assigns the clone to #dom_element, then sets all the properties */
   initDomElementFromTemplate() {
-    this.dom_element = template.clone(true);
-    this.dom_element.attributes.remove('data-component-template');
-    this.dom_element.setAttribute('data-component-class', this.runtimeType.toString());
-    attribute_names.forEach((a) => prvt_updatePropertyOnNode(a));
+    if(this.template != null) {
+      this.dom_element = this.template.clone(true);
+      this.dom_element.attributes.remove('data-component-template');
+      this.dom_element.setAttribute('data-component-class', this.runtimeType.toString());
+      attribute_names.forEach((a) => prvt_updatePropertyOnNode(a));
+    }
   }
 
-  /** Redefining obervable_roles.Subscriber's method.
+  /** Reloading obervable_roles.Subscriber's method.
     * 1. call the super() method to make sure the handler is applied.
     * 2. The actual code that adds new functionality:
     *    publish event to the parent with the current component roles.
@@ -115,6 +117,24 @@ class Component extends Object with observable.Subscriber,
         return;
       }
     });
+  }
+
+  /** Reloading HeritageTree#add_child to automatically do the following things
+    * when a child component is added:
+    *
+    * 1. Initialize a dom_element from template
+    * 2. Append child's dom_element to the parent's dom_element.
+    *
+    * Obviously, you might not always want (2), so just redefine #_appendChildDomElement()
+    * method in your class to change this behavior.
+    */
+  addChild(Component child) {
+    // We only do it if this element is clearly not in the DOM.
+    if(child.dom_element == null || child.dom_element.parent == null) {
+      child.initDomElementFromTemplate();
+      _appendChildDomElement(child.dom_element);
+    }
+    super.addChild(child);
   }
 
   /** Updates dom element's #text or attribute so it refelects Component's current property value. */
@@ -238,6 +258,15 @@ class Component extends Object with observable.Subscriber,
         component_children.add(c);
     });
     return component_children;
+  }
+
+  /** This method defines a default behavior when a new child is added.
+    * Makes sense to append child dom_element to the parent's dom_element.
+    * Of course, this might not always be desirable, so this method may be
+    * redefined in descendant calasses.
+    */
+  _appendChildDomElement(HtmlElement el) {
+    this.dom_element.append(el);
   }
 
   // So far this is only required for Attributable module to work on this class.

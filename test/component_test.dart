@@ -51,7 +51,6 @@ void main() {
       child_component_el.setAttribute('data-component-class', 'MyChildComponent');
       child_component_el.setAttribute('data-component-roles', 'role1,role2');
       el.append(child_component_el);
-      c.initChildComponents();
     });
 
     test("can behave", () {
@@ -60,18 +59,28 @@ void main() {
     });
 
     test("creates child components out of the descendant dom elements", () {
+      c.initChildComponents();
       expect(c.children[0], isNotNull);
       expect(c.children[0].dom_element, equals(child_component_el));
       expect(c.children[0].parent, equals(c));
     });
 
     test("assigns child components roles from data-component-role attribute", () {
+      c.initChildComponents();
       expect(c.children[0].roles, equals(["role1", "role2"]));
     });
 
     test("it propagates events from child to parent", () {
+      c.initChildComponents();
       child_component_el.click();
       expect(c.events_history[0], equals("role1#clicked"));
+    });
+
+    test("adding a child appends it to the dom_element's parent by default", () {
+      // it's okay, we can add MyComponent as a child of MyComponent, who's going to stop us?
+      var new_component = new MyComponent();
+      c.addChild(new_component);
+      expect(c.dom_element.children[1], equals(new_component.dom_element));
     });
 
     group("native events", () {
