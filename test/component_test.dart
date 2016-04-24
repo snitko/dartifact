@@ -6,19 +6,19 @@ import "dart:html";
 
 class MyComponent extends Component {
 
-  Map event_handlers = {
-    'click' : {
-      #self:             (self,p) => self.events_history.add("self#clicked"),
-      'self.text_field': (self,p) => self.events_history.add("self.text_field#clicked"),
-      'role1':           (self,p) => self.events_history.add("role1#clicked")
-    }
-  };
-
   final List attribute_names = ['property1', 'property2', 'property3', 'property4'];
 
   List events_history = [];
   List native_events  = ["click", "mouseover", "text_field.click"];
-  MyComponent() : super();
+  MyComponent() : super() {
+    event_handlers.add_for_event('click',
+      {
+        #self:             (self,p) => self.events_history.add("self#clicked"),
+        'self.text_field': (self,p) => self.events_history.add("self.text_field#clicked"),
+        'role1':           (self,p) => self.events_history.add("role1#clicked")
+      }
+    );
+  }
 
 }
 
