@@ -108,12 +108,16 @@ class Component extends Object with observable.Subscriber,
     * Only those events that are called on #self or self's parts (prefixed with "self.")
     * are propagated up to the parent.
   */
-  captureEvent(name, publisher_roles, [data=null]) {
-    super.captureEvent(name, publisher_roles, [data=null]);
+  captureEvent(e, publisher_roles, [data=null]) {
+    if(!(e is String) && event_handlers.hasHandlerFor(event: e.type, role: publisher_roles)) {
+      e.preventDefault();
+      e = e.type;
+    }
+    super.captureEvent(e, publisher_roles, [data=null]);
     var roles_regexp = new RegExp(r"^self.");
     publisher_roles.forEach((r) {
       if(r == #self || roles_regexp.hasMatch(r)) {
-        this.publishEvent(name, data);
+        this.publishEvent(e, data);
         return;
       }
     });
@@ -181,12 +185,12 @@ class Component extends Object with observable.Subscriber,
             attr_value: part_name
         );
         if(part_el != null) {
-          part_el.on[event_name].listen((e) => this.captureEvent(e.type, ["self.$part_name"]));
+          part_el.on[event_name].listen((e) => this.captureEvent(e, ["self.$part_name"]));
         }
       }
       // Event belongs to our component's dom_element
       else {
-        this.dom_element.on[e].listen((e) => this.captureEvent(e.type, [#self]));
+        this.dom_element.on[e].listen((e) => this.captureEvent(e, [#self]));
       }
    }); 
   }
