@@ -83,6 +83,36 @@ void main() {
       expect(c.dom_element.children[1], equals(new_component.dom_element));
     });
 
+    group("removing a component", () {
+
+      test("removing a component removes its DOM element too", () {
+        c.remove();
+        expect(c.dom_element, isNull);
+      });
+
+      test("removing a component removes it from its parent children's list", () {
+        c.initChildComponents();
+        var child = c.children[0];
+        c.children[0].remove();
+        expect(c.children.length, equals(0));
+        expect(child.parent, isNull);
+      });
+
+      test("deep removal of the component removes all of its descendants and their DOM elements", () {
+        var child_component_el2 = new DivElement();
+        child_component_el2.setAttribute('data-component-class', 'MyChildComponent');
+        child_component_el.append(child_component_el2);
+        c.initChildComponents();
+        var descendant1 = c.children[0];
+        var descendant2 = c.children[0].children[0];
+        expect(descendant1 is MyChildComponent, isTrue);
+        c.remove(deep: true);
+        expect(descendant1.children.length, equals(0));
+        expect(descendant2.parent, isNull);
+      });
+
+    });
+
     group("native events", () {
 
       test("streams native browser events and applies component handlers", () {

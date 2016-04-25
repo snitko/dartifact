@@ -45,8 +45,10 @@ class Component extends Object with observable.Subscriber,
   get dom_element => _dom_element;
   set dom_element(HtmlElement el) {
     _dom_element = el;
-    _assignRolesFromDomElement();
-    _listenToNativeEvents();
+    if(el != null) {
+      _assignRolesFromDomElement();
+      _listenToNativeEvents();
+    }
   }
   
   Component() {
@@ -139,6 +141,30 @@ class Component extends Object with observable.Subscriber,
       _appendChildDomElement(child.dom_element);
     }
     super.addChild(child);
+  }
+
+  /**
+    * Removes itself from the parent's children List and removes the #dom_element
+    * from the DOM. In case deep is set to true, recursively calls remove() on
+    * all of its children.
+    *
+    * Makes use of _removeDomElement() to define specific behaviors to be invoked
+    * when the #dom_element is being removed from the DOM. Default is to just use
+    * HtmlElement#remove(), but one might want to redefine it to have animations of
+    * some sort.
+   */
+  remove({ bool deep: false }) {
+    if(deep) {
+      this.children.forEach((c) => c.remove(deep: true));
+      this.children = [];
+    }
+    if(this.parent != null) {
+      if(!deep) // Otherwise we'd have a "Concurrent modification during iteration" error
+        this.parent.removeChild(this);
+      this.parent = null;
+    }
+    _removeDomElement();
+    this.dom_element = null;
   }
 
   /** Updates dom element's #text or attribute so it refelects Component's current property value. */
@@ -271,6 +297,10 @@ class Component extends Object with observable.Subscriber,
     */
   _appendChildDomElement(HtmlElement el) {
     this.dom_element.append(el);
+  }
+
+  _removeDomElement() {
+    this.dom_element.remove();
   }
 
   // So far this is only required for Attributable module to work on this class.
