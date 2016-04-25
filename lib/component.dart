@@ -266,11 +266,13 @@ class Component extends Object with observable.Subscriber,
       return null;
 
     var el;
-    node.children.forEach((c) {
-      if(c.getAttribute('data-component-id') == null) {
-         el = _firstDescendantOrSelfWithAttr(c, attr_name: attr_name, attr_value: attr_value);
+    for(var c in node.children) {
+      if(c.getAttribute('data-component-class') == null) {
+        el = _firstDescendantOrSelfWithAttr(c, attr_name: attr_name, attr_value: attr_value);
+        if(el != null)
+          break;
       }
-    });
+    }
 
     return el;
 
@@ -299,6 +301,10 @@ class Component extends Object with observable.Subscriber,
     this.dom_element.append(el);
   }
 
+  /** Defines behavior for removal of the #dom_element
+    * Redefine this method to have something fancier (like an animation)
+    * for when the #dom_element is removed.
+    */
   _removeDomElement() {
     this.dom_element.remove();
   }

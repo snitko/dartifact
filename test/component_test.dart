@@ -168,7 +168,7 @@ void main() {
         var child_component = new DivElement();
         property_node.setAttribute('data-component-property', 'property3');
         child_component.setAttribute('data-component-property', 'property3');
-        child_component.setAttribute('data-component-id', 'child-component-1');
+        child_component.setAttribute('data-component-class', 'MyComponent');
         c.dom_element.append(child_component);
         c.dom_element.append(property_node);
         c.property3 = "new value";
