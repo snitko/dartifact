@@ -53,11 +53,6 @@ void main() {
       el.append(child_component_el);
     });
 
-    test("can behave", () {
-      c.behave('hide');
-      expect(el.style.display, equals('none'));
-    });
-
     test("creates child components out of the descendant dom elements", () {
       c.initChildComponents();
       expect(c.children[0], isNotNull);
@@ -200,6 +195,83 @@ void main() {
       });
 
     });
+
+    group("standard behaviors", () {
+
+      group("visibility", () {
+        
+        test("hides an element", () {
+          c.behave('hide');
+          expect(el.style.display, equals('none'));
+        });
+
+        test("shows an element", () {
+          c.dom_element.style.display="none";
+          c.behave('show');
+          expect(el.style.display, equals(''));
+        });
+
+        test("toggles visibility", () {
+          c.behave('toggleDisplay');
+          expect(el.style.display, equals('none'));
+          c.behave('toggleDisplay');
+          expect(el.style.display, equals(''));
+        });
+
+      });
+
+      group("locking/unlocking", () {
+        
+        test("adds 'locked' class to a locked element", () {
+          c.behave('lock');
+          expect(el.classes, contains('locked'));
+        });
+
+        test("removes 'locked' class from an unlocked element", () {
+          c.dom_element.classes.add("locked");
+          c.behave('unlock');
+          expect(el.classes, isNot(contains('locked')));
+        });
+
+        test("toggles between locked and unlocked by adding/removing 'locked' class", () {
+          c.behave('toggleLock');
+          expect(el.classes, contains('locked'));
+          c.behave('toggleLock');
+          expect(el.classes, isNot(contains('locked')));
+        });
+
+      });
+
+      group("disabling/enabling", () {
+        
+        test("adds 'disabled' class and attribute to a locked element", () {
+          c.behave('disable');
+          expect(el.classes,    contains('disabled'));
+          expect(el.attributes, contains('disabled'));
+        });
+
+        test("removes 'disabled' class and attribute from a locked element", () {
+          c.dom_element.classes.add("disabled");
+          c.dom_element.setAttribute("disabled", "disabled");
+          c.behave('enable');
+          expect(el.classes,    isNot(contains('disabled')));
+          expect(el.attributes, isNot(contains('disabled')));
+        });
+
+        test("toggles between locked and unlocked by adding/removing .locked class", () {
+          c.behave('disable');
+          expect(el.classes, contains('disabled'));
+          expect(el.attributes, contains('disabled'));
+          c.behave('enable');
+          expect(el.classes, isNot(contains('disabled')));
+          expect(el.attributes, isNot(contains('disabled')));
+        });
+
+      });
+
+      
+    });
+    
 
   });
 

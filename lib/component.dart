@@ -80,7 +80,7 @@ class Component extends Object with observable.Subscriber,
     var elements = _findChildComponentDomElements(this.dom_element);
     elements.forEach((el) {
       ['', 'nest_ui'].forEach((l) {
-        var component = new_instance_of(el.getAttribute('data-component-class'), l);
+        var component = new_instance_of(el.getAttribute('data-component-class'), [], l);
         if(component != null) {
           component.addObservingSubscriber(this);
           component.dom_element = el;
@@ -230,11 +230,9 @@ class Component extends Object with observable.Subscriber,
   _createBehaviors() {
     behaviors.forEach((b) {
       ['', 'nest_ui'].forEach((l) {
-        var behavior_instance = new_instance_of(b.toString(), l);
-        if(behavior_instance != null) {
-          behavior_instance.component = this;
+        var behavior_instance = new_instance_of(b.toString(), [this], l);
+        if(behavior_instance != null)
           _behaviors.add(behavior_instance);
-        }
       });
     });
   }

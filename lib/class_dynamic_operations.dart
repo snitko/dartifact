@@ -20,7 +20,12 @@ List findSubclasses(name) {
 
 }
 
-Object new_instance_of(String class_name, [String library='']) {
+Object new_instance_of(String class_name, [List args, String library='']) {
+
+  // Arguments for the class constructor out which
+  // then new instance will be obtained.
+  if(args is Null)
+    args = [];
 
   MirrorSystem mirrors = currentMirrorSystem();
   ClassMirror   cm;
@@ -40,7 +45,7 @@ Object new_instance_of(String class_name, [String library='']) {
   libs.forEach((lm) {
     cm = lm.declarations[new Symbol(class_name)];
     if(cm != null) {
-      InstanceMirror im = cm.newInstance(new Symbol(''), []);
+      InstanceMirror im = cm.newInstance(new Symbol(''), args);
       reflectee = im.reflectee;
       return;
     }
