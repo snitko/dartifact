@@ -13,6 +13,8 @@ dependencies:
     path: '../heritage_tree'
   attributable:
     path: '../attributable'
+  logmaster:
+    path: '../logmaster'
 
 dev_dependencies:
   test: '>=0.12.0'
