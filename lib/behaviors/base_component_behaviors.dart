@@ -23,12 +23,12 @@ class BaseComponentBehaviors {
 
   // Enable-disable behaviors
   //
-  disable() => {
+  disable() {
     this.dom_element.classes.add('disabled');
     this.dom_element.setAttribute('disabled', 'disabled');
   }
-  enable() => {
-    this.dom_element.classes.add('disabled');
+  enable() {
+    this.dom_element.classes.remove('disabled');
     this.dom_element.attributes.remove('disabled');
   }
   toggleDisable() => _toggle([enable, disable], this.dom_element.classes.contains('disabled'));
