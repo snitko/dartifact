@@ -9,7 +9,7 @@ import 'dart:mirrors';
 import 'package:observable_roles/observable_roles.dart' as observable;
 import 'package:heritage_tree/heritage_tree.dart';
 import 'package:attributable/attributable.dart';
-//import 'package:validatable/validatable.dart';
+import 'package:validatable/validatable.dart';
 export 'package:logmaster/logmaster.dart';
 
 // parts of the current lib

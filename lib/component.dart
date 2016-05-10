@@ -3,9 +3,9 @@ part of nest_ui;
 class Component extends Object with observable.Subscriber,
                                     observable.Publisher,
                                     HeritageTree,
-                                    Attributable
+                                    Attributable,
+                                    Validatable
 {
-
   /** Events emitted by the browser that we'd like to handle
    *  if you prefer to not listen to them all for your component,
    *  simply list the ones you'd like to listen to, ommiting all the others.
@@ -165,6 +165,47 @@ class Component extends Object with observable.Subscriber,
     }
     _removeDomElement();
     this.dom_element = null;
+  }
+
+  /** Finds immediate children with a specific role */
+  findChildrenByRole(r) {
+    var children_with_roles = [];
+    for(var c in children) {
+      if(c.roles.contains(r))
+        children_with_roles.add(c);
+    }
+    return children_with_roles;
+  }
+
+  /** Finds all descendants with satisfy role path.
+    * For example, if the current element has a child with role 'form' and
+    * this child in turn has a child with role 'submit', then calling
+    *
+    *   findDescendantsByRole('form.submit')
+    *
+    * will find that child, but calling
+    *
+    *   findDescendantsByRole('submit')
+    *
+    * will NOT and would be equivalent to calling
+    *
+    *   findChildrenByRole('submit')
+    *
+    * returning an empty List [].
+    *
+   */
+  findDescendantsByRole(r) {
+    var role_path  = r.split('.');
+    var child_role = role_path.removeAt(0);
+    var children_with_roles = findChildrenByRole(child_role);
+    if(role_path.length > 0) {
+      var descendants_with_roles = [];
+      for(var c in children_with_roles)
+        descendants_with_roles.addAll(c.findDescendantsByRole(role_path.join('.')));
+      return descendants_with_roles;
+    } else {
+      return children_with_roles;
+    }
   }
 
   /** Updates dom element's #text or attribute so it refelects Component's current property value. */

@@ -13,6 +13,8 @@ dependencies:
     path: '../heritage_tree'
   attributable:
     path: '../attributable'
+  validatable:
+    path: '../validatable'
   logmaster:
     path: '../logmaster'
 

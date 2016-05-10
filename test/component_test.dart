@@ -268,11 +268,35 @@ void main() {
         });
 
       });
+      
+    });
 
+    group("finding descendants by roles", () {
+
+      test("finds all children with a specific role", () {
+        c.initChildComponents();
+        expect(c.findChildrenByRole('role1'), equals([c.children[0]]));
+        expect(c.findChildrenByRole('role100'), equals([]));
+      });
+
+      test("finds all descendants with a specific role using . as a parent qualifier", () {
+        var child_component_el2 = new DivElement();
+        child_component_el2.setAttribute('data-component-class', 'MyChildComponent');
+        child_component_el2.setAttribute('data-component-roles', 'role3,role4');
+        child_component_el.append(child_component_el2);
+        c.initChildComponents();
+        expect(c.findDescendantsByRole('role1.role3'), equals([c.children[0].children[0]]));
+      });
+
+    });
+
+    group("validation of children", () {
+
+      test("it defines validation on all descendants with a specific role", () {
+      });
       
     });
     
-
   });
 
 }

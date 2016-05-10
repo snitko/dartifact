@@ -185,6 +185,12 @@ packages:
     description: utf
     source: hosted
     version: "0.9.0+2"
+  validatable:
+    description:
+      path: "../validatable"
+      relative: true
+    source: path
+    version: "0.1.0"
   watcher:
     description: watcher
     source: hosted
