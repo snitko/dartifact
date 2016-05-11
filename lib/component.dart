@@ -224,6 +224,35 @@ class Component extends Object with observable.Subscriber,
     }
   }
 
+
+  validate({ deep: true }) {
+    super.validate();
+
+    try {
+      if(!valid) {
+        var validation_errors_summary_map = [];
+        for(var ve in validation_errors.keys)
+          validation_errors_summary_map.add("$ve: ${validation_errors[ve].join(' and ')}");
+        this.validation_errors_summary = validation_errors_summary_map.join(', ');
+      } else {
+        this.validation_errors_summary = '';
+      }
+    }
+    on NoSuchMethodError {
+      // Ignore if no such attribute validation_errors_summary;
+    }
+
+    if(deep) {
+      for(var c in this.children) {
+        if(!c.validate(deep: deep)) {
+          valid = false;
+          break;
+        }
+      }
+    }
+    return valid;
+  }
+
   /** Updates dom element's #text or attribute so it refelects Component's current property value. */
   prvt_updatePropertyOnNode(property_name) {
     if(this.dom_element == null)
@@ -369,11 +398,19 @@ class Component extends Object with observable.Subscriber,
     */
   _separateDescendantValidations() {
     for(var k in this.validations.keys) {
-      if(k.contains('.'))
-        descendant_validations[k] = this.validations[k];
+      if(k.contains('.')) {
+        this.descendant_validations[k] = this.validations[k];
+      }
     }
+    for(var dv in this.descendant_validations.keys)
+      this.validations.remove(dv);
   }
 
+  /** Adds validations to children by looking at #descendants_validations.
+    * Worth noting that if one of the validation keys contains more than one dot (.)
+    * it means that this validation is for one of the child's children and it gets added
+    * to child's #descendant_validations, not to #validations.
+    */
   _addValidationsToChild(c) {
     for(var dr in this.descendant_validations.keys) {
       var dr_map = dr.split('.');
