@@ -8,6 +8,11 @@ class MyComponent extends Component {
 
   final List attribute_names = ['property1', 'property2', 'property3', 'property4'];
 
+  Map validations = {
+    'role1.role3.property1': { 'isNumeric'  : true },
+    'role1.property1':       { 'isNotNull'  : true }
+  };
+
   List events_history = [];
   List native_events  = ["click", "mouseover", "text_field.click"];
   MyComponent() : super() {
@@ -293,6 +298,20 @@ void main() {
     group("validation of children", () {
 
       test("it defines validation on all descendants with a specific role", () {
+        var child_component_el2 = new DivElement();
+        child_component_el2.setAttribute('data-component-class', 'MyChildComponent');
+        child_component_el2.setAttribute('data-component-roles', 'role3,role4');
+        child_component_el.append(child_component_el2);
+        c.initChildComponents();
+
+        expect(c.children[0].validations, equals({
+          'property1': { 'isNotNull'  : true }
+        }));
+
+        expect(c.children[0].children[0].validations, equals({
+          'property1': { 'isNumeric'  : true }
+        }));
+
       });
       
     });

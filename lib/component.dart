@@ -33,6 +33,20 @@ class Component extends Object with observable.Subscriber,
   /// if needed. Obviously, unless a real element from DOM isn't assigned.
   HtmlElement template;
 
+  /** This is not to be updated manually. Validations for descenndants are defined along
+    * all other validations in #validations Map, but dot (.) is used to separate roles of
+    * descendants and property names. For example:
+    *
+    *   Map validations = {
+    *     'form.input.text' => ...
+    *   }
+    *
+    * would define a validation on the .text property of a component which has an "input" role,
+    * which is also a child of an element with role "form", which, in turn, is a child of
+    * the current component.
+    */
+  Map descendant_validations = {};
+
   final Map attribute_callbacks = {
     'default' : (attr_name, self) => self.prvt_updatePropertyOnNode(attr_name)
   };
@@ -52,6 +66,7 @@ class Component extends Object with observable.Subscriber,
   }
   
   Component() {
+    _separateDescendantValidations();
     _createBehaviors();
     _initTemplate();
   }
@@ -135,6 +150,7 @@ class Component extends Object with observable.Subscriber,
     * method in your class to change this behavior.
     */
   addChild(Component child) {
+    _addValidationsToChild(child);
     // We only do it if this element is clearly not in the DOM.
     if(child.dom_element == null || child.dom_element.parent == null) {
       child.initDomElementFromTemplate();
@@ -346,6 +362,29 @@ class Component extends Object with observable.Subscriber,
     */
   _removeDomElement() {
     this.dom_element.remove();
+  }
+
+  /** Extracts validations with keys containing dots .
+    * as those are validations defined for descendants.
+    */
+  _separateDescendantValidations() {
+    for(var k in this.validations.keys) {
+      if(k.contains('.'))
+        descendant_validations[k] = this.validations[k];
+    }
+  }
+
+  _addValidationsToChild(c) {
+    for(var dr in this.descendant_validations.keys) {
+      var dr_map = dr.split('.');
+      var r      = dr_map.removeAt(0);
+      if(c.roles.contains(r)) {
+        if(dr_map.length > 1)
+          c.descendant_validations[dr_map.join('.')] = this.descendant_validations[dr];
+        else
+          c.validations[dr_map[0]] = this.descendant_validations[dr];
+      }
+    }
   }
 
   // So far this is only required for Attributable module to work on this class.
