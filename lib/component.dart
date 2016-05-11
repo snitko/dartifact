@@ -225,6 +225,11 @@ class Component extends Object with observable.Subscriber,
   }
 
 
+  /** Reloads standart Validatable module method for two reasons:
+    * 1. Collect all validation errors and write a String represenation of them
+    *    to display somehwere in UI.
+    * 2. Run validations on children too if deep is set to true.
+    */
   validate({ deep: true }) {
     super.validate();
 
@@ -244,7 +249,7 @@ class Component extends Object with observable.Subscriber,
 
     if(deep) {
       for(var c in this.children) {
-        if(!c.validate(deep: deep)) {
+        if(!c.validate(deep: true)) {
           valid = false;
           break;
         }
