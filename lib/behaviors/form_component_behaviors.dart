@@ -9,13 +9,18 @@ class FormComponentBehaviors extends BaseComponentBehaviors {
 
   showErrors() {
     this.dom_element.classes.add('errors');
-
-    this.dom_element.querySelector('[data-component-property=validation_errors_summary]').style.display = '';
+    this.validation_errors_summary_element.style.display = '';
   }
 
   hideErrors() {
     this.dom_element.classes.remove('errors');
-    this.dom_element.querySelector('[data-component-property=validation_errors_summary]').style.display = 'none';
+    this.validation_errors_summary_element.style.display = 'none';
+  }
+
+  get validation_errors_summary_element {
+    return this.component.firstDomDescendantOrSelfWithAttr(
+      this.dom_element, attr_name: 'data-component-property', attr_value: 'validation_errors_summary'
+    );
   }
 
 }
