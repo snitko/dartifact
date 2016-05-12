@@ -26,13 +26,22 @@ class FormComponent extends Component {
     return valid;
   }
 
-  prvt_updateValueFromDom() {
+  reset() {
+    this.value = null;
+    value_holder_element.value = null;
+  }
+
+  get value_holder_element {
     var value_holder = this.firstDomDescendantOrSelfWithAttr(
       this.dom_element, attr_name: 'data-component-part', attr_value: 'value_holder'
     );
     if(value_holder == null)
       value_holder = this.dom_element;
-    this.updateAttributes({ "$value_property" : value_holder.value });
+    return value_holder;
+  }
+
+  prvt_updateValueFromDom() {
+    this.updateAttributes({ "$value_property" : value_holder_element.value });
   }
 
 

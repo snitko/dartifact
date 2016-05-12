@@ -51,6 +51,16 @@ void main() {
     c.validate();
     expect(c.dom_element.children[1].style.display, equals('none'));
   });
+
+  test("resets an element value", () {
+    c.dom_element       = new TextAreaElement();
+    c.dom_element.value = 'some text';
+    c.dom_element.dispatchEvent(new Event("change"));
+    c.reset();
+    expect(c.value, isNull);
+    expect(c.value_holder_element.value, '');
+  });
+  
   
 
 }
