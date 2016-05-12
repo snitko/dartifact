@@ -332,6 +332,15 @@ void main() {
         expect(c.children[0].validation_errors_summary, equals('property1: should not be null'));
         expect(c.children[0].children[0].validation_errors_summary, equals('property1: should not be null'));
       });
+
+      test("shows the validation errors summary block if invalid after validation", () {
+        
+      });
+
+      test("hides the validation errors summary block if valid after validation", () {
+        
+      });
+      
       
       
     });

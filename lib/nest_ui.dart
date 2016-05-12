@@ -17,4 +17,5 @@ part 'class_dynamic_operations.dart';
 part 'component.dart';
 part 'native_events_list.dart';
 part 'behaviors/base_component_behaviors.dart';
+part 'behaviors/form_component_behaviors.dart';
 part 'components/form_component.dart';

@@ -230,6 +230,7 @@ class Component extends Object with observable.Subscriber,
     *    to display somehwere in UI.
     * 2. Run validations on children too if deep is set to true.
     */
+  @override
   validate({ deep: true }) {
     super.validate();
 
@@ -258,11 +259,37 @@ class Component extends Object with observable.Subscriber,
     return valid;
   }
 
+  /** Finds first DOM descendant with a certain combination of attribute and its value,
+   *  or returns the same node if that node has that combination.
+   * 
+   *  This method is needed when we want to listen to #dom_element's descendant native events
+   *  or when a property is changed and we need to change a correspondent descendant node.
+   */
+  firstDomDescendantOrSelfWithAttr(node, { attr_name: null, attr_value: null }) {
+
+    if(attr_name == null || node.getAttribute(attr_name) == attr_value)
+      return node;
+    else if(node.children.length == 0)
+      return null;
+
+    var el;
+    for(var c in node.children) {
+      if(c.getAttribute('data-component-class') == null) {
+        el = firstDomDescendantOrSelfWithAttr(c, attr_name: attr_name, attr_value: attr_value);
+        if(el != null)
+          break;
+      }
+    }
+
+    return el;
+
+  }
+
   /** Updates dom element's #text or attribute so it refelects Component's current property value. */
   prvt_updatePropertyOnNode(property_name) {
     if(this.dom_element == null)
       return;
-    var property_el = _firstDescendantOrSelfWithAttr(
+    var property_el = this.firstDomDescendantOrSelfWithAttr(
         this.dom_element,
         attr_name: "data-component-property",
         attr_value: property_name
@@ -296,7 +323,7 @@ class Component extends Object with observable.Subscriber,
         e = e.split('.'); // the original string is something like "text_field.click"
         var part_name  = e[0];
         var event_name = e[1];
-        var part_el   = _firstDescendantOrSelfWithAttr(
+        var part_el   = this.firstDomDescendantOrSelfWithAttr(
             this.dom_element,
             attr_name: 'data-component-part',
             attr_value: part_name
@@ -339,32 +366,6 @@ class Component extends Object with observable.Subscriber,
     var roles_attr = dom_element.getAttribute('data-component-roles');
     if(roles_attr != null)
       this.roles = dom_element.getAttribute('data-component-roles').split(new RegExp(r",\s?"));
-  }
-
-  /** Finds first DOM descendant with a certain combination of attribute and its value,
-   *  or returns the same node if that node has that combination.
-   * 
-   *  This method is needed when we want to listen to #dom_element's descendant native events
-   *  or when a property is changed and we need to change a correspondent descendant node.
-   */
-  _firstDescendantOrSelfWithAttr(node, { attr_name: null, attr_value: null }) {
-
-    if(attr_name == null || node.getAttribute(attr_name) == attr_value)
-      return node;
-    else if(node.children.length == 0)
-      return null;
-
-    var el;
-    for(var c in node.children) {
-      if(c.getAttribute('data-component-class') == null) {
-        el = _firstDescendantOrSelfWithAttr(c, attr_name: attr_name, attr_value: attr_value);
-        if(el != null)
-          break;
-      }
-    }
-
-    return el;
-
   }
 
   /**  In order to be able to instatiate nested components, we need to find descendants of the #dom_element
