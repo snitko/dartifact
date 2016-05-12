@@ -31,6 +31,9 @@ class MyComponent extends Component {
 class MyChildComponent extends Component {
   List native_events  = ["click"];
   final List attribute_names = ['property1', 'property2', 'property3', 'property4', 'validation_errors_summary'];
+
+  List hellos = [];
+  sayHello(s) => hellos.add(s);
 }
 
 void main() {
@@ -84,6 +87,13 @@ void main() {
       c.addChild(new_component);
       expect(c.dom_element.children[1], equals(new_component.dom_element));
     });
+
+    test("calls a method on all of its children", () {
+      c.initChildComponents();
+      c.applyToChildren('sayHello', ['hi']);
+      expect(c.children[0].hellos, equals(['hi']));
+    });
+    
 
     group("removing a component", () {
 

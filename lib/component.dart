@@ -285,6 +285,18 @@ class Component extends Object with observable.Subscriber,
 
   }
 
+  /** Calls a specific method on all of it's children. If method doesn't exist on one of the
+    * children, ignores and doesn't raise an exception. This method is useful when we want to
+    * communicate a common an action to all children, such as when we want to reset() all form
+    * elements.
+    */
+  applyToChildren(method_name, [args=null]) {
+    for(var c in children) {
+      if(hasMethod(method_name, c))
+        callMethod(method_name, c, args);
+    }
+  }
+
   /** Updates dom element's #text or attribute so it refelects Component's current property value. */
   prvt_updatePropertyOnNode(property_name) {
     if(this.dom_element == null)

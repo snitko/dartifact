@@ -64,6 +64,17 @@ List<String> methods_of(object) {
   return methods;
 }
 
+bool hasMethod(method_name, object) {
+  return methods_of(object).contains(method_name);
+}
+
+callMethod(String method_name, Object object, args) {
+  if(args == null)
+    args = [];
+  InstanceMirror im = reflect(object);
+  return im.invoke(new Symbol(method_name), args);
+}
+
 symbol_to_string(s) {
   return MirrorSystem.getName(s);
 }
