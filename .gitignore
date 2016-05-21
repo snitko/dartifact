@@ -2,3 +2,4 @@
 .pub
 packages/
 example/
+test/components/packages

@@ -17,9 +17,9 @@ packages:
     version: "1.9.0"
   attributable:
     description:
-      path: "../attributable"
-      relative: true
-    source: path
+      name: attributable
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.1.0"
   barback:
     description: barback
@@ -61,9 +61,9 @@ packages:
     version: "1.0.5"
   heritage_tree:
     description:
-      path: "../heritage_tree"
-      relative: true
-    source: path
+      name: heritage_tree
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.1.0"
   html:
     description: html
@@ -85,9 +85,9 @@ packages:
     version: "0.11.1+1"
   logmaster:
     description:
-      path: "../logmaster"
-      relative: true
-    source: path
+      name: logmaster
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.1.0"
   matcher:
     description: matcher
@@ -99,10 +99,10 @@ packages:
     version: "0.9.3"
   observable_roles:
     description:
-      path: "../observable_roles"
-      relative: true
-    source: path
-    version: "0.1.0"
+      name: observable_roles
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1"
   package_config:
     description: package_config
     source: hosted
@@ -187,9 +187,9 @@ packages:
     version: "0.9.0+2"
   validatable:
     description:
-      path: "../validatable"
-      relative: true
-    source: path
+      name: validatable
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.1.0"
   watcher:
     description: watcher

@@ -17,7 +17,7 @@ class MyComponent extends Component {
   List events_history = [];
   List native_events  = ["click", "mouseover", "text_field.click"];
   MyComponent() : super() {
-    event_handlers.add_for_event('click',
+    event_handlers.addForEvent('click',
       {
         #self:             (self,p) => self.events_history.add("self#clicked"),
         'self.text_field': (self,p) => self.events_history.add("self.text_field#clicked"),

@@ -1,5 +1,5 @@
 name: nest_ui
-version: 0.5.0
+version: 0.5.1
 description: >
   A Dart implementation of the NestUI concept. Basically, a UI framework with nestable components.
 author: Roman Snitko <roman.snitko@gmail.com>
@@ -7,7 +7,7 @@ homepage: http://nestui.romansnitko.com
 documentation: http://nestui.romansnitko.com
 
 dependencies:
-  observable_roles: '>=0.1.0 <0.2.0'
+  observable_roles: '>=0.1.1 <0.2.0'
   heritage_tree: '>=0.1.0 <0.2.0'
   attributable: '>=0.1.0 <0.2.0'
   validatable: '>=0.1.0 <0.2.0'
