@@ -1,5 +1,5 @@
 name: nest_ui
-version: 0.5.1
+version: 0.5.2
 description: >
   A Dart implementation of the NestUI concept. Basically, a UI framework with nestable components.
 author: Roman Snitko <roman.snitko@gmail.com>

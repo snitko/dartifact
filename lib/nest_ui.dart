@@ -17,7 +17,7 @@ part 'class_dynamic_operations.dart';
 part 'component.dart';
 part 'native_events_list.dart';
 part 'behaviors/base_component_behaviors.dart';
-part 'behaviors/form_component_behaviors.dart';
-part 'components/form_component.dart';
+part 'behaviors/form_field_component_behaviors.dart';
+part 'components/form_field_component.dart';
 
 part 'nest_ui_app.dart';

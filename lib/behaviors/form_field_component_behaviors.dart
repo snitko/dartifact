@@ -1,9 +1,9 @@
 part of nest_ui;
 
-class FormComponentBehaviors extends BaseComponentBehaviors {
+class FormFieldComponentBehaviors extends BaseComponentBehaviors {
 
   Component component;
-  FormComponentBehaviors(c) : super(c) {
+  FormFieldComponentBehaviors(c) : super(c) {
     this.component = c;
   }
 

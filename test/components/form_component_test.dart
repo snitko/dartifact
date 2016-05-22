@@ -4,7 +4,7 @@ import "dart:html";
 
 @TestOn("browser")
 
-class MyFormComponent extends FormComponent {
+class MyFormFieldComponent extends FormFieldComponent {
 
   Map validations = {
     'value': { 'isNotNull' : true }
@@ -17,7 +17,7 @@ void main() {
   var c;
 
   setUp(() {
-    c = new MyFormComponent();
+    c = new MyFormFieldComponent();
   });
 
   test("catches change event from the dom_element", () {
