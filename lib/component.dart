@@ -47,6 +47,15 @@ class Component extends Object with observable.Subscriber,
     */
   Map descendant_validations = {};
 
+  /** This one is importany if you intrend to separate your app
+    * into many parts (files). In that case, you'll need to declare a library.
+    * Component then will look for its children in 'nest_ui' library as well as
+    * app_library. Due to how Dart works, it's impossible to lookup for class names
+    * without knowing which library do they belong. Thus, it's either '' (top level)
+    * or your app_library name.
+    */
+  static String app_library = '';
+
   final Map attribute_callbacks = {
     'default' : (attr_name, self) => self.prvt_updatePropertyOnNode(attr_name)
   };
@@ -94,7 +103,7 @@ class Component extends Object with observable.Subscriber,
   initChildComponents({ recursive: true }) {
     var elements = _findChildComponentDomElements(this.dom_element);
     elements.forEach((el) {
-      ['', 'nest_ui'].forEach((l) {
+      [Component.app_library, 'nest_ui'].forEach((l) {
         var component = new_instance_of(el.getAttribute('data-component-class'), [], l);
         if(component != null) {
           component.addObservingSubscriber(this);
@@ -359,7 +368,7 @@ class Component extends Object with observable.Subscriber,
    */
   _createBehaviors() {
     behaviors.forEach((b) {
-      ['', 'nest_ui'].forEach((l) {
+      [Component.app_library, 'nest_ui'].forEach((l) {
         var behavior_instance = new_instance_of(b.toString(), [this], l);
         if(behavior_instance != null)
           _behaviors.add(behavior_instance);
