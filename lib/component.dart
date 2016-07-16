@@ -134,15 +134,17 @@ class Component extends Object with observable.Subscriber,
     * Only those events that are called on #self or self's parts (prefixed with "self.")
     * are propagated up to the parent.
   */
-  captureEvent(e, publisher_roles, [data=null]) {
+  captureEvent(e, publisher_roles, { data: null, prevent_default: false}) {
     if(!(e is String) && event_handlers.hasHandlerFor(event: e.type, role: publisher_roles)) {
-      e.preventDefault();
+      if(prevent_default)
+        e.preventDefault();
       e = e.type;
     }
-    super.captureEvent(e, publisher_roles, [data=null]);
+    super.captureEvent(e, publisher_roles, data: data);
     var roles_regexp = new RegExp(r"^self.");
+
     publisher_roles.forEach((r) {
-      if(r == #self || roles_regexp.hasMatch(r)) {
+      if(r == #self || roles_regexp.hasMatch(r.toString())) {
         this.publishEvent(e, data);
         return;
       }
@@ -339,6 +341,13 @@ class Component extends Object with observable.Subscriber,
    */
   _listenToNativeEvents() {
     this.native_events.forEach((e) {
+
+      bool prevent_default = true;
+      if(e.startsWith('!')) {
+        e = e.substring(1);
+        prevent_default = false;
+      }
+
       // Event belongs to an html element which is a descendant of our component's dom_element
       if(e.contains('.')) {
         e = e.split('.'); // the original string is something like "text_field.click"
@@ -350,12 +359,16 @@ class Component extends Object with observable.Subscriber,
             attr_value: part_name
         );
         if(part_el != null) {
-          part_el.on[event_name].listen((e) => this.captureEvent(e, ["self.$part_name"]));
+          part_el.on[event_name].listen((e) {
+            this.captureEvent(e, ["self.$part_name"], prevent_default: prevent_default);
+          });
         }
       }
       // Event belongs to our component's dom_element
       else {
-        this.dom_element.on[e].listen((e) => this.captureEvent(e, [#self]));
+        this.dom_element.on[e].listen((e) {
+          this.captureEvent(e, [#self], prevent_default: prevent_default);
+        });
       }
    }); 
   }

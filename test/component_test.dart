@@ -15,15 +15,22 @@ class MyComponent extends Component {
   };
 
   List events_history = [];
-  List native_events  = ["click", "mouseover", "text_field.click"];
+  List native_events  = ["click", "mouseover", "text_field.click", '!mouseout'];
   MyComponent() : super() {
+
     event_handlers.addForEvent('click',
       {
-        #self:             (self,p) => self.events_history.add("self#clicked"),
-        'self.text_field': (self,p) => self.events_history.add("self.text_field#clicked"),
-        'role1':           (self,p) => self.events_history.add("role1#clicked")
+        #self:             (self) => self.events_history.add("self#clicked"),
+        'self.text_field': (self) => self.events_history.add("self.text_field#clicked"),
+        'role1':           (self,publisher) => self.events_history.add("role1#clicked")
       }
     );
+    
+    // This event is not preventing default...
+    event_handlers.add(event: 'mouseout', role: #self, handler: (self) => self.events_history.add("self#mouseout"));
+    // ...and this one is not prevented!
+    event_handlers.add(event: 'mouseover', role: #self, handler: (self) => self.events_history.add("self#mouseover"));
+
   }
 
 }
@@ -140,6 +147,21 @@ void main() {
         component_part.click();
         expect(c.events_history[0], equals("self.text_field#clicked"));
       });
+
+      test("invokes default browser event handler", () {
+
+        var e1 = new MouseEvent('mouseout');
+        el.dispatchEvent(e1);
+        expect(c.events_history[0], equals("self#mouseout"));
+        expect(e1.defaultPrevented, equals(false));
+
+        var e2 = new MouseEvent('mouseover');
+        el.dispatchEvent(e2);
+        expect(c.events_history[1], equals("self#mouseover"));
+        expect(e2.defaultPrevented, equals(true));
+
+      });
+      
 
     });
 
