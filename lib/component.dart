@@ -109,6 +109,7 @@ class Component extends Object with observable.Subscriber,
           component.addObservingSubscriber(this);
           component.dom_element = el;
           this.addChild(component);
+          component.after_initialize();
           if(recursive)
             component.initChildComponents();
         }
@@ -307,6 +308,11 @@ class Component extends Object with observable.Subscriber,
         callMethod(method_name, c, args);
     }
   }
+
+  /** Is run after a component is initialized by a parent component (but not manually).
+    * Override this method in descendants.
+    */
+  after_initialize() {}
 
   /** Updates dom element's #text or attribute so it refelects Component's current property value. */
   prvt_updatePropertyOnNode(property_name) {

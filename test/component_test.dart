@@ -36,11 +36,16 @@ class MyComponent extends Component {
 }
 
 class MyChildComponent extends Component {
+
+  List events_history = [];
+
   List native_events  = ["click"];
   final List attribute_names = ['property1', 'property2', 'property3', 'property4', 'validation_errors_summary'];
 
   List hellos = [];
   sayHello(s) => hellos.add(s);
+  after_initialize() => this.events_history.add("initialized");
+
 }
 
 void main() {
@@ -99,6 +104,11 @@ void main() {
       c.initChildComponents();
       c.applyToChildren('sayHello', ['hi']);
       expect(c.children[0].hellos, equals(['hi']));
+    });
+
+    test("runs after_initialize when initialized by a parent", () {
+      c.initChildComponents();
+      expect(c.children[0].events_history[0], equals('initialized'));
     });
     
 
