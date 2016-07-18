@@ -222,6 +222,37 @@ void main() {
 
     });
 
+    group("property updates from node", () {
+
+      var property_node1 = new DivElement();
+      var property_node2 = new DivElement();
+
+      setUp(() {
+        property_node1.setAttribute('data-component-property', 'property1');
+        property_node2.setAttribute('data-component-property', 'property2');
+        property_node2.setAttribute('data-component-property-attr-name', 'ok-property2');
+        c.dom_element.append(property_node1);
+        c.dom_element.append(property_node2);
+        property_node1.text = "new value";
+        property_node2.setAttribute('ok-property2', 'new value');
+      });
+    
+      test("updates property from node", () {
+        c.prvt_readPropertyFromNode('property1');
+        c.prvt_readPropertyFromNode('property2');
+        expect(c.property1, equals("new value"));
+        expect(c.property2, equals("new value"));
+      });
+
+      test("updates all properties from nodes", () {
+        c.updatePropertiesFromNodes();
+        expect(c.property1, equals("new value"));
+        expect(c.property2, equals("new value"));
+      });
+      
+
+    });
+
     group("templates", () {
       
       test("templates are identified in the dom", () {

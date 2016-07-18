@@ -127,6 +127,10 @@ class Component extends Object with observable.Subscriber,
     }
   }
 
+  updatePropertiesFromNode() {
+  
+  }
+
   /** Reloading obervable_roles.Subscriber's method.
     * 1. call the super() method to make sure the handler is applied.
     * 2. The actual code that adds new functionality:
@@ -314,21 +318,49 @@ class Component extends Object with observable.Subscriber,
     */
   after_initialize() {}
 
+  /** Updates all properties values from their DOM nodes values.
+    * If provided with an optional List of property names, updates only
+    * properties that are on that List.
+    */
+  updatePropertiesFromNodes([attrs=false]) {
+    if(!attrs)
+      attrs = this.attribute_names;
+    for(var a in attrs)
+      prvt_readPropertyFromNode(a);
+  }
+
   /** Updates dom element's #text or attribute so it refelects Component's current property value. */
   prvt_updatePropertyOnNode(property_name) {
     if(this.dom_element == null)
       return;
-    var property_el = this.firstDomDescendantOrSelfWithAttr(
-        this.dom_element,
-        attr_name: "data-component-property",
-        attr_value: property_name
-    );
+    var property_el = prvt_findPropertyEl(property_name);
     if(property_el != null) {
       // Basic case when property is tied to the node's text.
       property_el.text = this.attributes[property_name];
       // Now deal with properties tied to an element's attribute, rather than it's text.
       _updatePropertyOnHtmlAttribute(property_el, property_name);
     }
+  }
+
+  /** Reads property value from a DOM node, updates Component's object property with the value */
+  prvt_readPropertyFromNode(property_name) {
+    var property_el = prvt_findPropertyEl(property_name);
+    if(property_el != null) {
+      var pa = property_el.attributes['data-component-property-attr-name'];
+      if(pa != null)
+        this.attributes[property_name] = property_el.attributes[pa];
+      else
+        this.attributes[property_name] = property_el.text;
+    }
+  }
+
+  /** Finds property node in the DOM */
+  prvt_findPropertyEl(property_name) {
+    return this.firstDomDescendantOrSelfWithAttr(
+        this.dom_element,
+        attr_name: "data-component-property",
+        attr_value: property_name
+    );
   }
 
   /** Finds the template HtmlElement in the dom and assigns it to #template */
