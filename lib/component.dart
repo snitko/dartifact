@@ -57,7 +57,7 @@ class Component extends Object with observable.Subscriber,
   static String app_library = '';
 
   final Map attribute_callbacks = {
-    'default' : (attr_name, self) => self.prvt_updatePropertyOnNode(attr_name)
+    'default' : (attr_name, self) => self.prvt_writePropertyToNode(attr_name)
   };
 
   /** Dom element is what it is: a DOM element in our HTML page, which is associated
@@ -123,7 +123,7 @@ class Component extends Object with observable.Subscriber,
       this.dom_element = this.template.clone(true);
       this.dom_element.attributes.remove('data-component-template');
       this.dom_element.setAttribute('data-component-class', this.runtimeType.toString());
-      attribute_names.forEach((a) => prvt_updatePropertyOnNode(a));
+      attribute_names.forEach((a) => prvt_writePropertyToNode(a));
     }
   }
 
@@ -330,15 +330,16 @@ class Component extends Object with observable.Subscriber,
   }
 
   /** Updates dom element's #text or attribute so it refelects Component's current property value. */
-  prvt_updatePropertyOnNode(property_name) {
+  prvt_writePropertyToNode(property_name) {
     if(this.dom_element == null)
       return;
     var property_el = prvt_findPropertyEl(property_name);
     if(property_el != null) {
-      // Basic case when property is tied to the node's text.
-      property_el.text = this.attributes[property_name];
-      // Now deal with properties tied to an element's attribute, rather than it's text.
-      _updatePropertyOnHtmlAttribute(property_el, property_name);
+      var pa = property_el.attributes['data-component-property-attr-name'];
+      if(pa == null)
+        property_el.text = this.attributes[property_name];
+      else
+        property_el.setAttribute(pa, this.attributes[property_name]);
     }
   }
 
@@ -347,10 +348,10 @@ class Component extends Object with observable.Subscriber,
     var property_el = prvt_findPropertyEl(property_name);
     if(property_el != null) {
       var pa = property_el.attributes['data-component-property-attr-name'];
-      if(pa != null)
-        this.attributes[property_name] = property_el.attributes[pa];
-      else
+      if(pa == null)
         this.attributes[property_name] = property_el.text;
+      else
+        this.attributes[property_name] = property_el.attributes[pa];
     }
   }
 
@@ -425,13 +426,6 @@ class Component extends Object with observable.Subscriber,
           _behaviors.add(behavior_instance);
       });
     });
-  }
-
-  /** Sometimes properties are tied to HTML attributes, not to node's text. */
-  _updatePropertyOnHtmlAttribute(node, attr_name) {
-    var property_html_attr_name = node.getAttribute('data-component-property-attr-name');
-    if(property_html_attr_name != null)
-      node.setAttribute(property_html_attr_name, this.attributes[attr_name]);
   }
 
   _assignRolesFromDomElement() {
