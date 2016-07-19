@@ -283,7 +283,11 @@ class Component extends Object with observable.Subscriber,
    */
   firstDomDescendantOrSelfWithAttr(node, { attr_name: null, attr_value: null }) {
 
-    if(attr_name == null || node.getAttribute(attr_name) == attr_value)
+    var actual_attr_value = node.getAttribute(attr_name);
+
+    if(attr_value is RegExp && actual_attr_value != null && attr_value.hasMatch(actual_attr_value))
+      return node;
+    else if(attr_name == null || node.getAttribute(attr_name) == attr_value)
       return node;
     else if(node.children.length == 0)
       return null;
@@ -330,38 +334,57 @@ class Component extends Object with observable.Subscriber,
   }
 
   /** Updates dom element's #text or attribute so it refelects Component's current property value. */
-  prvt_writePropertyToNode(property_name) {
+  prvt_writePropertyToNode(String property_name) {
     if(this.dom_element == null)
       return;
     var property_el = prvt_findPropertyEl(property_name);
     if(property_el != null) {
-      var pa = property_el.attributes['data-component-property-attr-name'];
+      var pa = property_el.attributes['data-component-attribute-properties'];
       if(pa == null)
         property_el.text = this.attributes[property_name];
-      else
-        property_el.setAttribute(pa, this.attributes[property_name]);
+      else {
+        var attr_property_name = prvt_getHtmlAttributeNameForProperty(pa, property_name);
+        property_el.setAttribute(attr_property_name, this.attributes[property_name]);
+      }
     }
   }
 
   /** Reads property value from a DOM node, updates Component's object property with the value */
-  prvt_readPropertyFromNode(property_name) {
+  prvt_readPropertyFromNode(String property_name) {
     var property_el = prvt_findPropertyEl(property_name);
     if(property_el != null) {
-      var pa = property_el.attributes['data-component-property-attr-name'];
+      var pa = property_el.attributes['data-component-attribute-properties'];
       if(pa == null)
         this.attributes[property_name] = property_el.text;
-      else
-        this.attributes[property_name] = property_el.attributes[pa];
+      else {
+        var attr_property_name = prvt_getHtmlAttributeNameForProperty(pa, property_name);
+        this.attributes[property_name] = property_el.getAttribute(attr_property_name);
+      }
     }
   }
 
   /** Finds property node in the DOM */
-  prvt_findPropertyEl(property_name) {
-    return this.firstDomDescendantOrSelfWithAttr(
-        this.dom_element,
-        attr_name: "data-component-property",
-        attr_value: property_name
+  prvt_findPropertyEl(String property_name) {
+    var property_el = this.firstDomDescendantOrSelfWithAttr(
+      this.dom_element,
+      attr_name: "data-component-property",
+      attr_value: property_name
     );
+    if(property_el == null) {
+      property_el = this.firstDomDescendantOrSelfWithAttr(
+        this.dom_element,
+        attr_name: "data-component-attribute-properties",
+        // This one finds attribute properties of the format
+        // property_name:html_attribute_name_for_the_property
+        attr_value: new RegExp('(^|,| +)$property_name:')
+      );
+    }
+    return property_el;
+  }
+
+  prvt_getHtmlAttributeNameForProperty(String attr_list, String property_name) {
+    var attr_list_regexp = new RegExp("${property_name}:" r"[a-zA-Z0-9_\-]+");
+    return attr_list_regexp.firstMatch(attr_list)[0].split(':')[1];
   }
 
   /** Finds the template HtmlElement in the dom and assigns it to #template */

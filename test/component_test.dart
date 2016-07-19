@@ -184,10 +184,9 @@ void main() {
       });
 
       test("dom_element changes its html attribute", () {
-        c.dom_element.setAttribute('data-component-property', 'property1');
-        c.dom_element.setAttribute('data-component-property-attr-name', 'ok-property1');
-        c.property1 = "new value";
-        expect(c.dom_element.getAttribute("ok-property1"), equals("new value"));
+        c.dom_element.setAttribute('data-component-attribute-properties', 'property2:ok-property2');
+        c.property2 = "new value";
+        expect(c.dom_element.getAttribute("ok-property2"), equals("new value"));
       });
 
       test("child of the dom element changes its text", () {
@@ -200,8 +199,7 @@ void main() {
 
       test("child of the dom element changes its html attribute", () {
         var property_node = new DivElement();
-        property_node.setAttribute('data-component-property', 'property2');
-        property_node.setAttribute('data-component-property-attr-name', 'ok-property2');
+        property_node.setAttribute('data-component-attribute-properties', 'property2:ok-property2');
         c.dom_element.append(property_node);
         c.property2 = "new value";
         expect(property_node.getAttribute("ok-property2"), equals("new value"));
@@ -229,8 +227,7 @@ void main() {
 
       setUp(() {
         property_node1.setAttribute('data-component-property', 'property1');
-        property_node2.setAttribute('data-component-property', 'property2');
-        property_node2.setAttribute('data-component-property-attr-name', 'ok-property2');
+        property_node2.setAttribute('data-component-attribute-properties', 'property2:ok-property2');
         c.dom_element.append(property_node1);
         c.dom_element.append(property_node2);
         property_node1.text = "new value";
