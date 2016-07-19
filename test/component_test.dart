@@ -246,6 +246,14 @@ void main() {
         expect(c.property1, equals("new value"));
         expect(c.property2, equals("new value"));
       });
+
+      test("if property is empty in DOM, assign null to the component", () {
+        property_node1.text = "";
+        property_node2.setAttribute('ok-property2', "");
+        c.updatePropertiesFromNodes();
+        expect(c.property1, isNull);
+        expect(c.property2, isNull);
+      });
       
 
     });
