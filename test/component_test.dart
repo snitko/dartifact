@@ -293,14 +293,21 @@ void main() {
         test("shows an element", () {
           c.dom_element.style.display="none";
           c.behave('show');
-          expect(el.style.display, equals(''));
+          expect(el.style.display, equals('block'));
+        });
+
+        test("shows an element with the specified display value", () {
+          c.dom_element.style.display="none";
+          c.dom_element.attributes['data-component-display-value'] = 'inline-block';
+          c.behave('show');
+          expect(el.style.display, equals('inline-block'));
         });
 
         test("toggles visibility", () {
           c.behave('toggleDisplay');
           expect(el.style.display, equals('none'));
           c.behave('toggleDisplay');
-          expect(el.style.display, equals(''));
+          expect(el.style.display, equals('block'));
         });
 
       });

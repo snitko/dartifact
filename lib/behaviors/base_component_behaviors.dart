@@ -9,7 +9,14 @@ class BaseComponentBehaviors {
   // Show-hide behaviors
   //
   hide() => this.dom_element.style.display="none";
-  show() => this.dom_element.style.display="";
+
+  show() {
+    var display_value = this.dom_element.attributes["data-component-display-value"];
+    if(display_value == null)
+      display_value = 'block';
+    this.dom_element.style.display = display_value;
+  }
+
   toggleDisplay() => _toggle(
     [show, hide],
     this.dom_element.style.display == 'none'
