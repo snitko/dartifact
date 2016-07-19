@@ -356,6 +356,8 @@ class Component extends Object with observable.Subscriber,
       var pa = property_el.attributes['data-component-attribute-properties'];
       if(pa == null) {
         var s = property_el.text;
+        // Ignore whitespace. If you need to preserve whitespace,
+        // use attribute-based properties instead.
         s = s.replaceFirst(new RegExp(r"^\s+"), "");
         s = s.replaceFirst(new RegExp(r"\s+$"), "");
         this.attributes[property_name] = s;
@@ -364,7 +366,7 @@ class Component extends Object with observable.Subscriber,
         var attr_property_name = prvt_getHtmlAttributeNameForProperty(pa, property_name);
         this.attributes[property_name] = property_el.getAttribute(attr_property_name);
       }
-      if(this.attributes[property_name].isEmpty)
+      if(this.attributes[property_name] is String && this.attributes[property_name].isEmpty)
         this.attributes[property_name] = null;
     }
   }
