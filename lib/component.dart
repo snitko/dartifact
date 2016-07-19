@@ -24,7 +24,7 @@ class Component extends Object with observable.Subscriber,
   /// a DOM element associated with this component
   HtmlElement _dom_element;
 
-  /// ... and you can add more, for example [... ButtonBehaviors, LinkBehaviors] 
+  /// ... and you can add more, for example [... ButtonBehaviors, LinkBehaviors]
   List behaviors  = [BaseComponentBehaviors];
   /// instantiated behavior objects, don't touch it
   List _behaviors = [];
@@ -354,8 +354,12 @@ class Component extends Object with observable.Subscriber,
     var property_el = prvt_findPropertyEl(property_name);
     if(property_el != null) {
       var pa = property_el.attributes['data-component-attribute-properties'];
-      if(pa == null)
-        this.attributes[property_name] = property_el.text;
+      if(pa == null) {
+        var s = property_el.text;
+        s = s.replaceFirst(new RegExp(r"^\s+"), "");
+        s = s.replaceFirst(new RegExp(r"\s+$"), "");
+        this.attributes[property_name] = s;
+      }
       else {
         var attr_property_name = prvt_getHtmlAttributeNameForProperty(pa, property_name);
         this.attributes[property_name] = property_el.getAttribute(attr_property_name);
