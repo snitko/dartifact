@@ -12,8 +12,8 @@ class FormFieldComponent extends Component {
     attribute_names.add(value_property);
 
     event_handlers.addForEvent('change', {
-        #self:               (self, p) => self.prvt_updateValueFromDom(),
-        'self.value_holder': (self, p) => self.prvt_updateValueFromDom()
+        #self:               (self, event) => self.prvt_updateValueFromDom(),
+        'self.value_holder': (self, event) => self.prvt_updateValueFromDom()
       }
     );
 

@@ -20,16 +20,16 @@ class MyComponent extends Component {
 
     event_handlers.addForEvent('click',
       {
-        #self:             (self) => self.events_history.add("self#clicked"),
-        'self.text_field': (self) => self.events_history.add("self.text_field#clicked"),
-        'role1':           (self,publisher) => self.events_history.add("role1#clicked")
+        #self:             (self,event) => self.events_history.add(["MyComponent.self#clicked", event]),
+        'self.text_field': (self,event) => self.events_history.add("MyComponent.text_field#clicked"),
+        'role1':           (self,publisher) => self.events_history.add("MyComponent.role1#clicked")
       }
     );
     
     // This event is not preventing default...
-    event_handlers.add(event: 'mouseout', role: #self, handler: (self) => self.events_history.add("self#mouseout"));
+    event_handlers.add(event: 'mouseout', role: #self, handler: (self,event) => self.events_history.add("self#mouseout"));
     // ...and this one is not prevented!
-    event_handlers.add(event: 'mouseover', role: #self, handler: (self) => self.events_history.add("self#mouseover"));
+    event_handlers.add(event: 'mouseover', role: #self, handler: (self,event) => self.events_history.add("self#mouseover"));
 
   }
 
@@ -41,6 +41,8 @@ class MyChildComponent extends Component {
 
   List native_events  = ["click"];
   final List attribute_names = ['property1', 'property2', 'property3', 'property4', 'validation_errors_summary'];
+
+  List event_lock_for = ['click'];
 
   List hellos = [];
   sayHello(s) => hellos.add(s);
@@ -85,12 +87,6 @@ void main() {
     test("assigns child components roles from data-component-role attribute", () {
       c.initChildComponents();
       expect(c.children[0].roles, equals(["role1", "role2"]));
-    });
-
-    test("it propagates events from child to parent", () {
-      c.initChildComponents();
-      child_component_el.click();
-      expect(c.events_history[0], equals("role1#clicked"));
     });
 
     test("adding a child appends it to the dom_element's parent by default", () {
@@ -142,11 +138,36 @@ void main() {
 
     });
 
+    group("events", () {
+
+      setUp(() {
+        c.initChildComponents();
+      });
+
+      test("propagate from child to parent", () {
+        child_component_el.click();
+        expect(c.events_history[0], equals("MyComponent.role1#clicked"));
+      });
+
+      test("lock and do not allow a similar event to be handled twice", () {
+        // First event
+        child_component_el.click();
+        expect(c.events_history, contains("MyComponent.role1#clicked"));
+        c.events_history = [];
+
+        // Second event, not supposed to be handled:
+        child_component_el.click();
+        expect(c.events_history, isNot(contains("MyComponent.role1#clicked")));
+      });
+      
+    });
+    
+
     group("native events", () {
 
       test("streams native browser events and applies component handlers", () {
         el.click();
-        expect(c.events_history[0], equals("self#clicked"));
+        expect(c.events_history[0][0], equals("MyComponent.self#clicked"));
       });
 
       test("captures and streams native browser events for dom_element children and applies component handlers", () {
@@ -155,7 +176,7 @@ void main() {
         el.append(component_part);
         c.dom_element = el;
         component_part.click();
-        expect(c.events_history[0], equals("self.text_field#clicked"));
+        expect(c.events_history[0], equals("MyComponent.text_field#clicked"));
       });
 
       test("invokes default browser event handler", () {
@@ -170,6 +191,12 @@ void main() {
         expect(c.events_history[1], equals("self#mouseover"));
         expect(e2.defaultPrevented, equals(true));
 
+      });
+
+      test("passes event object in data", () {
+        el.click();
+        expect(c.events_history[0][0], equals("MyComponent.self#clicked"));
+        expect((c.events_history[0][1] is Event), isTrue);
       });
       
 

@@ -29,6 +29,15 @@ class Component extends Object with observable.Subscriber,
   /// instantiated behavior objects, don't touch it
   List _behaviors = [];
 
+  /** Event locks allow you to prevent similar events being handled twice
+    * until the lock is remove. This is useful, for example, to prevent
+    * button being clicked twice and, consequently, a form being submitted twice.
+    */
+  /// Defines which events to use locks for
+  List event_lock_for = [];
+  /// Stores the locks themselves. If event name is in this List, it's locked.
+  List event_locks    = [];
+
   /// Contains an element which will later be cloned and assigned to #dom_element
   /// if needed. Obviously, unless a real element from DOM isn't assigned.
   HtmlElement template;
@@ -127,9 +136,6 @@ class Component extends Object with observable.Subscriber,
     }
   }
 
-  updatePropertiesFromNode() {
-  
-  }
 
   /** Reloading obervable_roles.Subscriber's method.
     * 1. call the super() method to make sure the handler is applied.
@@ -139,12 +145,24 @@ class Component extends Object with observable.Subscriber,
     * Only those events that are called on #self or self's parts (prefixed with "self.")
     * are propagated up to the parent.
   */
-  captureEvent(e, publisher_roles, { data: null, prevent_default: false}) {
-    if(!(e is String) && event_handlers.hasHandlerFor(event: e.type, role: publisher_roles)) {
-      if(prevent_default)
+  captureEvent(e, publisher_roles, { data: null, prevent_default: false, is_native: false}) {
+
+    // For native events, pass the Event object in data
+    if(data == null && e is Event && is_native)
+      data = e;
+
+    var event_obj = e;
+    if(!(e is String)) {
+      if(event_handlers.hasHandlerFor(event: e.type, role: publisher_roles) && prevent_default)
         e.preventDefault();
       e = e.type;
     }
+
+    if(!enableEventLock(e, publisher_roles: publisher_roles)) {
+      event_obj.preventDefault();
+      return false;
+    }
+
     super.captureEvent(e, publisher_roles, data: data);
     var roles_regexp = new RegExp(r"^self.");
 
@@ -154,6 +172,31 @@ class Component extends Object with observable.Subscriber,
         return;
       }
     });
+  }
+
+  /** Enables event lock and returns true. If it already exists, returns false.
+      Not that in case the event name is not on the event_lock_for List,
+      the method would still return true, but the lock wouldn't be set.
+      If you want the lock to be set anyway, just use the event_locks property
+      directly.
+   */
+  enableEventLock(event_name, { publisher_roles: null }) {
+
+    var event_names = new Set();
+    publisher_roles.forEach((r) {
+      if(r == #self)
+        event_names.add(event_name);
+      else
+        event_names.add("$r.$event_name");
+    });
+
+    if(event_locks.toSet().intersection(event_names).isEmpty) {
+      if(event_lock_for.contains(event_name))
+        event_names.forEach((en) => event_locks.add(en));
+      return true;
+    }
+    else
+      return false;
   }
 
   /** Reloading HeritageTree#add_child to automatically do the following things
@@ -430,14 +473,14 @@ class Component extends Object with observable.Subscriber,
         );
         if(part_el != null) {
           part_el.on[event_name].listen((e) {
-            this.captureEvent(e, ["self.$part_name"], prevent_default: prevent_default);
+            this.captureEvent(e, ["self.$part_name"], prevent_default: prevent_default, is_native: true);
           });
         }
       }
       // Event belongs to our component's dom_element
       else {
         this.dom_element.on[e].listen((e) {
-          this.captureEvent(e, [#self], prevent_default: prevent_default);
+          this.captureEvent(e, [#self], prevent_default: prevent_default, is_native: true);
         });
       }
    }); 
