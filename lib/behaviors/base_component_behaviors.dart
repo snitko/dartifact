@@ -3,8 +3,11 @@ part of nest_ui;
 class BaseComponentBehaviors {
 
   Component component;
+  PositionManager pos;
 
-  BaseComponentBehaviors(this.component) {}
+  BaseComponentBehaviors(this.component) {
+    this.pos = new PositionManager();
+  }
 
   // Show-hide behaviors
   //
