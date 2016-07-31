@@ -324,27 +324,33 @@ class Component extends Object with observable.Subscriber,
    *  or when a property is changed and we need to change a correspondent descendant node.
    */
   firstDomDescendantOrSelfWithAttr(node, { attr_name: null, attr_value: null }) {
+    var elements = allDomDescendantsAndSelfWithAttr(node, attr_name: attr_name, attr_value: attr_value, first_only: true);
+    if(elements != null && elements.length > 0)
+      return elements[0];
+  }
 
+  allDomDescendantsAndSelfWithAttr(node, { attr_name: null, attr_value: null, first_only: false }) {
     var actual_attr_value = node.getAttribute(attr_name);
 
     if(attr_value is RegExp && actual_attr_value != null && attr_value.hasMatch(actual_attr_value))
-      return node;
+      return [node];
     else if(attr_name == null || node.getAttribute(attr_name) == attr_value)
-      return node;
+      return [node];
     else if(node.children.length == 0)
       return null;
 
-    var el;
+    List elements = [];
     for(var c in node.children) {
       if(c.getAttribute('data-component-class') == null) {
-        el = firstDomDescendantOrSelfWithAttr(c, attr_name: attr_name, attr_value: attr_value);
-        if(el != null)
+        var children_elements = allDomDescendantsAndSelfWithAttr(c, attr_name: attr_name, attr_value: attr_value);
+        if(children_elements != null)
+          elements.addAll(children_elements);
+        if(elements.length > 0 && first_only)
           break;
       }
     }
 
-    return el;
-
+    return elements;
   }
 
   /** Calls a specific method on all of it's children. If method doesn't exist on one of the
@@ -468,15 +474,17 @@ class Component extends Object with observable.Subscriber,
         e = e.split('.'); // the original string is something like "text_field.click"
         var part_name  = e[0];
         var event_name = e[1];
-        var part_el   = this.firstDomDescendantOrSelfWithAttr(
-            this.dom_element,
-            attr_name: 'data-component-part',
-            attr_value: part_name
+        var part_els   = this.allDomDescendantsAndSelfWithAttr(
+          this.dom_element,
+          attr_name: 'data-component-part',
+          attr_value: part_name
         );
-        if(part_el != null) {
-          part_el.on[event_name].listen((e) {
-            this.captureEvent(e, ["self.$part_name"], prevent_default: prevent_default, is_native: true);
-          });
+        if(part_els != null && part_els.length > 0) {
+          for(var part_el in part_els) {
+            part_el.on[event_name].listen((e) {
+              this.captureEvent(e, ["self.$part_name"], prevent_default: prevent_default, is_native: true);
+            });
+          }
         }
       }
       // Event belongs to our component's dom_element

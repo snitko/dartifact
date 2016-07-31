@@ -211,7 +211,7 @@ void main() {
         expect(c.dom_element.text, equals("new value"));
       });
 
-      test("dom_element changes its html attribute", () {
+      test("changes its html attribute", () {
         c.dom_element.setAttribute('data-component-attribute-properties', 'property2:ok-property2');
         c.property2 = "new value";
         expect(c.dom_element.getAttribute("ok-property2"), equals("new value"));
