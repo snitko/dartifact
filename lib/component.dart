@@ -85,7 +85,6 @@ class Component extends Object with observable.Subscriber,
   
   Component() {
     _separateDescendantValidations();
-    _createBehaviors();
     _initTemplate();
   }
 
@@ -361,9 +360,12 @@ class Component extends Object with observable.Subscriber,
   }
 
   /** Is run after a component is initialized by a parent component (but not manually).
-    * Override this method in descendants.
+    * Override this method in descendants, but don't forget to call super() inside, or
+    * you'll be left without behaviors!
     */
-  after_initialize() {}
+  after_initialize() {
+    _createBehaviors();
+  }
 
   /** Updates all properties values from their DOM nodes values.
     * If provided with an optional List of property names, updates only

@@ -64,6 +64,7 @@ void main() {
     el            = new DivElement();
     c             = new MyComponent();
     c.dom_element = el;
+    c.after_initialize();
   });
 
   group("Component", () {
