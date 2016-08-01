@@ -17,7 +17,7 @@ class MyComponent extends Component {
   Map attribute_callbacks = {
     'default' : (attr_name, self) {
       self.attribute_callbacks_history.add("$attr_name updated");
-      self.standart_attribute_callbacks['default'](attr_name, self);
+      self.attribute_callbacks_collection['write_property_to_dom'](attr_name, self);
     }
   };
 
@@ -114,6 +114,14 @@ void main() {
     test("runs after_initialize when initialized by a parent", () {
       c.initChildComponents();
       expect(c.children[0].events_history[0], equals('initialized'));
+    });
+
+    test("checks whether a particular node is a descendant of the component", () {
+      var el1 = new DivElement();
+      var el2 = new DivElement();
+      el.append(el1);
+      expect(c.prvt_hasNode(el1), isTrue);
+      expect(c.prvt_hasNode(el2), isFalse);
     });
     
 

@@ -30,7 +30,7 @@ class Component extends Object with observable.Subscriber,
   List _behaviors = [];
 
   /** Event locks allow you to prevent similar events being handled twice
-    * until the lock is remove. This is useful, for example, to prevent
+    * until the lock is removed. This is useful, for example, to prevent
     * button being clicked twice and, consequently, a form being submitted twice.
     */
   /// Defines which events to use locks for
@@ -66,10 +66,10 @@ class Component extends Object with observable.Subscriber,
   static String app_library = '';
 
   Map attribute_callbacks = {
-    'default' : (attr_name, self) => self.standart_attribute_callbacks['default'](attr_name, self)
+    'default' : (attr_name, self) => self.attribute_callbacks_collection['write_property_to_dom'](attr_name, self)
   };
-  final Map standart_attribute_callbacks = {
-    'default' : (attr_name, self) => self.prvt_writePropertyToNode(attr_name)
+  final Map attribute_callbacks_collection = {
+    'write_property_to_dom' : (attr_name, self) => self.prvt_writePropertyToNode(attr_name)
   };
 
   /** Dom element is what it is: a DOM element in our HTML page, which is associated
@@ -160,10 +160,11 @@ class Component extends Object with observable.Subscriber,
       e = e.type;
     }
 
-    if(!enableEventLock(e, publisher_roles: publisher_roles)) {
+    if(hasEventLock(e, publisher_roles: publisher_roles)) {
       event_obj.preventDefault();
       return false;
     }
+    addEventLock(e, publisher_roles: publisher_roles);
 
     super.captureEvent(e, publisher_roles, data: data);
     var roles_regexp = new RegExp(r"^self.");
@@ -176,14 +177,28 @@ class Component extends Object with observable.Subscriber,
     });
   }
 
-  /** Enables event lock and returns true. If it already exists, returns false.
-      Not that in case the event name is not on the event_lock_for List,
-      the method would still return true, but the lock wouldn't be set.
-      If you want the lock to be set anyway, just use the event_locks property
-      directly.
+  /** Adds a new event lock. In case the event name is not on the event_lock_for List,
+      the lock wouldn't be set. If you want the lock to be set anyway,
+      just use the event_locks property directly.
    */
-  enableEventLock(event_name, { publisher_roles: null }) {
+  void addEventLock(event_name, { publisher_roles: null }) {
+    var event_names = _prepareFullEventNames(event_name, publisher_roles);
+    if(event_locks.toSet().intersection(event_names).isEmpty) {
+      if(event_lock_for.contains(event_name))
+        event_names.forEach((en) => event_locks.add(en));
+    }
 
+  }
+
+  bool hasEventLock(event_name, { publisher_roles: null }) {
+    var event_names = _prepareFullEventNames(event_name, publisher_roles);
+    if(event_locks.contains(#any) || !(event_locks.toSet().intersection(event_names).isEmpty))
+      return true;
+    else
+      return false;
+  }
+
+  Set _prepareFullEventNames(event_name, [publisher_roles=null]) {
     var event_names = new Set();
     publisher_roles.forEach((r) {
       if(r == #self)
@@ -191,16 +206,9 @@ class Component extends Object with observable.Subscriber,
       else
         event_names.add("$r.$event_name");
     });
-
-    if(event_locks.toSet().intersection(event_names).isEmpty) {
-      if(event_lock_for.contains(event_name))
-        event_names.forEach((en) => event_locks.add(en));
-      return true;
-    }
-    else
-      return false;
+    return event_names;
   }
-
+  
   /** Reloading HeritageTree#add_child to automatically do the following things
     * when a child component is added:
     *
@@ -361,10 +369,13 @@ class Component extends Object with observable.Subscriber,
     * communicate a common an action to all children, such as when we want to reset() all form
     * elements.
     */
-  applyToChildren(method_name, [args=null]) {
+  applyToChildren(method_name, [args=null, recursive=false, condition=null]) {
     for(var c in children) {
-      if(hasMethod(method_name, c))
+      if(hasMethod(method_name, c) && (condition == null || (condition != null && !condition(c)))) {
         callMethod(method_name, c, args);
+        if(recursive != false)
+          c.applyToChildren(method_name, args, #recursive, condition);
+      }
     }
   }
 
@@ -450,6 +461,18 @@ class Component extends Object with observable.Subscriber,
   prvt_getHtmlAttributeNameForProperty(String attr_list, String property_name) {
     var attr_list_regexp = new RegExp("${property_name}:" r"[a-zA-Z0-9_\-]+");
     return attr_list_regexp.firstMatch(attr_list)[0].split(':')[1];
+  }
+
+  /** Finds whether the dom_element's descendants has a particular node
+    * or if it itself is this node.
+    */
+  bool prvt_hasNode(node) {
+    if(node == this.dom_element)
+      return true;
+    for(final descendant in this.dom_element.querySelectorAll("*"))
+      if(node == descendant)
+        return true;
+    return false;
   }
 
   /** Finds the template HtmlElement in the dom and assigns it to #template */
