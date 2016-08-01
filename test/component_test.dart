@@ -14,7 +14,15 @@ class MyComponent extends Component {
     'property1':             { 'isNotNull' : true }
   };
 
+  Map attribute_callbacks = {
+    'default' : (attr_name, self) {
+      self.attribute_callbacks_history.add("$attr_name updated");
+      self.standart_attribute_callbacks['default'](attr_name, self);
+    }
+  };
+
   List events_history = [];
+  List attribute_callbacks_history = [];
   List native_events  = ["click", "mouseover", "text_field.click", '!mouseout'];
   MyComponent() : super() {
 
@@ -273,6 +281,12 @@ void main() {
         c.updatePropertiesFromNodes();
         expect(c.property1, equals("new value"));
         expect(c.property2, equals("new value"));
+      });
+
+      test("invokes callbacks after updating all properties from nodes", () {
+        c.updatePropertiesFromNodes(invoke_callbacks: true);
+        expect(c.attribute_callbacks_history[0], equals("property1 updated"));
+        expect(c.attribute_callbacks_history[1], equals("property2 updated"));
       });
 
       test("if property is empty in DOM, assign null to the component", () {

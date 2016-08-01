@@ -123,9 +123,9 @@ packages:
     version: "0.9.3"
   observable_roles:
     description:
-      name: observable_roles
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../observable_roles"
+      relative: true
+    source: path
     version: "0.1.2"
   package_config:
     description:

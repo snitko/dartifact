@@ -56,7 +56,7 @@ class Component extends Object with observable.Subscriber,
     */
   Map descendant_validations = {};
 
-  /** This one is importany if you intrend to separate your app
+  /** This one is important if you intend to separate your app
     * into many parts (files). In that case, you'll need to declare a library.
     * Component then will look for its children in 'nest_ui' library as well as
     * app_library. Due to how Dart works, it's impossible to lookup for class names
@@ -65,7 +65,10 @@ class Component extends Object with observable.Subscriber,
     */
   static String app_library = '';
 
-  final Map attribute_callbacks = {
+  Map attribute_callbacks = {
+    'default' : (attr_name, self) => self.standart_attribute_callbacks['default'](attr_name, self)
+  };
+  final Map standart_attribute_callbacks = {
     'default' : (attr_name, self) => self.prvt_writePropertyToNode(attr_name)
   };
 
@@ -377,11 +380,14 @@ class Component extends Object with observable.Subscriber,
     * If provided with an optional List of property names, updates only
     * properties that are on that List.
     */
-  updatePropertiesFromNodes([attrs=false]) {
+  updatePropertiesFromNodes({ attrs: false, invoke_callbacks: false }) {
     if(!attrs)
       attrs = this.attribute_names;
-    for(var a in attrs)
+    for(var a in attrs) {
       prvt_readPropertyFromNode(a);
+      if(invoke_callbacks)
+        invokeAttributeCallback(a);
+    }
   }
 
   /** Updates dom element's #text or attribute so it refelects Component's current property value. */
