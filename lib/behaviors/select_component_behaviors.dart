@@ -5,7 +5,6 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
   Component   component;
   HtmlElement options_container;
   HtmlElement selectbox;
-  bool        options_container_hidden = true;
   int         scroll_pos_bottom = 0;
 
   SelectComponentBehaviors(Component c) : super(c) {
@@ -15,25 +14,23 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
   }
 
   toggle() {
-    if(options_container_hidden)
+    if(this.options_container.style.display == 'none')
       open();
     else
       close();
   }
 
   open() {
-    scroll_pos_bottom = component.lines_to_show-1;
-    selectbox.classes.add("open");
-    options_container.style.minWidth = "${pos.getDimensions(selectbox)['x'] - 2}px";
-    options_container.style.display = 'block';
-    options_container_hidden = false;
+    scroll_pos_bottom = this.component.lines_to_show-1;
+    this.selectbox.classes.add("open");
+    this.options_container.style.minWidth = "${pos.getDimensions(this.selectbox)['x'] - 2}px";
+    this.options_container.style.display = 'block';
     _applyLinesToShow();
   }
 
   close() {
-    selectbox.classes.remove("open");
-    options_container.style.display = 'none';
-    options_container_hidden = true;
+    this.selectbox.classes.remove("open");
+    this.options_container.style.display = 'none';
     _removeFocusFromOptions();
   }
 
@@ -53,24 +50,24 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
   }
 
   _applyLinesToShow() {
-    var opt_els = options_container.querySelectorAll('.option');
+    var opt_els = this.options_container.querySelectorAll('.option');
     if(opt_els.isEmpty)
       return;
     var option_height = pos.getDimensions(opt_els[0])['y'];
-    if(component.lines_to_show > opt_els.length)
-      options_container.style.height = "${option_height*opt_els.length}px";
+    if(this.component.lines_to_show > opt_els.length)
+      this.options_container.style.height = "${option_height*opt_els.length}px";
     else
-      options_container.style.height = "${option_height*component.lines_to_show}px";
+      this.options_container.style.height = "${option_height*this.component.lines_to_show}px";
   }
   
   _scroll() {
-    var option_height = pos.getDimensions(options_container.querySelector('[data-component-part="option"]'))['y'];
-    doScroll() => options_container.scrollTop = option_height.toInt()*component.focused_option_id;
-    if(scroll_pos_bottom < component.focused_option_id) {
-      scroll_pos_bottom += 1;
+    var option_height = pos.getDimensions(this.options_container.querySelector('[data-component-part="option"]'))['y'];
+    doScroll() => this.options_container.scrollTop = option_height.toInt()*this.component.focused_option_id;
+    if(this.scroll_pos_bottom < this.component.focused_option_id) {
+      this.scroll_pos_bottom += 1;
       doScroll();
-    } else if(scroll_pos_bottom-component.lines_to_show+1 > component.focused_option_id) {
-      scroll_pos_bottom -= 1;
+    } else if(this.scroll_pos_bottom-this.component.lines_to_show+1 > this.component.focused_option_id) {
+      this.scroll_pos_bottom -= 1;
       doScroll();
     }
   }

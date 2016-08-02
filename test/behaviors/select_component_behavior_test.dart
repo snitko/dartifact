@@ -21,6 +21,7 @@ void main() {
 
     options_container = new DivElement();
     options_container.attributes["data-component-part"] = "options_container";
+    options_container.style.display = 'none';
     select_el.append(options_container);
 
     ["option_1", "option_2", "option_3", "option_4", "option_5"].forEach((o) {

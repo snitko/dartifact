@@ -116,7 +116,7 @@ class SelectComponent extends Component {
     options.forEach((k,v) {
       if(found)
         return;
-      if(v.toLowerCase().startsWith(keypress_stack.toLowerCase())) {
+      if(v.toLowerCase().startsWith(this.keypress_stack.toLowerCase())) {
         this.setValueByInputValue(k);
         found = true;
       }
@@ -125,7 +125,7 @@ class SelectComponent extends Component {
 
   updateKeypressStackWithChar(String c) {
     var time = new DateTime.now().millisecondsSinceEpoch;
-    if(keypress_stack_last_updated < time-(keypress_stack_timeout*1000)) {
+    if(this.keypress_stack_last_updated < time-(this.keypress_stack_timeout*1000)) {
       this.keypress_stack_last_updated = time;
       this.keypress_stack = c;
     } else {
@@ -148,7 +148,7 @@ class SelectComponent extends Component {
   }
 
   get focused_option_id {
-    return options.keys.toList().indexOf(focused_option);
+    return options.keys.toList().indexOf(this.focused_option);
   }
 
 
