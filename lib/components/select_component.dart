@@ -2,7 +2,11 @@ part of nest_ui;
 
 class SelectComponent extends Component {
 
+  /* display_value - the one we show to the user,
+   * input_value - the one we'd want to send to the server.
+   */
   List attribute_names = ["display_value", "input_value", "disabled"];
+
   List native_events   = ["selectbox.click", "keypress", "keydown", "option.click"];
   List behaviors       = [SelectComponentBehaviors];
 
@@ -18,9 +22,16 @@ class SelectComponent extends Component {
     */
   String keypress_stack = "";
   int    keypress_stack_last_updated = new DateTime.now().millisecondsSinceEpoch;
-  String focused_option;
-  bool   opened = false;
   static const keypress_stack_timeout = 1;
+
+  /** The value that's picked and about to be set, but awaits user input - specifically a key press */
+  String focused_option;
+
+  /** Indicates whether the selectbox is opened. Obviously, this class has nothing to do with visual
+    * representation, but this flag is used when deciding what to do with a particular keyboard
+    * event, for example - like, we don't want to call `behave('open')` if the selectbox is already opened.
+   */
+  bool opened = false;
 
   Map attribute_callbacks = {
     'default'  : (attr_name, self) => self.attribute_callbacks_collection['write_property_to_dom'](attr_name, self),
@@ -68,12 +79,27 @@ class SelectComponent extends Component {
       this.display_value = options[this.input_value];
   }
 
+  /** Does what it says. Parses those options from DOM and puts both input values and
+    * display values into `options` Map. Note the `options` is actually a SplayTreeMap
+    * and element order matters.
+    */
   readOptionsFromDom() {
     var option_els = this.dom_element.querySelectorAll('[data-component-part="option"]');
     for(var el in option_els)
       options[el.getAttribute('data-option-value')] = el.text.trim();
   }
 
+  /**************************************************************************
+   * The following methods are used to effectively navigate the selectbox
+   * with arrow keys. They key handler looks up the keyCode (UP or DOWN) and
+   * decides which method to call. Then assignes the returned value
+   * to input_value.
+   **************************************************************************
+   *
+  /** Takes the next option and returns the input_value of that option.
+    * If we're at the end of the list, gets you the first option.
+    * If no current option is set (passed) gets your the first option too.
+   */
   getNextValue(String current) {
     if(current == null)
       return options.firstKey();
@@ -82,6 +108,10 @@ class SelectComponent extends Component {
       key = options.firstKey();
     return key;
   }
+  /** Takes the previous option and returns the input_value of that option.
+    * If we're at the beginning of the list, gets you the last option.
+    * If no current option is set (passed) gets your the last option too.
+   */
   getPrevValue(String current) {
     if(current == null)
       return options.lastKey();
@@ -96,6 +126,24 @@ class SelectComponent extends Component {
   setPrevValue() {
     setValueByInputValue(getPrevValue(this.input_value));
   }
+  setValueByInputValue(ip) {
+    this.input_value    = ip;
+    this.focused_option = ip;
+    this.display_value  = this.options[ip];
+  }
+  /**************************************************************************/
+
+
+  /**************************************************************************
+   * The next two methods are used when the selectbox us open and we navigate
+   * the items in it without actually setting them. It basically just uses the
+   * same mechanism with #getNextValue/#getPrevValue, but instead of assigning
+   * those values it just tells select component to display them as focused.
+   *
+   * Then, when user is ready, he presses ENTER or SPACE and the focused value
+   * is actually assigned to input_value.
+   **************************************************************************
+   */
   focusNextOption() {
     this.focused_option = getNextValue(this.focused_option);
     this.behave('focusCurrentOption');
@@ -104,13 +152,18 @@ class SelectComponent extends Component {
     this.focused_option = getPrevValue(this.focused_option);
     this.behave('focusCurrentOption');
   }
-  
-  setValueByInputValue(ip) {
-    this.input_value    = ip;
-    this.focused_option = ip;
-    this.display_value  = this.options[ip];
-  }
+  /**************************************************************************/
 
+  /** When user focuses on the select component (for example, by pressing the TAB key)
+    * it should then be possible to press letter keys to navigate the options list without
+    * opening the selectbox. That's native browser behavior for <select> element and that's
+    * what's being emulated here.
+    * 
+    * Note the use of keypress_stack. If user presses "a" and "b" within 1 second of each other
+    * then the stack is going to contain "ab" and we'll be looking for the first option
+    * which has display_value that starts with "ab", then setting it as current option
+    * (by writing input_value and display_value properties with #setValueByInputValue()).
+   */
   setValueFromKeypressStack() {
     var found = false;
     options.forEach((k,v) {
@@ -123,6 +176,13 @@ class SelectComponent extends Component {
     });
   }
 
+  /** Everytime a letter key is pressed we need to update the #keypress_stack, which
+    * will then be used to set the current value of our select component.
+    * We first check whether the last update was less than a second ago and append
+    * the new character to the end of the stack in case the user pressed another letter
+    * key less than a second ago. If it happened more than a second ago, ignore the previous
+    * characters, clear the stack and put this new character into it.
+    */
   updateKeypressStackWithChar(String c) {
     var time = new DateTime.now().millisecondsSinceEpoch;
     if(this.keypress_stack_last_updated < time-(keypress_stack_timeout*1000)) {
@@ -133,6 +193,10 @@ class SelectComponent extends Component {
     }
   }
 
+  /** This method helps us handle what happens when user presses ENTER/SPACE keys.
+    * If the selectbox is closed, then just open it. If it's opened, then it means
+    * that the user is navigating it with keys and whichever option currently has focus
+    * should be set as current. */
   setFocusedAndToggle() {
     if(this.opened) {
       if(this.focused_option != null)
@@ -143,14 +207,14 @@ class SelectComponent extends Component {
     _toggleOpenedStatus();
   }
 
-  _toggleOpenedStatus() {
-    this.opened = !this.opened;
-  }
-
+  /** Sometimes we need an index of the option (int), not it input_value */
   get focused_option_id {
     return options.keys.toList().indexOf(this.focused_option);
   }
 
+  _toggleOpenedStatus() {
+    this.opened = !this.opened;
+  }
 
   prvt_processKeyEvent(e) {
     if(this.event_locks.contains("keydown") || this.event_locks.contains(#any))
