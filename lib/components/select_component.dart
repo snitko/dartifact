@@ -174,7 +174,7 @@ class SelectComponent extends Component {
           this.setFocusedAndToggle();
           break;
       }
-      e.preventDefault();
+    e.preventDefault();
     } 
   }
 

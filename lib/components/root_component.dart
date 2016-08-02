@@ -2,7 +2,7 @@ part of nest_ui;
 
 class RootComponent extends Component {
 
-  List native_events  = ["click"];
+  List native_events  = ["!click"];
 
   RootComponent() : super() {
 
