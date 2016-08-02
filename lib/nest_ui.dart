@@ -3,7 +3,11 @@ library nest_ui;
 // vendor libs
 import 'dart:html'   ;
 import 'dart:mirrors';
-//import 'dart:math'   ;
+
+// Collection is used by SelectComponent, which is not necessarily loaded
+// (use decides wether to load it or not). Exporting us required in such cases.
+import 'dart:collection';
+export 'dart:collection';
 
 // local libs
 import 'package:observable_roles/observable_roles.dart' as observable;

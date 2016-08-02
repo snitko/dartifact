@@ -17,10 +17,10 @@ class SelectComponent extends Component {
     * element.
     */
   String keypress_stack = "";
-  int    keypress_stack_last_pdated = new DateTime.now().millisecondsSinceEpoch;
-  static const keypress_stack_timeout = 1;
+  int    keypress_stack_last_updated = new DateTime.now().millisecondsSinceEpoch;
   String focused_option;
   bool   opened = false;
+  static const keypress_stack_timeout = 1;
 
   Map attribute_callbacks = {
     'default'  : (attr_name, self) => self.attribute_callbacks_collection['write_property_to_dom'](attr_name, self),
@@ -39,33 +39,7 @@ class SelectComponent extends Component {
 
     // Workaround. Dart doesn't catch keydown events on divs, only on document -
     // but, surprise, it corretly sets the target, so we can still get it!
-    var self = this;
-    document.onKeyDown.listen((e) {
-
-      if(self.event_locks.contains("keydown") || self.event_locks.contains(#any))
-        return;
-
-      if(e.target == self.dom_element && self.disabled != 'disabled' && [32,38,40,27,13].contains(e.keyCode)) {
-        switch(e.keyCode) {
-          case KeyCode.ESC:
-            self.behave('close');
-            break;
-          case KeyCode.UP:
-            self.opened ? focusPrevOption() : setPrevValue();
-            break;
-          case KeyCode.DOWN:
-            self.opened ? focusNextOption() : setNextValue();
-            break;
-          case KeyCode.ENTER:
-            self.setFocusedAndToggle();
-            break;
-          case KeyCode.SPACE:
-            self.setFocusedAndToggle();
-            break;
-        }
-        e.preventDefault();
-      }
-    });
+    document.onKeyDown.listen((e) => prvt_processKeyEvent(e));
 
     event_handlers.add(event: 'click', role: 'self.selectbox', handler: (self,event) {
       self.behave('toggle');
@@ -166,6 +140,32 @@ class SelectComponent extends Component {
 
   get focused_option_id {
     return options.keys.toList().indexOf(focused_option);
+  }
+
+
+  prvt_processKeyEvent(e) {
+    if(this.event_locks.contains("keydown") || this.event_locks.contains(#any))
+     return;
+    if(e.target == this.dom_element && this.disabled != 'disabled' && [32,38,40,27,13].contains(e.keyCode)) {
+      switch(e.keyCode) {
+        case KeyCode.ESC:
+          this.behave('close');
+          break;
+        case KeyCode.UP:
+          this.opened ? focusPrevOption() : setPrevValue();
+          break;
+        case KeyCode.DOWN:
+          this.opened ? focusNextOption() : setNextValue();
+          break;
+        case KeyCode.ENTER:
+          this.setFocusedAndToggle();
+          break;
+        case KeyCode.SPACE:
+          this.setFocusedAndToggle();
+          break;
+      }
+      e.preventDefault();
+    } 
   }
 
 }

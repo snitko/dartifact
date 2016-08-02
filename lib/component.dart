@@ -27,7 +27,10 @@ class Component extends Object with observable.Subscriber,
   /// ... and you can add more, for example [... ButtonBehaviors, LinkBehaviors]
   List behaviors  = [BaseComponentBehaviors];
   /// instantiated behavior objects, don't touch it
-  List _behaviors = [];
+  List behavior_instances = [];
+  // If set to true and behavior object doesn't have the behavior being invoked, silently ignore that.
+  // When set to false - raises a NoSuchMethodError!
+  bool ignore_misbehavior = true;
 
   /** Event locks allow you to prevent similar events being handled twice
     * until the lock is removed. This is useful, for example, to prevent
@@ -96,8 +99,8 @@ class Component extends Object with observable.Subscriber,
    *  a MyBehaviors class and add into the #behaviors list.
    */
   behave(behavior) {
-    _behaviors.forEach((b) {
-      if(methods_of(b).contains(behavior)) {
+    behavior_instances.forEach((b) {
+      if(!ignore_misbehavior || methods_of(b).contains(behavior)) {
         var im = reflect(b);
         im.invoke(new Symbol(behavior), []);
         return;
@@ -392,7 +395,7 @@ class Component extends Object with observable.Subscriber,
     * properties that are on that List.
     */
   updatePropertiesFromNodes({ attrs: false, invoke_callbacks: false }) {
-    if(!attrs)
+    if(attrs == false)
       attrs = this.attribute_names;
     for(var a in attrs) {
       prvt_readPropertyFromNode(a);
@@ -536,7 +539,7 @@ class Component extends Object with observable.Subscriber,
       [Component.app_library, 'nest_ui'].forEach((l) {
         var behavior_instance = new_instance_of(b.toString(), [this], l);
         if(behavior_instance != null)
-          _behaviors.add(behavior_instance);
+          behavior_instances.add(behavior_instance);
       });
     });
   }

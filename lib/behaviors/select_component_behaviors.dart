@@ -6,7 +6,7 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
   HtmlElement options_container;
   HtmlElement selectbox;
   bool        options_container_hidden = true;
-  Map         scroll_pos_bottom = 0;
+  int         scroll_pos_bottom = 0;
 
   SelectComponentBehaviors(Component c) : super(c) {
     this.component = c;
