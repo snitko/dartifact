@@ -36,7 +36,7 @@ void main() {
     select_el   = new DivElement();
     select_comp = new SelectComponent();
     select_comp.dom_element = select_el;
-    select_comp.after_initialize();
+    select_comp.afterInitialize();
     select_comp.ignore_misbehavior = false;
     behaviors = select_comp.behavior_instances[0];
 

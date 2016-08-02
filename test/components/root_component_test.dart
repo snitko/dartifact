@@ -31,9 +31,9 @@ void main() {
     c.dom_element     = new DivElement();
     child.dom_element = new DivElement();
     grand_child.dom_element = new DivElement();
-    c.after_initialize();
-    child.after_initialize();
-    grand_child.after_initialize();
+    c.afterInitialize();
+    child.afterInitialize();
+    grand_child.afterInitialize();
     c.addChild(child);
     child.addChild(grand_child);
   });

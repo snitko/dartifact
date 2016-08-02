@@ -123,7 +123,7 @@ class Component extends Object with observable.Subscriber,
           component.addObservingSubscriber(this);
           component.dom_element = el;
           this.addChild(component);
-          component.after_initialize();
+          component.afterInitialize();
           if(recursive)
             component.initChildComponents();
         }
@@ -386,7 +386,7 @@ class Component extends Object with observable.Subscriber,
     * Override this method in descendants, but don't forget to call super() inside, or
     * you'll be left without behaviors!
     */
-  after_initialize() {
+  afterInitialize() {
     _createBehaviors();
   }
 

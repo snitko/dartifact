@@ -60,8 +60,8 @@ class SelectComponent extends Component {
 
   }
 
-  after_initialize() {
-    super.after_initialize();
+  afterInitialize() {
+    super.afterInitialize();
     readOptionsFromDom();
     updatePropertiesFromNodes(attrs: ["input_value", "disabled"], invoke_callbacks: true);
     if(this.input_value != null)
@@ -125,7 +125,7 @@ class SelectComponent extends Component {
 
   updateKeypressStackWithChar(String c) {
     var time = new DateTime.now().millisecondsSinceEpoch;
-    if(this.keypress_stack_last_updated < time-(this.keypress_stack_timeout*1000)) {
+    if(this.keypress_stack_last_updated < time-(keypress_stack_timeout*1000)) {
       this.keypress_stack_last_updated = time;
       this.keypress_stack = c;
     } else {

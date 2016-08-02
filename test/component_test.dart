@@ -54,7 +54,7 @@ class MyChildComponent extends Component {
 
   List hellos = [];
   sayHello(s) => hellos.add(s);
-  after_initialize() => this.events_history.add("initialized");
+  afterInitialize() => this.events_history.add("initialized");
 
 }
 
@@ -72,7 +72,7 @@ void main() {
     el            = new DivElement();
     c             = new MyComponent();
     c.dom_element = el;
-    c.after_initialize();
+    c.afterInitialize();
   });
 
   group("Component", () {
@@ -111,7 +111,7 @@ void main() {
       expect(c.children[0].hellos, equals(['hi']));
     });
 
-    test("runs after_initialize when initialized by a parent", () {
+    test("runs afterInitialize when initialized by a parent", () {
       c.initChildComponents();
       expect(c.children[0].events_history[0], equals('initialized'));
     });

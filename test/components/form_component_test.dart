@@ -18,7 +18,7 @@ void main() {
 
   setUp(() {
     c = new MyFormFieldComponent();
-    c.after_initialize();
+    c.afterInitialize();
   });
 
   test("catches change event from the dom_element", () {
