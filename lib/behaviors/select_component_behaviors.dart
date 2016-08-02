@@ -23,7 +23,6 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
 
   open() {
     scroll_pos_bottom = component.lines_to_show-1;
-    component.opened = true;
     selectbox.classes.add("open");
     options_container.style.minWidth = "${pos.getDimensions(selectbox)['x'] - 2}px";
     options_container.style.display = 'block';
@@ -32,7 +31,6 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
   }
 
   close() {
-    component.opened = false;
     selectbox.classes.remove("open");
     options_container.style.display = 'none';
     options_container_hidden = true;

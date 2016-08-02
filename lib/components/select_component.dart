@@ -43,6 +43,7 @@ class SelectComponent extends Component {
 
     event_handlers.add(event: 'click', role: 'self.selectbox', handler: (self,event) {
       self.behave('toggle');
+      _toggleOpenedStatus();
     });
     event_handlers.add(event: 'keypress', role: #self, handler: (self,event) {
       var char = new String.fromCharCodes([event.charCode]);
@@ -54,7 +55,9 @@ class SelectComponent extends Component {
       this.input_value   = t.getAttribute('data-option-value');
       this.display_value = options[this.input_value];
       self.behave('close');
+      _toggleOpenedStatus();
     });
+
   }
 
   after_initialize() {
@@ -136,6 +139,11 @@ class SelectComponent extends Component {
       this.focused_option = null;
     }
     this.behave('toggle');
+    _toggleOpenedStatus();
+  }
+
+  _toggleOpenedStatus() {
+    this.opened = !this.opened;
   }
 
   get focused_option_id {
@@ -149,6 +157,7 @@ class SelectComponent extends Component {
     if(e.target == this.dom_element && this.disabled != 'disabled' && [32,38,40,27,13].contains(e.keyCode)) {
       switch(e.keyCode) {
         case KeyCode.ESC:
+          _toggleOpenedStatus();
           this.behave('close');
           break;
         case KeyCode.UP:
