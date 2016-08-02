@@ -39,7 +39,7 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
 
   focusCurrentOption() {
     _removeFocusFromOptions();
-    var current_option = this.options_container.querySelector(".option[data-option-value=\"${this.component.focused_option}\"");
+    var current_option = this.options_container.querySelector("[data-option-value=\"${this.component.focused_option}\"");
     current_option.classes.add("focused");
     _scroll();
   }
@@ -64,8 +64,8 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
   }
   
   _scroll() {
-    var option_height = pos.getDimensions(options_container.querySelector('.option'))['y'];
-    doScroll() => options_container.scrollTop = option_height*component.focused_option_id;
+    var option_height = pos.getDimensions(options_container.querySelector('[data-component-part="option"]'))['y'];
+    doScroll() => options_container.scrollTop = option_height.toInt()*component.focused_option_id;
     if(scroll_pos_bottom < component.focused_option_id) {
       scroll_pos_bottom += 1;
       doScroll();
