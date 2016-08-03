@@ -5,7 +5,7 @@ class SelectComponent extends Component {
   /* display_value - the one we show to the user,
    * input_value - the one we'd want to send to the server.
    */
-  List attribute_names = ["display_value", "input_value", "disabled"];
+  List attribute_names = ["display_value", "input_value", "disabled", "name"];
 
   List native_events   = ["selectbox.click", "keypress", "keydown", "option.click"];
   List behaviors       = [SelectComponentBehaviors];
@@ -73,7 +73,7 @@ class SelectComponent extends Component {
   afterInitialize() {
     super.afterInitialize();
     readOptionsFromDom();
-    updatePropertiesFromNodes(attrs: ["input_value", "disabled"], invoke_callbacks: true);
+    updatePropertiesFromNodes(attrs: ["input_value", "disabled", "name"], invoke_callbacks: true);
     if(this.input_value != null)
       this.display_value = options[this.input_value];
   }
@@ -142,6 +142,7 @@ class SelectComponent extends Component {
     this.input_value    = ip;
     this.focused_option = ip;
     this.display_value  = (ip == null ? null : this.options[ip]);
+    this.publishEvent("change", this);
   }
   /**************************************************************************/
 
