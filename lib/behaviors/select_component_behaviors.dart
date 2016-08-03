@@ -62,13 +62,14 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
   
   _scroll() {
     var option_height = pos.getDimensions(this.options_container.querySelector('[data-component-part="option"]'))['y'];
-    doScroll() => this.options_container.scrollTop = option_height.toInt()*this.component.focused_option_id;
+    scrollDown() => this.options_container.scrollTop = option_height.toInt()*this.component.focused_option_id;
+    scrollUp() => this.options_container.scrollTop   = option_height.toInt()*this.component.focused_option_id-((this.component.lines_to_show-1)*option_height.toInt());
     if(this.scroll_pos_bottom < this.component.focused_option_id) {
-      this.scroll_pos_bottom += 1;
-      doScroll();
+      this.scroll_pos_bottom += this.component.lines_to_show;
+      scrollDown();
     } else if(this.scroll_pos_bottom-this.component.lines_to_show+1 > this.component.focused_option_id) {
-      this.scroll_pos_bottom -= 1;
-      doScroll();
+      this.scroll_pos_bottom -= this.component.lines_to_show;
+      scrollUp();
     }
   }
 
