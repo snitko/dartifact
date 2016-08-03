@@ -63,6 +63,7 @@ void main() {
     test("toggles the appearance or disappearance of the options container on open/close", () {
       behaviors.toggle();
       expect(options_container.style.display, equals('block'));
+      select_comp.opened = true;
       behaviors.toggle();
       expect(options_container.style.display, equals('none'));
     });

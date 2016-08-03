@@ -14,10 +14,10 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
   }
 
   toggle() {
-    if(this.options_container.style.display == 'none')
-      open();
-    else
+    if(this.component.opened)
       close();
+    else
+      open();
   }
 
   open() {
