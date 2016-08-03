@@ -42,6 +42,7 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
   }
 
   externalClickResponse() {
+    this.component.opened = false;
     close();
   }
 
