@@ -87,6 +87,12 @@ void main() {
       expect(select_comp.focused_option_id, equals(2));
     });
 
+    test("sets display value and focused option to null if input value is null", () {
+      select_comp.setValueByInputValue("null");
+      expect(select_comp.display_value,     isNull);
+      expect(select_comp.focused_option_id, isNull);
+    });
+
     test("focuses on previous option", () {
       select_comp.focusPrevOption();
       expect(select_comp.focused_option, equals("option_5"));

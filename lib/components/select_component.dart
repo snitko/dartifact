@@ -63,8 +63,7 @@ class SelectComponent extends Component {
     });
     event_handlers.add(event: 'click', role: 'self.option', handler: (self,event) {
       var t = event.target;
-      this.input_value   = t.getAttribute('data-option-value');
-      this.display_value = options[this.input_value];
+      setValueByInputValue(t.getAttribute('data-option-value'));
       self.behave('close');
       _toggleOpenedStatus();
     });
@@ -85,8 +84,11 @@ class SelectComponent extends Component {
     */
   readOptionsFromDom() {
     var option_els = this.dom_element.querySelectorAll('[data-component-part="option"]');
-    for(var el in option_els)
-      options[el.getAttribute('data-option-value')] = el.text.trim();
+    for(var el in option_els) {
+      var key = el.getAttribute('data-option-value');
+      if(key != null)
+        options[key] = (el.text == null ? '' : el.text.trim());
+    }
   }
 
   /**************************************************************************
@@ -127,9 +129,11 @@ class SelectComponent extends Component {
     setValueByInputValue(getPrevValue(this.input_value));
   }
   setValueByInputValue(ip) {
+    if(ip == 'null')
+      ip = null;
     this.input_value    = ip;
     this.focused_option = ip;
-    this.display_value  = this.options[ip];
+    this.display_value  = (ip == null ? null : this.options[ip]);
   }
   /**************************************************************************/
 
@@ -209,7 +213,10 @@ class SelectComponent extends Component {
 
   /** Sometimes we need an index of the option (int), not it input_value */
   get focused_option_id {
-    return options.keys.toList().indexOf(this.focused_option);
+    var result = options.keys.toList().indexOf(this.focused_option);
+    if(result == -1)
+      result = null;
+    return result;
   }
 
   _toggleOpenedStatus() {
