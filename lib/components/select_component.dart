@@ -96,9 +96,9 @@ class SelectComponent extends Component {
    * to input_value.
    **************************************************************************
    *
-  /** Takes the next option and returns the input_value of that option.
-    * If we're at the end of the list, gets you the first option.
-    * If no current option is set (passed) gets your the first option too.
+   * Takes the next option and returns the input_value of that option.
+   * If we're at the end of the list, gets you the first option.
+   * If no current option is set (passed) gets your the first option too.
    */
   getNextValue(String current) {
     if(current == null)
