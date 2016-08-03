@@ -10,7 +10,7 @@ class SelectComponent extends Component {
   List native_events   = ["selectbox.click", "keypress", "keydown", "option.click"];
   List behaviors       = [SelectComponentBehaviors];
 
-  SplayTreeMap options = new SplayTreeMap();
+  LinkedHashMap options = new LinkedHashMap();
   int lines_to_show = 10;
 
   /** When user presses a key with selectbox focused,
@@ -79,15 +79,15 @@ class SelectComponent extends Component {
   }
 
   /** Does what it says. Parses those options from DOM and puts both input values and
-    * display values into `options` Map. Note the `options` is actually a SplayTreeMap
+    * display values into `options` Map. Note the `options` is actually a LinkedHashMap
     * and element order matters.
     */
   readOptionsFromDom() {
-    var option_els = this.dom_element.querySelectorAll('[data-component-part="option"]');
+    var option_els = this.dom_element.querySelectorAll('[data-option-value]');
     for(var el in option_els) {
       var key = el.getAttribute('data-option-value');
       if(key != null)
-        options[key] = (el.text == null ? '' : el.text.trim());
+        options[key] = el.text.trim();
     }
   }
 
@@ -103,11 +103,15 @@ class SelectComponent extends Component {
    * If no current option is set (passed) gets your the first option too.
    */
   getNextValue(String current) {
+    var key;
+    var opt_keys = options.keys.toList();
     if(current == null)
-      return options.firstKey();
-    var key = options.firstKeyAfter(current);
-    if(key == null)
-      key = options.firstKey();
+      return opt_keys.first;
+    try {
+      key = opt_keys[opt_keys.indexOf(current)+1];
+    } catch(RangeError) {
+      key = opt_keys.first;
+    }
     return key;
   }
   /** Takes the previous option and returns the input_value of that option.
@@ -115,11 +119,15 @@ class SelectComponent extends Component {
     * If no current option is set (passed) gets your the last option too.
    */
   getPrevValue(String current) {
+    var key;
+    var opt_keys = options.keys.toList();
     if(current == null)
-      return options.lastKey();
-    var key = options.lastKeyBefore(current);
-    if(key == null)
-      key = options.lastKey();
+      return opt_keys.last;
+    try {
+      key = opt_keys[opt_keys.indexOf(current)-1];
+    } catch(RangeError) {
+      key = opt_keys.last;
+    }
     return key;
   }
   setNextValue() {

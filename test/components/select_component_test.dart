@@ -73,7 +73,7 @@ void main() {
     });
 
     test("reads option input and display values from DOM", () {
-      select_comp.options = new SplayTreeMap();
+      select_comp.options = new LinkedHashMap();
       createOptionsInDom();
       expect(select_comp.options.keys, equals([]));
       select_comp.readOptionsFromDom();
