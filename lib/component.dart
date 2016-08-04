@@ -374,8 +374,9 @@ class Component extends Object with observable.Subscriber,
     */
   applyToChildren(method_name, [args=null, recursive=false, condition=null]) {
     for(var c in children) {
-      if(hasMethod(method_name, c) && (condition == null || (condition != null && !condition(c)))) {
-        callMethod(method_name, c, args);
+      if(condition == null || (condition != null && condition(c))) {
+        if(hasMethod(method_name, c))
+          callMethod(method_name, c, args);
         if(recursive != false)
           c.applyToChildren(method_name, args, #recursive, condition);
       }
