@@ -228,6 +228,8 @@ class SelectComponent extends Component {
     return result;
   }
 
+  get value => this.input_value;
+
   _toggleOpenedStatus() {
     this.opened = !this.opened;
   }

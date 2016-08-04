@@ -233,6 +233,12 @@ void main() {
         expect(c.dom_element.getAttribute("ok-property2"), equals("new value"));
       });
 
+      test("removes the attribute from the property element if property is null", () {
+        c.dom_element.setAttribute('data-component-attribute-properties', 'property2:ok-property2');
+        c.property2 = null;
+        expect(c.dom_element.attributes.keys, isNot(contains("ok-property2")));
+      });
+
       test("child of the dom element changes its text", () {
         var property_node = new DivElement();
         property_node.setAttribute('data-component-property', 'property2');

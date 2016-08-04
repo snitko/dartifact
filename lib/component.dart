@@ -415,7 +415,10 @@ class Component extends Object with observable.Subscriber,
         property_el.text = this.attributes[property_name];
       else {
         var attr_property_name = prvt_getHtmlAttributeNameForProperty(pa, property_name);
-        property_el.setAttribute(attr_property_name, this.attributes[property_name]);
+        if(this.attributes[property_name] == null)
+          property_el.attributes.remove(attr_property_name);
+        else
+          property_el.setAttribute(attr_property_name, this.attributes[property_name]);
       }
     }
   }

@@ -4,7 +4,7 @@ class FormFieldComponent extends Component {
 
   List   native_events   = ["value_holder.change", "change"];
   String value_property  = 'value';
-  List   attribute_names = ["validation_errors_summary"];
+  List   attribute_names = ["validation_errors_summary", "name", "disabled"];
   List   behaviors       = [FormFieldComponentBehaviors];
 
   FormFieldComponent() {
