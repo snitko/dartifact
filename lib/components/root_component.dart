@@ -8,7 +8,7 @@ class RootComponent extends Component {
 
     event_handlers.add(event: 'click', role: #self, handler: (self, event) {
       var attrs = event.target.attributes.keys;
-      self.applyToChildren('behave', ['externalClickResponse'], #recursive, (child) {
+      self.applyToChildren('externalClickCallback', [], #recursive, (child) {
         return child.prvt_hasNode(event.target);
       });
     });

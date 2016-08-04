@@ -220,6 +220,11 @@ class SelectComponent extends Component {
     _toggleOpenedStatus();
   }
 
+  externalClickCallback() {
+    this.opened = false;
+    this.behave("close");
+  }
+
   /** Sometimes we need an index of the option (int), not it input_value */
   get focused_option_id {
     var result = options.keys.toList().indexOf(this.focused_option);

@@ -4,18 +4,12 @@ import "dart:html";
 
 @TestOn("browser")
 
-class MyComponentBehaviors {
-  Component component;
-  MyComponentBehaviors(this.component) {}
-  externalClickResponse() {
-    component.external_events.add("click");
-  }
-}
-
 
 class MyComponent extends Component {
-  List behaviors = [MyComponentBehaviors];
   List external_events = [];
+  externalClickCallback() {
+    this.external_events.add("click");
+  }
 }
 
 void main() {
