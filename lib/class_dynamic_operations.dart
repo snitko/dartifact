@@ -44,6 +44,7 @@ Object new_instance_of(String class_name, [List args, String library='']) {
 
   libs.forEach((lm) {
     cm = lm.declarations[new Symbol(class_name)];
+
     if(cm != null) {
       InstanceMirror im = cm.newInstance(new Symbol(''), args);
       reflectee = im.reflectee;

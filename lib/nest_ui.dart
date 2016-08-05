@@ -22,8 +22,10 @@ part 'component.dart';
 part 'native_events_list.dart';
 part 'behaviors/base_component_behaviors.dart';
 part 'behaviors/form_field_component_behaviors.dart';
+part 'behaviors/select_component_behaviors.dart';
 part 'components/form_field_component.dart';
 part 'components/numeric_form_field_component.dart';
+part 'components/select_component.dart';
 part 'components/root_component.dart';
 part 'modules/position_manager.dart';
 

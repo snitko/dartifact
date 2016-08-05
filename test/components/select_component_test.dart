@@ -3,13 +3,15 @@ import 'package:mockito/mockito.dart';
 import "dart:html";
 import '../../lib/nest_ui.dart';
 
-part '../../lib/components/select_component.dart';
-
 @TestOn("browser")
 
-class SelectComponentBehaviors extends Mock {
-  SelectComponentBehaviors(Component c) {}
+class MySelectComponentBehaviors extends Mock {
+  MySelectComponentBehaviors(Component c) {}
   noSuchMethod(i) => super.noSuchMethod(i);
+}
+
+class MySelectComponent extends SelectComponent {
+  List behaviors = [MySelectComponentBehaviors];
 }
 
 class KeyEventMock {
@@ -34,7 +36,7 @@ void main() {
 
   setUp(() {
     select_el   = new DivElement();
-    select_comp = new SelectComponent();
+    select_comp = new MySelectComponent();
     select_comp.dom_element = select_el;
     select_comp.afterInitialize();
     select_comp.ignore_misbehavior = false;
