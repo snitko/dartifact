@@ -176,7 +176,7 @@ void main() {
         child_component_el.click();
         expect(c.events_history, isNot(contains("MyComponent.role1#clicked")));
       });
-      
+
     });
     
 
@@ -193,6 +193,18 @@ void main() {
         el.append(component_part);
         c.dom_element = el;
         component_part.click();
+        expect(c.events_history[0], equals("MyComponent.text_field#clicked"));
+      });
+
+      test("detects events on parts of the component that are nested in other parts in DOM", () {
+        var component_part1 = new DivElement();
+        var component_part2 = new DivElement();
+        component_part1.setAttribute('data-component-part', 'container_part');
+        component_part2.setAttribute('data-component-part', 'text_field');
+        component_part1.append(component_part2);
+        el.append(component_part1);
+        c.dom_element = el;
+        component_part2.click();
         expect(c.events_history[0], equals("MyComponent.text_field#clicked"));
       });
 
