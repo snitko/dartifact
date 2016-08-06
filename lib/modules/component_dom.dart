@@ -24,6 +24,9 @@ abstract class ComponentDom {
       return elements[0];
   }
 
+  /** Same as firstDomDescendantOrSelfWithAttr, but finds all dom elements
+    * and returns a List
+    */
   List<HtmlElement> allDomDescendantsAndSelfWithAttr(node, { attr_name: null, attr_value: null, first_only: false }) {
     var actual_attr_value = node.getAttribute(attr_name);
 
