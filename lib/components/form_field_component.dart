@@ -20,13 +20,13 @@ class FormFieldComponent extends Component {
   }
 
   @override
-  validate({ deep: true }) {
+  bool validate({ deep: true }) {
     super.validate();
     this.valid ? this.behave('hideErrors') : this.behave('showErrors');
     return valid;
   }
 
-  reset() {
+  void reset() {
     this.value = null;
     value_holder_element.value = null;
   }
@@ -40,7 +40,7 @@ class FormFieldComponent extends Component {
     return value_holder;
   }
 
-  prvt_updateValueFromDom() {
+  void prvt_updateValueFromDom() {
     this.updateAttributes({ "$value_property" : value_holder_element.value });
   }
 

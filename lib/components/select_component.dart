@@ -70,7 +70,7 @@ class SelectComponent extends Component {
 
   }
 
-  afterInitialize() {
+  void afterInitialize() {
     super.afterInitialize();
     readOptionsFromDom();
     updatePropertiesFromNodes(attrs: ["input_value", "disabled", "name"], invoke_callbacks: true);
@@ -82,7 +82,7 @@ class SelectComponent extends Component {
     * display values into `options` Map. Note the `options` is actually a LinkedHashMap
     * and element order matters.
     */
-  readOptionsFromDom() {
+  void readOptionsFromDom() {
     var option_els = this.dom_element.querySelectorAll('[data-option-value]');
     for(var el in option_els) {
       var key = el.getAttribute('data-option-value');
@@ -102,7 +102,7 @@ class SelectComponent extends Component {
    * If we're at the end of the list, gets you the first option.
    * If no current option is set (passed) gets your the first option too.
    */
-  getNextValue(String current) {
+  String getNextValue(String current) {
     var key;
     var opt_keys = options.keys.toList();
     if(current == null)
@@ -118,7 +118,7 @@ class SelectComponent extends Component {
     * If we're at the beginning of the list, gets you the last option.
     * If no current option is set (passed) gets your the last option too.
    */
-  getPrevValue(String current) {
+  String getPrevValue(String current) {
     var key;
     var opt_keys = options.keys.toList();
     if(current == null)
@@ -130,13 +130,13 @@ class SelectComponent extends Component {
     }
     return key;
   }
-  setNextValue() {
+  void setNextValue() {
     setValueByInputValue(getNextValue(this.input_value));
   }
-  setPrevValue() {
+  void setPrevValue() {
     setValueByInputValue(getPrevValue(this.input_value));
   }
-  setValueByInputValue(ip) {
+  void setValueByInputValue(ip) {
     if(ip == 'null')
       ip = null;
     this.input_value    = ip;
@@ -157,11 +157,11 @@ class SelectComponent extends Component {
    * is actually assigned to input_value.
    **************************************************************************
    */
-  focusNextOption() {
+  void focusNextOption() {
     this.focused_option = getNextValue(this.focused_option);
     this.behave('focusCurrentOption');
   }
-  focusPrevOption() {
+  void focusPrevOption() {
     this.focused_option = getPrevValue(this.focused_option);
     this.behave('focusCurrentOption');
   }
@@ -177,7 +177,7 @@ class SelectComponent extends Component {
     * which has display_value that starts with "ab", then setting it as current option
     * (by writing input_value and display_value properties with #setValueByInputValue()).
    */
-  setValueFromKeypressStack() {
+  void setValueFromKeypressStack() {
     var found = false;
     options.forEach((k,v) {
       if(found)
@@ -196,7 +196,7 @@ class SelectComponent extends Component {
     * key less than a second ago. If it happened more than a second ago, ignore the previous
     * characters, clear the stack and put this new character into it.
     */
-  updateKeypressStackWithChar(String c) {
+  void updateKeypressStackWithChar(String c) {
     var time = new DateTime.now().millisecondsSinceEpoch;
     if(this.keypress_stack_last_updated < time-(keypress_stack_timeout*1000)) {
       this.keypress_stack_last_updated = time;
@@ -210,7 +210,7 @@ class SelectComponent extends Component {
     * If the selectbox is closed, then just open it. If it's opened, then it means
     * that the user is navigating it with keys and whichever option currently has focus
     * should be set as current. */
-  setFocusedAndToggle() {
+  void setFocusedAndToggle() {
     if(this.opened) {
       if(this.focused_option != null)
         setValueByInputValue(this.focused_option);
@@ -220,7 +220,7 @@ class SelectComponent extends Component {
     _toggleOpenedStatus();
   }
 
-  externalClickCallback() {
+  void externalClickCallback() {
     this.opened = false;
     this.behave("close");
   }
@@ -235,11 +235,11 @@ class SelectComponent extends Component {
 
   get value => this.input_value;
 
-  _toggleOpenedStatus() {
+  void _toggleOpenedStatus() {
     this.opened = !this.opened;
   }
 
-  prvt_processKeyEvent(e) {
+  void prvt_processKeyEvent(e) {
     if(this.event_locks.contains("keydown") || this.event_locks.contains(#any))
      return;
     if(e.target == this.dom_element && this.disabled != 'disabled' && [32,38,40,27,13].contains(e.keyCode)) {

@@ -11,7 +11,7 @@ class NumericFormFieldComponent extends FormFieldComponent {
     });
   }
 
-  afterInitialize() {
+  void afterInitialize() {
     updatePropertiesFromNodes(attrs: ["value", "disabled", "name"], invoke_callbacks: true);
   }
 
@@ -27,7 +27,7 @@ class NumericFormFieldComponent extends FormFieldComponent {
   }
 
   @override
-  prvt_updateValueFromDom() {
+  void prvt_updateValueFromDom() {
     this.value = value_holder_element.value;
   }
 

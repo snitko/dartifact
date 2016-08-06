@@ -98,7 +98,7 @@ class Component extends Object with observable.Subscriber,
    *  when the constructor is called. If you want to define custom Behaviors, simply create
    *  a MyBehaviors class and add into the #behaviors list.
    */
-  behave(behavior) {
+  void behave(behavior) {
     behavior_instances.forEach((b) {
       if(!ignore_misbehavior || methods_of(b).contains(behavior)) {
         var im = reflect(b);
@@ -114,7 +114,8 @@ class Component extends Object with observable.Subscriber,
    *  specified in this attribute. Obviously, you should define such a class beforehand and
    *  inherit from Component.
   */
-  initChildComponents({ recursive: true }) {
+  void initChildComponents({ recursive: true }) {
+
     var elements = _findChildComponentDomElements(this.dom_element);
     elements.forEach((el) {
       [Component.app_library, 'nest_ui'].forEach((l) {
@@ -131,7 +132,7 @@ class Component extends Object with observable.Subscriber,
   }
 
   /** Clones #template and assigns the clone to #dom_element, then sets all the properties */
-  initDomElementFromTemplate() {
+  void initDomElementFromTemplate() {
     if(this.template != null) {
       this.dom_element = this.template.clone(true);
       this.dom_element.attributes.remove('data-component-template');
@@ -149,7 +150,7 @@ class Component extends Object with observable.Subscriber,
     * Only those events that are called on #self or self's parts (prefixed with "self.")
     * are propagated up to the parent.
   */
-  captureEvent(e, publisher_roles, { data: null, prevent_default: false, is_native: false}) {
+  bool captureEvent(e, publisher_roles, { data: null, prevent_default: false, is_native: false}) {
 
     // For native events, pass the Event object in data
     if(data == null && e is Event && is_native)
@@ -177,6 +178,8 @@ class Component extends Object with observable.Subscriber,
         return;
       }
     });
+
+    return true;
   }
 
   /** Adds a new event lock. In case the event name is not on the event_lock_for List,
@@ -220,7 +223,7 @@ class Component extends Object with observable.Subscriber,
     * Obviously, you might not always want (2), so just redefine #_appendChildDomElement()
     * method in your class to change this behavior.
     */
-  addChild(Component child) {
+  void addChild(Component child) {
     _addValidationsToChild(child);
     child.addObservingSubscriber(this);
     // We only do it if this element is clearly not in the DOM.
@@ -241,7 +244,7 @@ class Component extends Object with observable.Subscriber,
     * HtmlElement#remove(), but one might want to redefine it to have animations of
     * some sort.
    */
-  remove({ bool deep: false }) {
+  void remove({ bool deep: false }) {
     if(deep) {
       this.children.forEach((c) => c.remove(deep: true));
       this.children = [];
@@ -256,7 +259,7 @@ class Component extends Object with observable.Subscriber,
   }
 
   /** Finds immediate children with a specific role */
-  findChildrenByRole(r) {
+  List<Component> findChildrenByRole(r) {
     var children_with_roles = [];
     for(var c in children) {
       if(c.roles.contains(r))
@@ -265,7 +268,7 @@ class Component extends Object with observable.Subscriber,
     return children_with_roles;
   }
 
-  /** Finds all descendants with satisfy role path.
+  /** Finds all descendants wich satisfy role path.
     * For example, if the current element has a child with role 'form' and
     * this child in turn has a child with role 'submit', then calling
     *
@@ -282,7 +285,7 @@ class Component extends Object with observable.Subscriber,
     * returning an empty List [].
     *
    */
-  findDescendantsByRole(r) {
+  List<Component> findDescendantsByRole(r) {
     var role_path  = r.split('.');
     var child_role = role_path.removeAt(0);
     var children_with_roles = findChildrenByRole(child_role);
@@ -303,7 +306,7 @@ class Component extends Object with observable.Subscriber,
     * 2. Run validations on children too if deep is set to true.
     */
   @override
-  validate({ deep: true }) {
+  bool validate({ deep: true }) {
     super.validate();
 
     try {
@@ -337,13 +340,13 @@ class Component extends Object with observable.Subscriber,
    *  This method is needed when we want to listen to #dom_element's descendant native events
    *  or when a property is changed and we need to change a correspondent descendant node.
    */
-  firstDomDescendantOrSelfWithAttr(node, { attr_name: null, attr_value: null }) {
+  HtmlElement firstDomDescendantOrSelfWithAttr(node, { attr_name: null, attr_value: null }) {
     var elements = allDomDescendantsAndSelfWithAttr(node, attr_name: attr_name, attr_value: attr_value, first_only: true);
     if(elements != null && elements.length > 0)
       return elements[0];
   }
 
-  allDomDescendantsAndSelfWithAttr(node, { attr_name: null, attr_value: null, first_only: false }) {
+  List<HtmlElement> allDomDescendantsAndSelfWithAttr(node, { attr_name: null, attr_value: null, first_only: false }) {
     var actual_attr_value = node.getAttribute(attr_name);
 
     if(attr_value is RegExp && actual_attr_value != null && attr_value.hasMatch(actual_attr_value))
@@ -372,7 +375,7 @@ class Component extends Object with observable.Subscriber,
     * communicate a common an action to all children, such as when we want to reset() all form
     * elements.
     */
-  applyToChildren(method_name, [args=null, recursive=false, condition=null]) {
+  void applyToChildren(method_name, [args=null, recursive=false, condition=null]) {
     for(var c in children) {
       if(condition == null || (condition != null && condition(c))) {
         if(hasMethod(method_name, c))
@@ -387,7 +390,7 @@ class Component extends Object with observable.Subscriber,
     * Override this method in descendants, but don't forget to call super() inside, or
     * you'll be left without behaviors!
     */
-  afterInitialize() {
+  void afterInitialize() {
     _createBehaviors();
   }
 
@@ -395,7 +398,7 @@ class Component extends Object with observable.Subscriber,
     * If provided with an optional List of property names, updates only
     * properties that are on that List.
     */
-  updatePropertiesFromNodes({ attrs: false, invoke_callbacks: false }) {
+  void updatePropertiesFromNodes({ attrs: false, invoke_callbacks: false }) {
     if(attrs == false)
       attrs = this.attribute_names;
     for(var a in attrs) {
@@ -406,7 +409,7 @@ class Component extends Object with observable.Subscriber,
   }
 
   /** Updates dom element's #text or attribute so it refelects Component's current property value. */
-  prvt_writePropertyToNode(String property_name) {
+  void prvt_writePropertyToNode(String property_name) {
     if(this.dom_element == null)
       return;
     var property_el = prvt_findPropertyEl(property_name);
@@ -425,7 +428,7 @@ class Component extends Object with observable.Subscriber,
   }
 
   /** Reads property value from a DOM node, updates Component's object property with the value */
-  prvt_readPropertyFromNode(String property_name) {
+  void prvt_readPropertyFromNode(String property_name) {
     var property_el = prvt_findPropertyEl(property_name);
     if(property_el != null) {
       var pa = property_el.attributes['data-component-attribute-properties'];
@@ -447,7 +450,7 @@ class Component extends Object with observable.Subscriber,
   }
 
   /** Finds property node in the DOM */
-  prvt_findPropertyEl(String property_name) {
+  HtmlElement prvt_findPropertyEl(String property_name) {
     var property_el = this.firstDomDescendantOrSelfWithAttr(
       this.dom_element,
       attr_name: "data-component-property",
@@ -465,7 +468,7 @@ class Component extends Object with observable.Subscriber,
     return property_el;
   }
 
-  prvt_getHtmlAttributeNameForProperty(String attr_list, String property_name) {
+  String prvt_getHtmlAttributeNameForProperty(String attr_list, String property_name) {
     var attr_list_regexp = new RegExp("${property_name}:" r"[a-zA-Z0-9_\-]+");
     return attr_list_regexp.firstMatch(attr_list)[0].split(':')[1];
   }
@@ -483,7 +486,7 @@ class Component extends Object with observable.Subscriber,
   }
 
   /** Finds the template HtmlElement in the dom and assigns it to #template */
-  _initTemplate() {
+  void _initTemplate() {
     this.template = querySelector("[data-component-template=${this.runtimeType.toString()}");
   }
 
@@ -496,7 +499,7 @@ class Component extends Object with observable.Subscriber,
    *  "self.part_name" where part_name is identical to the value of the data-component-part
    *  html attribute of the descendant element.
    */
-  _listenToNativeEvents() {
+  void _listenToNativeEvents() {
     this.native_events.forEach((e) {
 
       bool prevent_default = true;
@@ -538,7 +541,7 @@ class Component extends Object with observable.Subscriber,
    * belong to the "nest_ui" library or be top level, otherwise the won't be found
    * and an error will be raised.
    */
-  _createBehaviors() {
+  void _createBehaviors() {
     behaviors.forEach((b) {
       [Component.app_library, 'nest_ui'].forEach((l) {
         var behavior_instance = new_instance_of(b.toString(), [this], l);
@@ -548,7 +551,7 @@ class Component extends Object with observable.Subscriber,
     });
   }
 
-  _assignRolesFromDomElement() {
+  void _assignRolesFromDomElement() {
     var roles_attr = dom_element.getAttribute('data-component-roles');
     if(roles_attr != null)
       this.roles = dom_element.getAttribute('data-component-roles').split(new RegExp(r",\s?"));
@@ -557,7 +560,7 @@ class Component extends Object with observable.Subscriber,
   /**  In order to be able to instatiate nested components, we need to find descendants of the #dom_element
     *  which have data-component-class attribute. This method takes care of that.
     */
-  _findChildComponentDomElements(node) {
+  List<HtmlElement> _findChildComponentDomElements(node) {
     List component_children = [];
     node.children.forEach((c) {
       if(c.getAttribute('data-component-class') == null)
@@ -573,7 +576,7 @@ class Component extends Object with observable.Subscriber,
     * Of course, this might not always be desirable, so this method may be
     * redefined in descendant calasses.
     */
-  _appendChildDomElement(HtmlElement el) {
+  void _appendChildDomElement(HtmlElement el) {
     this.dom_element.append(el);
   }
 
@@ -581,14 +584,14 @@ class Component extends Object with observable.Subscriber,
     * Redefine this method to have something fancier (like an animation)
     * for when the #dom_element is removed.
     */
-  _removeDomElement() {
+  void _removeDomElement() {
     this.dom_element.remove();
   }
 
   /** Extracts validations with keys containing dots .
     * as those are validations defined for descendants.
     */
-  _separateDescendantValidations() {
+  void _separateDescendantValidations() {
     for(var k in this.validations.keys) {
       if(k.contains('.')) {
         this.descendant_validations[k] = this.validations[k];
@@ -603,7 +606,7 @@ class Component extends Object with observable.Subscriber,
     * it means that this validation is for one of the child's children and it gets added
     * to child's #descendant_validations, not to #validations.
     */
-  _addValidationsToChild(c) {
+  void _addValidationsToChild(c) {
     for(var dr in this.descendant_validations.keys) {
       var dr_map = dr.split('.');
       var r      = dr_map.removeAt(0);

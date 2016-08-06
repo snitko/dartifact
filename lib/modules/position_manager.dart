@@ -12,12 +12,12 @@ class PositionManager {
     return { 'x': pos.width, 'y': pos.height };
   }
   
-  placeAt(el,x,y) {
+  void placeAt(el,x,y) {
     el.style..top  = (y.toString() + 'px')
             ..left = (x.toString() + 'px');
   }
 
-  placeBy(
+  void placeBy(
     HtmlElement el1,
     HtmlElement el2,
     { double left: 0, double top: 0, double gravity_top: 0, double gravity_left: 0 }
@@ -35,39 +35,39 @@ class PositionManager {
 
   }
 
-  placeByCenter(HtmlElement el1, HtmlElement el2) {
+  void placeByCenter(HtmlElement el1, HtmlElement el2) {
     placeBy(el1, el2, top: 0.5, left: 0.5, gravity_top: 0.5, gravity_left: 0.5);
   }
 
-  placeByTopLeft(HtmlElement el1, HtmlElement el2) {
+  void placeByTopLeft(HtmlElement el1, HtmlElement el2) {
     placeBy(el1, el2);
   }
 
-  placeByTopRight(HtmlElement el1, HtmlElement el2) {
+  void placeByTopRight(HtmlElement el1, HtmlElement el2) {
     placeBy(el1, el2, left: 1, gravity_left: 1);
   }
 
-  placeByBottomLeft(HtmlElement el1, HtmlElement el2) {
+  void placeByBottomLeft(HtmlElement el1, HtmlElement el2) {
     placeBy(el1, el2, top: 1, gravity_top: 1);
   }
 
-  placeByBottomRight(HtmlElement el1, HtmlElement el2) {
+  void placeByBottomRight(HtmlElement el1, HtmlElement el2) {
     placeBy(el1, el2, top: 1, left: 1, gravity_left: 1, gravity_top: 1);
   }
 
-  placeAboveTopLeft(HtmlElement el1, HtmlElement el2) {
+  void placeAboveTopLeft(HtmlElement el1, HtmlElement el2) {
     placeBy(el1, el2, gravity_top: 1);
   }
 
-  placeBelowBottomLeft(HtmlElement el1, HtmlElement el2) {
+  void placeBelowBottomLeft(HtmlElement el1, HtmlElement el2) {
     placeBy(el1, el2, top: 1);
   }
 
-  placeAboveTopRight(HtmlElement el1, HtmlElement el2) {
+  void placeAboveTopRight(HtmlElement el1, HtmlElement el2) {
     placeBy(el1, el2, left: 1, gravity_left: 1, gravity_top: 1);
   }
 
-  placeBelowBottomRight(HtmlElement el1, HtmlElement el2) {
+  void placeBelowBottomRight(HtmlElement el1, HtmlElement el2) {
     placeBy(el1, el2, top: 1, left: 1, gravity_left: 1);
   }
 
