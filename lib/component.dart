@@ -4,7 +4,10 @@ class Component extends Object with observable.Subscriber,
                                     observable.Publisher,
                                     HeritageTree,
                                     Attributable,
-                                    Validatable
+                                    Validatable,
+                                    ComponentDomFunctions,
+                                    ComponentHeritageFunctions,
+                                    ComponentValidationFunctions
 {
   /** Events emitted by the browser that we'd like to handle
    *  if you prefer to not listen to them all for your component,
@@ -44,20 +47,6 @@ class Component extends Object with observable.Subscriber,
   /// Contains an element which will later be cloned and assigned to #dom_element
   /// if needed. Obviously, unless a real element from DOM isn't assigned.
   HtmlElement template;
-
-  /** This is not to be updated manually. Validations for descenndants are defined along
-    * all other validations in #validations Map, but dot (.) is used to separate roles of
-    * descendants and property names. For example:
-    *
-    *   Map validations = {
-    *     'form.input.text' => ...
-    *   }
-    *
-    * would define a validation on the .text property of a component which has an "input" role,
-    * which is also a child of an element with role "form", which, in turn, is a child of
-    * the current component.
-    */
-  Map descendant_validations = {};
 
   /** This one is important if you intend to separate your app
     * into many parts (files). In that case, you'll need to declare a library.
@@ -107,40 +96,6 @@ class Component extends Object with observable.Subscriber,
       }
     });
   }
-
-  /** Very important! This is why the library is called nest_ui. Components are nested.
-   *  This method goes through the #dom_element descendants looking for elements which
-   *  have data-component-class attribute. If found, a new Component is created with the class
-   *  specified in this attribute. Obviously, you should define such a class beforehand and
-   *  inherit from Component.
-  */
-  void initChildComponents({ recursive: true }) {
-
-    var elements = _findChildComponentDomElements(this.dom_element);
-    elements.forEach((el) {
-      [Component.app_library, 'nest_ui'].forEach((l) {
-        var component = new_instance_of(el.getAttribute('data-component-class'), [], l);
-        if(component != null) {
-          component.dom_element = el;
-          this.addChild(component);
-          component.afterInitialize();
-          if(recursive)
-            component.initChildComponents();
-        }
-      });
-    });
-  }
-
-  /** Clones #template and assigns the clone to #dom_element, then sets all the properties */
-  void initDomElementFromTemplate() {
-    if(this.template != null) {
-      this.dom_element = this.template.clone(true);
-      this.dom_element.attributes.remove('data-component-template');
-      this.dom_element.setAttribute('data-component-class', this.runtimeType.toString());
-      attribute_names.forEach((a) => prvt_writePropertyToNode(a));
-    }
-  }
-
 
   /** Reloading obervable_roles.Subscriber's method.
     * 1. call the super() method to make sure the handler is applied.
@@ -213,26 +168,6 @@ class Component extends Object with observable.Subscriber,
     });
     return event_names;
   }
-  
-  /** Reloading HeritageTree#add_child to automatically do the following things
-    * when a child component is added:
-    *
-    * 1. Initialize a dom_element from template
-    * 2. Append child's dom_element to the parent's dom_element.
-    *
-    * Obviously, you might not always want (2), so just redefine #_appendChildDomElement()
-    * method in your class to change this behavior.
-    */
-  void addChild(Component child) {
-    _addValidationsToChild(child);
-    child.addObservingSubscriber(this);
-    // We only do it if this element is clearly not in the DOM.
-    if(child.dom_element == null || child.dom_element.parent == null) {
-      child.initDomElementFromTemplate();
-      _appendChildDomElement(child.dom_element);
-    }
-    super.addChild(child);
-  }
 
   /**
     * Removes itself from the parent's children List and removes the #dom_element
@@ -258,236 +193,12 @@ class Component extends Object with observable.Subscriber,
     this.dom_element = null;
   }
 
-  /** Finds immediate children with a specific role */
-  List<Component> findChildrenByRole(r) {
-    var children_with_roles = [];
-    for(var c in children) {
-      if(c.roles.contains(r))
-        children_with_roles.add(c);
-    }
-    return children_with_roles;
-  }
-
-  /** Finds all descendants wich satisfy role path.
-    * For example, if the current element has a child with role 'form' and
-    * this child in turn has a child with role 'submit', then calling
-    *
-    *   findDescendantsByRole('form.submit')
-    *
-    * will find that child, but calling
-    *
-    *   findDescendantsByRole('submit')
-    *
-    * will NOT and would be equivalent to calling
-    *
-    *   findChildrenByRole('submit')
-    *
-    * returning an empty List [].
-    *
-   */
-  List<Component> findDescendantsByRole(r) {
-    var role_path  = r.split('.');
-    var child_role = role_path.removeAt(0);
-    var children_with_roles = findChildrenByRole(child_role);
-    if(role_path.length > 0) {
-      var descendants_with_roles = [];
-      for(var c in children_with_roles)
-        descendants_with_roles.addAll(c.findDescendantsByRole(role_path.join('.')));
-      return descendants_with_roles;
-    } else {
-      return children_with_roles;
-    }
-  }
-
-
-  /** Reloads standart Validatable module method for two reasons:
-    * 1. Collect all validation errors and write a String represenation of them
-    *    to display somehwere in UI.
-    * 2. Run validations on children too if deep is set to true.
-    */
-  @override
-  bool validate({ deep: true }) {
-    super.validate();
-
-    try {
-      if(!valid) {
-        var validation_errors_summary_map = [];
-        for(var ve in validation_errors.keys)
-          validation_errors_summary_map.add("$ve: ${validation_errors[ve].join(' and ')}");
-        this.validation_errors_summary = validation_errors_summary_map.join(', ');
-      } else {
-        this.validation_errors_summary = '';
-      }
-    }
-    on NoSuchMethodError {
-      // Ignore if no such attribute validation_errors_summary;
-    }
-
-    if(deep) {
-      for(var c in this.children) {
-        if(!c.validate(deep: true)) {
-          valid = false;
-          break;
-        }
-      }
-    }
-    return valid;
-  }
-
-  /** Finds first DOM descendant with a certain combination of attribute and its value,
-   *  or returns the same node if that node has that combination.
-   * 
-   *  This method is needed when we want to listen to #dom_element's descendant native events
-   *  or when a property is changed and we need to change a correspondent descendant node.
-   */
-  HtmlElement firstDomDescendantOrSelfWithAttr(node, { attr_name: null, attr_value: null }) {
-    var elements = allDomDescendantsAndSelfWithAttr(node, attr_name: attr_name, attr_value: attr_value, first_only: true);
-    if(elements != null && elements.length > 0)
-      return elements[0];
-  }
-
-  List<HtmlElement> allDomDescendantsAndSelfWithAttr(node, { attr_name: null, attr_value: null, first_only: false }) {
-    var actual_attr_value = node.getAttribute(attr_name);
-
-    if(attr_value is RegExp && actual_attr_value != null && attr_value.hasMatch(actual_attr_value))
-      return [node];
-    else if(attr_name == null || node.getAttribute(attr_name) == attr_value)
-      return [node];
-    else if(node.children.length == 0)
-      return null;
-
-    List elements = [];
-    for(var c in node.children) {
-      if(c.getAttribute('data-component-class') == null) {
-        var children_elements = allDomDescendantsAndSelfWithAttr(c, attr_name: attr_name, attr_value: attr_value);
-        if(children_elements != null)
-          elements.addAll(children_elements);
-        if(elements.length > 0 && first_only)
-          break;
-      }
-    }
-
-    return elements;
-  }
-
-  /** Calls a specific method on all of it's children. If method doesn't exist on one of the
-    * children, ignores and doesn't raise an exception. This method is useful when we want to
-    * communicate a common an action to all children, such as when we want to reset() all form
-    * elements.
-    */
-  void applyToChildren(method_name, [args=null, recursive=false, condition=null]) {
-    for(var c in children) {
-      if(condition == null || (condition != null && condition(c))) {
-        if(hasMethod(method_name, c))
-          callMethod(method_name, c, args);
-        if(recursive != false)
-          c.applyToChildren(method_name, args, #recursive, condition);
-      }
-    }
-  }
-
   /** Is run after a component is initialized by a parent component (but not manually).
     * Override this method in descendants, but don't forget to call super() inside, or
     * you'll be left without behaviors!
     */
   void afterInitialize() {
     _createBehaviors();
-  }
-
-  /** Updates all properties values from their DOM nodes values.
-    * If provided with an optional List of property names, updates only
-    * properties that are on that List.
-    */
-  void updatePropertiesFromNodes({ attrs: false, invoke_callbacks: false }) {
-    if(attrs == false)
-      attrs = this.attribute_names;
-    for(var a in attrs) {
-      prvt_readPropertyFromNode(a);
-      if(invoke_callbacks)
-        invokeAttributeCallback(a);
-    }
-  }
-
-  /** Updates dom element's #text or attribute so it refelects Component's current property value. */
-  void prvt_writePropertyToNode(String property_name) {
-    if(this.dom_element == null)
-      return;
-    var property_el = prvt_findPropertyEl(property_name);
-    if(property_el != null) {
-      var pa = property_el.attributes['data-component-attribute-properties'];
-      if(pa == null)
-        property_el.text = this.attributes[property_name];
-      else {
-        var attr_property_name = prvt_getHtmlAttributeNameForProperty(pa, property_name);
-        if(this.attributes[property_name] == null)
-          property_el.attributes.remove(attr_property_name);
-        else
-          property_el.setAttribute(attr_property_name, this.attributes[property_name]);
-      }
-    }
-  }
-
-  /** Reads property value from a DOM node, updates Component's object property with the value */
-  void prvt_readPropertyFromNode(String property_name) {
-    var property_el = prvt_findPropertyEl(property_name);
-    if(property_el != null) {
-      var pa = property_el.attributes['data-component-attribute-properties'];
-      if(pa == null) {
-        var s = property_el.text;
-        // Ignore whitespace. If you need to preserve whitespace,
-        // use attribute-based properties instead.
-        s = s.replaceFirst(new RegExp(r"^\s+"), "");
-        s = s.replaceFirst(new RegExp(r"\s+$"), "");
-        this.attributes[property_name] = s;
-      }
-      else {
-        var attr_property_name = prvt_getHtmlAttributeNameForProperty(pa, property_name);
-        this.attributes[property_name] = property_el.getAttribute(attr_property_name);
-      }
-      if(this.attributes[property_name] is String && this.attributes[property_name].isEmpty)
-        this.attributes[property_name] = null;
-    }
-  }
-
-  /** Finds property node in the DOM */
-  HtmlElement prvt_findPropertyEl(String property_name) {
-    var property_el = this.firstDomDescendantOrSelfWithAttr(
-      this.dom_element,
-      attr_name: "data-component-property",
-      attr_value: property_name
-    );
-    if(property_el == null) {
-      property_el = this.firstDomDescendantOrSelfWithAttr(
-        this.dom_element,
-        attr_name: "data-component-attribute-properties",
-        // This one finds attribute properties of the format
-        // property_name:html_attribute_name_for_the_property
-        attr_value: new RegExp('(^|,| +)$property_name:')
-      );
-    }
-    return property_el;
-  }
-
-  String prvt_getHtmlAttributeNameForProperty(String attr_list, String property_name) {
-    var attr_list_regexp = new RegExp("${property_name}:" r"[a-zA-Z0-9_\-]+");
-    return attr_list_regexp.firstMatch(attr_list)[0].split(':')[1];
-  }
-
-  /** Finds whether the dom_element's descendants has a particular node
-    * or if it itself is this node.
-    */
-  bool prvt_hasNode(node) {
-    if(node == this.dom_element)
-      return true;
-    for(final descendant in this.dom_element.querySelectorAll("*"))
-      if(node == descendant)
-        return true;
-    return false;
-  }
-
-  /** Finds the template HtmlElement in the dom and assigns it to #template */
-  void _initTemplate() {
-    this.template = querySelector("[data-component-template=${this.runtimeType.toString()}");
   }
 
   /** Starts listening to native events defined in #native_events. It is
@@ -549,74 +260,6 @@ class Component extends Object with observable.Subscriber,
           behavior_instances.add(behavior_instance);
       });
     });
-  }
-
-  void _assignRolesFromDomElement() {
-    var roles_attr = dom_element.getAttribute('data-component-roles');
-    if(roles_attr != null)
-      this.roles = dom_element.getAttribute('data-component-roles').split(new RegExp(r",\s?"));
-  }
-
-  /**  In order to be able to instatiate nested components, we need to find descendants of the #dom_element
-    *  which have data-component-class attribute. This method takes care of that.
-    */
-  List<HtmlElement> _findChildComponentDomElements(node) {
-    List component_children = [];
-    node.children.forEach((c) {
-      if(c.getAttribute('data-component-class') == null)
-        component_children.addAll(_findChildComponentDomElements(c));
-      else
-        component_children.add(c);
-    });
-    return component_children;
-  }
-
-  /** This method defines a default behavior when a new child is added.
-    * Makes sense to append child dom_element to the parent's dom_element.
-    * Of course, this might not always be desirable, so this method may be
-    * redefined in descendant calasses.
-    */
-  void _appendChildDomElement(HtmlElement el) {
-    this.dom_element.append(el);
-  }
-
-  /** Defines behavior for removal of the #dom_element
-    * Redefine this method to have something fancier (like an animation)
-    * for when the #dom_element is removed.
-    */
-  void _removeDomElement() {
-    this.dom_element.remove();
-  }
-
-  /** Extracts validations with keys containing dots .
-    * as those are validations defined for descendants.
-    */
-  void _separateDescendantValidations() {
-    for(var k in this.validations.keys) {
-      if(k.contains('.')) {
-        this.descendant_validations[k] = this.validations[k];
-      }
-    }
-    for(var dv in this.descendant_validations.keys)
-      this.validations.remove(dv);
-  }
-
-  /** Adds validations to children by looking at #descendants_validations.
-    * Worth noting that if one of the validation keys contains more than one dot (.)
-    * it means that this validation is for one of the child's children and it gets added
-    * to child's #descendant_validations, not to #validations.
-    */
-  void _addValidationsToChild(c) {
-    for(var dr in this.descendant_validations.keys) {
-      var dr_map = dr.split('.');
-      var r      = dr_map.removeAt(0);
-      if(c.roles.contains(r)) {
-        if(dr_map.length > 1)
-          c.descendant_validations[dr_map.join('.')] = this.descendant_validations[dr];
-        else
-          c.validations[dr_map[0]] = this.descendant_validations[dr];
-      }
-    }
   }
 
   // So far this is only required for Attributable module to work on this class.
