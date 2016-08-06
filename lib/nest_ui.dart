@@ -18,9 +18,10 @@ export 'package:logmaster/logmaster.dart';
 
 // parts of the current lib
 part 'class_dynamic_operations.dart';
-part 'modules/component_dom_functions.dart';
-part 'modules/component_heritage_functions.dart';
-part 'modules/component_validation_functions.dart';
+part 'modules/component_dom.dart';
+part 'modules/component_heritage.dart';
+part 'modules/component_validation.dart';
+part 'modules/component_event_lock.dart';
 part 'modules/position_manager.dart';
 
 part 'component.dart';

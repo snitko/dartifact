@@ -1,6 +1,6 @@
 part of nest_ui;
 
-abstract class ComponentValidationFunctions {
+abstract class ComponentValidation {
 
   /** This is not to be updated manually. Validations for descenndants are defined along
     * all other validations in #validations Map, but dot (.) is used to separate roles of

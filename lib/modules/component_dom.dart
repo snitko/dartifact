@@ -1,6 +1,6 @@
 part of nest_ui;
 
-abstract class ComponentDomFunctions {
+abstract class ComponentDom {
 
   /** Clones #template and assigns the clone to #dom_element, then sets all the properties */
   void initDomElementFromTemplate() {

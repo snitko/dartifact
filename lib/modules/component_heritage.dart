@@ -1,6 +1,6 @@
 part of nest_ui;
 
-abstract class ComponentHeritageFunctions {
+abstract class ComponentHeritage {
 
   /** Very important! This is why the library is called nest_ui. Components are nested.
    *  This method goes through the #dom_element descendants looking for elements which
