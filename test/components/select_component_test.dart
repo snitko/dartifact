@@ -14,6 +14,16 @@ class MySelectComponent extends SelectComponent {
   List behaviors = [MySelectComponentBehaviors];
 }
 
+class MyParentComponent extends Component {
+  List events_history = [];
+  MyParentComponent() {
+    this.dom_element = new DivElement();
+    event_handlers.add(event: 'change', role: 'select', handler: (self,caller) {
+      self.events_history.add("'change' event on select");
+    });
+  }
+}
+
 class KeyEventMock {
   String type;
   int keyCode, charCode;
@@ -93,6 +103,14 @@ void main() {
       select_comp.setValueByInputValue("null");
       expect(select_comp.display_value,     isNull);
       expect(select_comp.focused_option_id, isNull);
+    });
+
+    test("publishes a 'change' event after setting a new value", () {
+      select_comp.roles = ["select"];
+      var parent = new MyParentComponent();
+      parent.addChild(select_comp);
+      select_comp.setValueByInputValue("option_3");
+      expect(parent.events_history[0], equals("'change' event on select"));
     });
 
     test("focuses on previous option", () {

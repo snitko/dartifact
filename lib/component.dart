@@ -120,7 +120,6 @@ class Component extends Object with observable.Subscriber,
       [Component.app_library, 'nest_ui'].forEach((l) {
         var component = new_instance_of(el.getAttribute('data-component-class'), [], l);
         if(component != null) {
-          component.addObservingSubscriber(this);
           component.dom_element = el;
           this.addChild(component);
           component.afterInitialize();
@@ -223,6 +222,7 @@ class Component extends Object with observable.Subscriber,
     */
   addChild(Component child) {
     _addValidationsToChild(child);
+    child.addObservingSubscriber(this);
     // We only do it if this element is clearly not in the DOM.
     if(child.dom_element == null || child.dom_element.parent == null) {
       child.initDomElementFromTemplate();
