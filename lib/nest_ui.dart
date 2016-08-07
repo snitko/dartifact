@@ -32,4 +32,11 @@ part 'components/form_field_component.dart';
 part 'components/numeric_form_field_component.dart';
 part 'components/root_component.dart';
 
+/* These ones are not included by default. Placed here to
+ * explicitly explain that and also so that when documentation is generated,
+ * we can uncomment it and include it into the documentation.
+ */
+/*part 'behaviors/select_component_behaviors.dart';*/
+/*part 'components/select_component.dart';*/
+
 part 'nest_ui_app.dart';

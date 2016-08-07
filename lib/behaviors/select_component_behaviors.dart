@@ -41,11 +41,6 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
     _scroll();
   }
 
-  externalClickResponse() {
-    this.component.opened = false;
-    close();
-  }
-
   _removeFocusFromOptions() {
     this.options_container.querySelectorAll('.option').forEach((el) => el.classes.remove("focused"));
   }

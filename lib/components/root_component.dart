@@ -18,7 +18,4 @@ class RootComponent extends Component {
 
   }
 
-
-
 }
-

@@ -28,7 +28,8 @@ class Component extends Object with observable.Subscriber,
   /// a DOM element associated with this component
   HtmlElement _dom_element;
 
-  /// ... and you can add more, for example [... ButtonBehaviors, LinkBehaviors]
+  /// Contains behavior classes from which objects are instantiated.
+  /// You can add more, for example [... ButtonBehaviors, LinkBehaviors]
   List behaviors  = [BaseComponentBehaviors];
   /// instantiated behavior objects, don't touch it
   List behavior_instances = [];

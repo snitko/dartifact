@@ -90,6 +90,11 @@ abstract class ComponentHeritage {
     * children, ignores and doesn't raise an exception. This method is useful when we want to
     * communicate a common an action to all children, such as when we want to reset() all form
     * elements.
+    *
+    * The last argument - `condition` - is a function which is passed a child component.
+    * The method is not called on any child for which the function returned false.
+    * If condition argument is `null` (or nothing passed), then the method is called
+    * on all children regardless.
     */
   void applyToChildren(method_name, [args=null, recursive=false, condition=null]) {
     for(var c in children) {
