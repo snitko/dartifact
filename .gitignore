@@ -2,4 +2,4 @@
 .pub
 packages/
 example/
-test/components/packages
+test/packages
