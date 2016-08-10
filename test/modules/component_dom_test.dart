@@ -41,7 +41,18 @@ void main() {
     test("finds first descendant with a particular attribute", () {
       expect(c.firstDomDescendantOrSelfWithAttr(el, attr_name: "test-attr", attr_value: "test"), equals(d1));
     });
-    
+
+    test("read numeric properties and parses them into int or double", () {
+      d1.attributes["test-attr"] = "5.312321";
+      c.prvt_readPropertyFromNode();
+      expect(c.attributes["test-attr"], equals(5.312321));
+      d1.attributes["test-attr"] = "5";
+      c.prvt_readPropertyFromNode();
+      expect(c.attributes["test-attr"], equals(5));
+      d1.attributes["test-attr"] = "5a";
+      c.prvt_readPropertyFromNode();
+      expect(c.attributes["test-attr"], equals("5a"));
+    });
     
   });
 

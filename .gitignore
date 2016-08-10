@@ -3,3 +3,4 @@
 packages/
 example/
 test/packages
+test/*/packages
