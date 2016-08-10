@@ -24,6 +24,16 @@ void main() {
       c.value = "10a";
       expect(c.value, equals("10"));
     });
+
+    test("doesn't allow value to be more than max_length", () {
+      c.max_length = '15';
+      c.value = "12345678901234567";
+      expect(c.value, equals(null));
+      c.value = "123456789012345";
+      expect(c.value, equals("123456789012345"));
+    });
+    
+
   });
   
 

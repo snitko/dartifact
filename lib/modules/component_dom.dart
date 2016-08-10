@@ -66,14 +66,14 @@ abstract class ComponentDom {
   }
 
   /** Updates dom element's #text or attribute so it refelects Component's current property value. */
-  void prvt_writePropertyToNode(String property_name) {
+  void prvt_writePropertyToNode(property_name) {
     if(this.dom_element == null)
       return;
     var property_el = prvt_findPropertyEl(property_name);
     if(property_el != null) {
       var pa = property_el.attributes['data-component-attribute-properties'];
       if(pa == null)
-        property_el.text = this.attributes[property_name];
+        property_el.text = this.attributes[property_name].toString();
       else {
         var attr_property_name = prvt_getHtmlAttributeNameForProperty(pa, property_name);
         if(this.attributes[property_name] == null)
