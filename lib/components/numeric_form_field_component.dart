@@ -17,7 +17,7 @@ class NumericFormFieldComponent extends FormFieldComponent {
 
   @override
   set value(v) {
-    var numeric_regexp = new RegExp(r"^\d*$");
+    var numeric_regexp = new RegExp(r"^(\d|\.)*$");
     if(numeric_regexp.hasMatch(v)) {
       this.attributes["value"] = v;
       this.publishEvent("change", this);
