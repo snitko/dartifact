@@ -20,9 +20,9 @@ void main() {
 
     test("doesn't allow to enter non-numeric characters", () {
       c.value = "10";
-      expect(c.value, equals("10"));
+      expect(c.value, equals(10));
       c.value = "10a";
-      expect(c.value, equals("10"));
+      expect(c.value, equals(10));
     });
 
     test("doesn't allow value to be more than max_length", () {
@@ -30,8 +30,22 @@ void main() {
       c.value = "12345678901234567";
       expect(c.value, equals(null));
       c.value = "123456789012345";
-      expect(c.value, equals("123456789012345"));
+      expect(c.value, equals(123456789012345));
     });
+
+    test("ingores incorrect non-numeric values and sets value to null instead", () {
+      c.value = ".";
+      expect(c.value, isNull);
+      c.value = ".0";
+      expect(c.value, isNull);
+      c.value = "1.";
+      expect(c.value, isNull);
+      c.value = "1.2345";
+      expect(c.value, equals(1.2345));
+      c.value = 1.5432;
+      expect(c.value, equals(1.5432));
+    });
+    
     
 
   });

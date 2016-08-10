@@ -17,13 +17,27 @@ class NumericFormFieldComponent extends FormFieldComponent {
 
   @override
   set value(v) {
-    var numeric_regexp = new RegExp(r"^(\d|\.)*$");
-    if(numeric_regexp.hasMatch(v) && (max_length == null || v.length <= int.parse(max_length))) {
+
+    if(v is String) {
+      var numeric_regexp = new RegExp(r"^(\d|\.)*$");
+      if(numeric_regexp.hasMatch(v) && (max_length == null || v.length <= int.parse(max_length))) {
+
+        this.publishEvent("change", this);
+
+        if(v.endsWith(".") || v.startsWith("."))
+          v = null;
+        else if(v != null && v.length > 0)
+          v = double.parse(v);
+        else
+          v = null;
+        this.attributes["value"] = v;
+
+      } else {
+        this.value_holder_element.value = this.value.toString();
+      }
+    } else if (v is num) {
       this.attributes["value"] = v;
-      this.publishEvent("change", this);
     }
-    else
-      this.value_holder_element.value = this.value;
   }
 
   @override
