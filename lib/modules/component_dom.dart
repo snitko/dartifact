@@ -100,10 +100,12 @@ abstract class ComponentDom {
       else {
         var attr_property_name = prvt_getHtmlAttributeNameForProperty(pa, property_name);
         var v = property_el.getAttribute(attr_property_name);
-        if(v.match(r"^\d+.\d+$")) // it's a double!
-          v = double.parse(v);
-        else if(v.match(r"^\d+$")) // it's an integer!
-          v = int.parse(v);
+
+        if(v != null)
+          if(new RegExp(r"^\d+.\d+$").hasMatch(v)) // it's a double!
+            v = double.parse(v);
+          else if(new RegExp(r"^\d+$").hasMatch(v)) // it's an integer!
+            v = int.parse(v);
         this.attributes[property_name] = v;
       }
       if(this.attributes[property_name] is String && this.attributes[property_name].isEmpty)

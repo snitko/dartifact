@@ -27,6 +27,7 @@ void main() {
       d3.append(d2);
       el.append(d1);
       el.append(d3);
+      c.dom_element = el;
     });
 
     test("finds all dom descendants with a particular attribute", () {
@@ -43,15 +44,16 @@ void main() {
     });
 
     test("read numeric properties and parses them into int or double", () {
+      d1.attributes['data-component-attribute-properties'] = "test_attr:test-attr";
       d1.attributes["test-attr"] = "5.312321";
-      c.prvt_readPropertyFromNode();
-      expect(c.attributes["test-attr"], equals(5.312321));
+      c.prvt_readPropertyFromNode("test_attr");
+      expect(c.attributes["test_attr"], equals(5.312321));
       d1.attributes["test-attr"] = "5";
-      c.prvt_readPropertyFromNode();
-      expect(c.attributes["test-attr"], equals(5));
+      c.prvt_readPropertyFromNode("test_attr");
+      expect(c.attributes["test_attr"], equals(5));
       d1.attributes["test-attr"] = "5a";
-      c.prvt_readPropertyFromNode();
-      expect(c.attributes["test-attr"], equals("5a"));
+      c.prvt_readPropertyFromNode("test_attr");
+      expect(c.attributes["test_attr"], equals("5a"));
     });
     
   });
