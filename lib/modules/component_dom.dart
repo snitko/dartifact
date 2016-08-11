@@ -79,7 +79,7 @@ abstract class ComponentDom {
         if(this.attributes[property_name] == null)
           property_el.attributes.remove(attr_property_name);
         else
-          property_el.setAttribute(attr_property_name, this.attributes[property_name]);
+          property_el.setAttribute(attr_property_name, this.attributes[property_name].toString());
       }
     }
   }

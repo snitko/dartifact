@@ -19,11 +19,9 @@ class NumericFormFieldComponent extends FormFieldComponent {
   set value(v) {
 
     if(v is String) {
+
       var numeric_regexp = new RegExp(r"^(\d|\.)*$");
-      if(numeric_regexp.hasMatch(v) && (max_length == null || v.length <= int.parse(max_length))) {
-
-        this.publishEvent("change", this);
-
+      if(numeric_regexp.hasMatch(v) && (max_length == null || v.length <= max_length)) {
         if(v.endsWith(".") || v.startsWith("."))
           v = null;
         else if(v != null && v.length > 0)
@@ -31,12 +29,16 @@ class NumericFormFieldComponent extends FormFieldComponent {
         else
           v = null;
         this.attributes["value"] = v;
-
+        this.publishEvent("change", this);
       } else {
-        this.value_holder_element.value = this.value.toString();
+        this.value_holder_element.value = this.value.toString().replaceFirst(new RegExp(r"\.0$"), "");
       }
+
     } else if (v is num) {
+
       this.attributes["value"] = v;
+      this.publishEvent("change", this);
+
     }
   }
 
