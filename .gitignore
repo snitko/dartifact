@@ -1,5 +1,6 @@
 .packages
 .pub
+.pub/*
 packages/
 example/
 test/packages

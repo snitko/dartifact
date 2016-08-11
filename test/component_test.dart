@@ -8,12 +8,6 @@ class MyComponent extends Component {
 
   final List attribute_names = ['property1', 'property2', 'property3', 'property4', 'validation_errors_summary'];
 
-  Map validations = {
-    'role1.role3.property1': { 'isNotNull' : true },
-    'role1.property1':       { 'isNotNull' : true },
-    'property1':             { 'isNotNull' : true }
-  };
-
   Map attribute_callbacks = {
     'default' : (attr_name, self) {
       self.attribute_callbacks_history.add("$attr_name updated");
@@ -448,52 +442,6 @@ void main() {
         expect(c.findDescendantsByRole('role1.role3'), equals([c.children[0].children[0]]));
       });
 
-    });
-
-    group("validation of children", () {
-
-      var child_component_el2 = new DivElement();
-
-      setUp(() {
-        child_component_el2.setAttribute('data-component-class', 'MyChildComponent');
-        child_component_el2.setAttribute('data-component-roles', 'role3,role4');
-        child_component_el.append(child_component_el2);
-        c.initChildComponents();
-      });
-
-      test("it defines validation on all descendants with a specific role", () {
-
-        expect(c.children[0].validations, equals({
-          'property1': { 'isNotNull'  : true }
-        }));
-
-        expect(c.children[0].children[0].validations, equals({
-          'property1': { 'isNotNull'  : true }
-        }));
-
-      });
-
-      test("collect validation errors in validation_errors_summary as a String", () {
-        c.validate(deep: false);
-        expect(c.validation_errors_summary, equals('property1: should not be null'));
-        // Not deep validation!
-        expect(c.children[0].validation_errors, isEmpty);
-      });
-
-      test("run validations on children too", () {
-        c.validate(deep: true);
-        expect(c.children[0].validation_errors_summary, equals('property1: should not be null'));
-        expect(c.children[0].children[0].validation_errors_summary, equals('property1: should not be null'));
-      });
-
-      test("shows the validation errors summary block if invalid after validation", () {
-        
-      });
-
-      test("hides the validation errors summary block if valid after validation", () {
-        
-      });
-      
     });
     
   });

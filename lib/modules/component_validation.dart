@@ -73,10 +73,15 @@ abstract class ComponentValidation {
       var dr_map = dr.split('.');
       var r      = dr_map.removeAt(0);
       if(c.roles.contains(r)) {
+        
+        var validation = this.descendant_validations[dr];
+        if(validation.containsKey('function'))
+          validation["object"] = this;
+
         if(dr_map.length > 1)
-          c.descendant_validations[dr_map.join('.')] = this.descendant_validations[dr];
+          c.descendant_validations[dr_map.join('.')] = validation;
         else
-          c.validations[dr_map[0]] = this.descendant_validations[dr];
+          c.validations[dr_map[0]] = validation;
       }
     }
   }
