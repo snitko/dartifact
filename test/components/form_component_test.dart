@@ -47,7 +47,7 @@ void main() {
     c.dom_element.append(text_area);
     c.dom_element.append(validations_summary);
     c.validate();
-    expect(c.dom_element.children[1].style.display, equals(''));
+    expect(c.dom_element.children[1].style.display, equals('block'));
     c.value = 1;
     c.validate();
     expect(c.dom_element.children[1].style.display, equals('none'));
