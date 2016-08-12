@@ -155,6 +155,24 @@ class Component extends Object with observable.Subscriber,
     this.dom_element = null;
   }
 
+  /** This method is here because dart2js doesn't support super() calls in mixins.
+    * Thus, the actual functionality is in _addChild() method inside the ComponentHeritage module
+    * and this is just a front calling _addChild() and then super.addChild();
+    */
+  void addChild(child) {
+    _addChild(child);
+    super.addChild(child);
+  }
+
+  /** This method is here because dart2js doesn't support super() calls in mixins.
+    * Thus, the actual functionality is in _validate() method inside the ComponentValidation module
+    * and this is just a front calling _validate() and then super.validate();
+    */
+  bool validate({deep: true}) {
+    super.validate();
+    return _validate(deep: deep);
+  }
+
   /** Is run after a component is initialized by a parent component (but not manually).
     * Override this method in descendants, but don't forget to call super() inside, or
     * you'll be left without behaviors!

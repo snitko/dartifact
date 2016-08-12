@@ -22,8 +22,7 @@ abstract class ComponentValidation {
     * 2. Run validations on children too if deep is set to true.
     */
   @override
-  bool validate({ deep: true }) {
-    super.validate();
+  bool _validate({ deep: true }) {
 
     try {
       if(!valid) {

@@ -25,26 +25,6 @@ abstract class ComponentHeritage {
     });
   }
 
-  /** Reloading HeritageTree#add_child to automatically do the following things
-    * when a child component is added:
-    *
-    * 1. Initialize a dom_element from template
-    * 2. Append child's dom_element to the parent's dom_element.
-    *
-    * Obviously, you might not always want (2), so just redefine #_appendChildDomElement()
-    * method in your class to change this behavior.
-    */
-  void addChild(Component child) {
-    _addValidationsToChild(child);
-    child.addObservingSubscriber(this);
-    // We only do it if this element is clearly not in the DOM.
-    if(child.dom_element == null || child.dom_element.parent == null) {
-      child.initDomElementFromTemplate();
-      _appendChildDomElement(child.dom_element);
-    }
-    super.addChild(child);
-  }
-
   /** Finds immediate children with a specific role */
   List<Component> findChildrenByRole(r) {
     var children_with_roles = [];
@@ -104,6 +84,25 @@ abstract class ComponentHeritage {
         if(recursive != false)
           c.applyToChildren(method_name, args, #recursive, condition);
       }
+    }
+  }
+
+  /** Reloading HeritageTree#add_child to automatically do the following things
+    * when a child component is added:
+    *
+    * 1. Initialize a dom_element from template
+    * 2. Append child's dom_element to the parent's dom_element.
+    *
+    * Obviously, you might not always want (2), so just redefine #_appendChildDomElement()
+    * method in your class to change this behavior.
+    */
+  void _addChild(Component child) {
+    _addValidationsToChild(child);
+    child.addObservingSubscriber(this);
+    // We only do it if this element is clearly not in the DOM.
+    if(child.dom_element == null || child.dom_element.parent == null) {
+      child.initDomElementFromTemplate();
+      _appendChildDomElement(child.dom_element);
     }
   }
 
