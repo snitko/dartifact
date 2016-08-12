@@ -32,7 +32,10 @@ class NumericFormFieldComponent extends FormFieldComponent {
         this.attributes["value"] = v;
         this.publishEvent("change", this);
       } else {
-        this.value_holder_element.value = this.value.toString().replaceFirst(new RegExp(r"\.0$"), "");
+        if(this.value != null)
+          this.value_holder_element.value = this.value.toString().replaceFirst(new RegExp(r"\.0$"), "");
+        else
+          this.value_holder_element.value = "";
       }
 
     } else if (v is num) {
