@@ -47,6 +47,7 @@ abstract class ComponentValidation {
         }
       }
     }
+    valid ? behave('hideErrors') : behave('showErrors');
     return valid;
   }
 
