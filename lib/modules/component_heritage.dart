@@ -35,6 +35,17 @@ abstract class ComponentHeritage {
     return children_with_roles;
   }
 
+  /** Finds the first child with a specified role
+    * Not this method knows nothing about the order of children in the DOM!
+    */
+  Component findFirstChildByRole(r) {
+    var children = findChildrenByRole(r);
+    if(children.length > 0)
+      return children[0];
+    else
+      return null;
+  }
+
   /** Finds all descendants wich satisfy role path.
     * For example, if the current element has a child with role 'form' and
     * this child in turn has a child with role 'submit', then calling

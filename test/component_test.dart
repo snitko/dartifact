@@ -429,8 +429,14 @@ void main() {
 
       test("finds all children with a specific role", () {
         c.initChildComponents();
-        expect(c.findChildrenByRole('role1'), equals([c.children[0]]));
+        expect(c.findChildrenByRole('role1'), contains(c.children[0]));
         expect(c.findChildrenByRole('role100'), equals([]));
+      });
+
+      test("finds first child with a specific role", () {
+        c.initChildComponents();
+        expect(c.findFirstChildByRole('role1'), equals(c.children[0]));
+        expect(c.findFirstChildByRole('role100'), isNull);
       });
 
       test("finds all descendants with a specific role using . as a parent qualifier", () {
