@@ -2,14 +2,7 @@ part of nest_ui;
 
 class NumericFormFieldComponent extends FormFieldComponent {
 
-  List native_events   = ["!value_holder.keyup"];
   List attribute_names = ["validation_errors_summary", "name", "disabled", "max_length"];
-
-  NumericFormFieldComponent() {
-    event_handlers.add(event: 'keyup', role: 'self.value_holder', handler: (self,event) {
-      prvt_updateValueFromDom();
-    });
-  }
 
   void afterInitialize() {
     super.afterInitialize();

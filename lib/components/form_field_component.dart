@@ -2,7 +2,7 @@ part of nest_ui;
 
 class FormFieldComponent extends Component {
 
-  List   native_events   = ["value_holder.change", "change"];
+  List   native_events   = ["value_holder.change", "change", "!value_holder.keyup"];
   String value_property  = 'value';
   List   attribute_names = ["validation_errors_summary", "name", "disabled"];
   List   behaviors       = [FormFieldComponentBehaviors];
@@ -16,6 +16,10 @@ class FormFieldComponent extends Component {
         'self.value_holder': (self,event) => self.prvt_updateValueFromDom()
       }
     );
+
+    event_handlers.add(event: 'keyup', role: 'self.value_holder', handler: (self,event) {
+      prvt_updateValueFromDom();
+    });
 
   }
 
@@ -43,6 +47,5 @@ class FormFieldComponent extends Component {
   void prvt_updateValueFromDom() {
     this.updateAttributes({ "$value_property" : value_holder_element.value });
   }
-
 
 }
