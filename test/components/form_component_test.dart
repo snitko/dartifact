@@ -61,6 +61,13 @@ void main() {
     expect(c.value, isNull);
     expect(c.value_holder_element.value, '');
   });
+
+  test("sets value to the DOM element after the attribute has been changed", () {
+    c.dom_element = new TextAreaElement();
+    c.value       = 'some text';
+    expect(c.dom_element.value, equals("some text"));
+    expect(c.dom_element.text,  equals("some text"));
+  });
   
   
 

@@ -9,7 +9,10 @@ class FormFieldComponent extends Component {
 
   FormFieldComponent() {
 
-    attribute_names.add(value_property);
+    attribute_names.add(this.value_property);
+    attribute_callbacks[this.value_property] = (attr_name, self) {
+      prvt_setValueForValueHolderElement(self.attributes[self.value_property]);
+    };
 
     event_handlers.addForEvent('change', {
         #self:               (self,event) => self.prvt_updateValueFromDom(),
@@ -42,6 +45,14 @@ class FormFieldComponent extends Component {
     if(value_holder == null)
       value_holder = this.dom_element;
     return value_holder;
+  }
+
+  prvt_setValueForValueHolderElement(v) {
+    attributes["value"] = v;
+    v == null ? v = "" : v = v.toString();
+    this.value_holder_element.value = v;
+    if(this.value_holder_element is TextAreaElement)
+      this.value_holder_element.text = v;
   }
 
   void prvt_updateValueFromDom() {
