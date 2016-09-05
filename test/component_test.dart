@@ -169,7 +169,7 @@ void main() {
         // Second event, not supposed to be handled:
         child_component_el.click();
         expect(c.events_history, isNot(contains("MyComponent.role1#clicked")));
-      });
+      });      
 
     });
     
@@ -200,6 +200,37 @@ void main() {
         c.dom_element = el;
         component_part2.click();
         expect(c.events_history[0], equals("MyComponent.text_field#clicked"));
+      });
+
+      test("re-creates events and catches events for newly added html elements", () {
+        var component_part1 = new DivElement();
+        var component_part2 = new DivElement();
+        component_part1.setAttribute('data-component-part', 'text_field');
+        component_part2.setAttribute('data-component-part', 'text_field');
+        el.append(component_part1);
+
+        c.dom_element = el; // attaching event listeners here
+        component_part1.click();
+
+        expect(c.events_history[0], equals("MyComponent.text_field#clicked"));
+        expect(c.events_history[1], isNot(equals("MyComponent.text_field#clicked")));
+        expect(c.events_history.length, equals(3));
+        c.events_history.clear();
+
+        el.append(component_part2);
+        component_part2.click();
+        expect(c.events_history[0], isNot(equals("MyComponent.text_field#clicked")));
+        expect(c.events_history[0], isNot(equals("MyComponent.self#clicked")));
+        expect(c.events_history[1], isNot(equals("MyComponent.self#clicked")));
+        expect(c.events_history.length, equals(2));
+        c.events_history.clear();
+
+        c.reCreateNativeEventListeners();
+        component_part2.click();
+        expect(c.events_history[0], equals("MyComponent.text_field#clicked"));
+        expect(c.events_history[1], isNot(equals("MyComponent.text_field#clicked")));
+        expect(c.events_history.length, equals(3));
+
       });
 
       test("invokes default browser event handler", () {

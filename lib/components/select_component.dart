@@ -91,6 +91,22 @@ class SelectComponent extends Component {
     }
   }
 
+  /** Takes the `options` property and creates html elements for each given option
+    * within the options container. All previously existing options are removed from that
+    * container.
+    */
+  updateOptionsInDom() {
+    var options_container = this.dom_element.querySelector("[data-component-part=\"options_container\"]");
+    options_container.children.clear();
+    options.forEach((k,v) {
+      var option = this.dom_element.querySelector("[data-component-part=\"option_template\"]").clone(true);
+      option.attributes["data-component-part"] = "option";
+      option.attributes["data-option-value"]   = k;
+      option.text = v;
+      options_container.append(option);
+    });
+  }
+
   /**************************************************************************
    * The following methods are used to effectively navigate the selectbox
    * with arrow keys. They key handler looks up the keyCode (UP or DOWN) and

@@ -92,7 +92,27 @@ void main() {
       expect(select_comp.options.keys, equals([]));
       select_comp.readOptionsFromDom();
       expect(select_comp.options.keys, equals(["option_1", "option_2", "option_3", "option_4", "option_5"]));
+    });
+
+    test("writes option input and display values to DOM", () {
+      var options_container = new DivElement();
+      options_container.attributes["data-component-part"] = "options_container";
+      select_el.append(options_container);
       
+      var option_template = new DivElement();
+      option_template.attributes["data-component-part"] = "option_template";
+      select_el.append(option_template);
+
+      select_comp.options = new LinkedHashMap();
+      select_comp.options["option_1"] = "option 1";
+      select_comp.options["option_2"] = "option 2";
+      select_comp.updateOptionsInDom();
+
+      var option_els = select_el.querySelectorAll("[data-component-part=\"option\"]");
+      expect(option_els[0].attributes["data-option-value"], equals("option_1"));
+      expect(option_els[0].text, equals("option 1"));
+      expect(option_els[1].attributes["data-option-value"], equals("option_2"));
+      expect(option_els[1].text, equals("option 2"));
     });
 
     test("sets display value and focused option using the input value", () {

@@ -25,6 +25,11 @@ class Component extends Object with observable.Subscriber,
    */
   List native_events = []; // native_events_list;
 
+  /** This is where Dart listeners for native events are stored, so we can cance
+    * a listenere later, for example
+    */
+  Map native_event_listeners = {};
+
   /// a DOM element associated with this component
   HtmlElement _dom_element;
 
@@ -181,6 +186,18 @@ class Component extends Object with observable.Subscriber,
     _createBehaviors();
   }
 
+  /** Sometimes we need to re-create all or some event listeners for native events. This
+    * is usually necessary when new elements are added onto the page - previously created
+    * listeners don't really monitor them. This method is created for this specific reason.
+    *
+    * This method first gets read of ALL existing listeners, the creates new listeners
+    * for all events listed in `native_events` property.
+    */
+  void reCreateNativeEventListeners() {
+    _cancelEventListeners();
+    _listenToNativeEvents();
+  }
+
   /** Starts listening to native events defined in #native_events. It is
    *  called (and thus, listeners are re-initialized) if #dom_element changes.
    *  Native events may come from the #dom_element itself or from one of its descendants.
@@ -199,6 +216,8 @@ class Component extends Object with observable.Subscriber,
         prevent_default = false;
       }
 
+      var original_native_event_name = e;
+
       // Event belongs to an html element which is a descendant of our component's dom_element
       if(e.contains('.')) {
         e = e.split('.'); // the original string is something like "text_field.click"
@@ -211,7 +230,7 @@ class Component extends Object with observable.Subscriber,
         );
         if(part_els != null && part_els.length > 0) {
           for(var part_el in part_els) {
-            part_el.on[event_name].listen((e) {
+            this.native_event_listeners[original_native_event_name] = part_el.on[event_name].listen((e) {
               this.captureEvent(e, ["self.$part_name"], prevent_default: prevent_default, is_native: true);
             });
           }
@@ -219,11 +238,30 @@ class Component extends Object with observable.Subscriber,
       }
       // Event belongs to our component's dom_element
       else {
-        this.dom_element.on[e].listen((e) {
+        this.native_event_listeners[original_native_event_name] = this.dom_element.on[e].listen((e) {
           this.captureEvent(e, [#self], prevent_default: prevent_default, is_native: true);
         });
       }
    }); 
+  }
+
+  /** Cancels all existing event listeners for all native events
+    * listed in `native_events` property.
+    *
+    * An optional List argument can be provided, in which case only
+    * event listeners listed in it will be cancelled.
+    */
+  void _cancelEventListeners([List event_names=null]) {
+    if(event_names == null) {
+      this.native_event_listeners.forEach((k,v) => v.cancel());
+      this.native_event_listeners = {};
+    }
+    else {
+      event.names.forEach((e) {
+        this.native_event_listeners[e].cancel();
+        this.native_event_listeners.remove(e);
+      });
+    }
   }
 
   /**
