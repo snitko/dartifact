@@ -210,39 +210,39 @@ void main() {
       }
 
       test("invokes toggle behavior on enter/space", () {
-        select_comp.prvt_processKeyEvent(new_key_event(KeyCode.ENTER));
-        select_comp.prvt_processKeyEvent(new_key_event(KeyCode.SPACE));
+        select_comp.prvt_processKeyDownEvent(new_key_event(KeyCode.ENTER));
+        select_comp.prvt_processKeyDownEvent(new_key_event(KeyCode.SPACE));
         verify(behaviors.toggle()).called(2);
       });
 
       test("sets new value after pressing enter/space on one of the options, closes the select", () {
         select_comp.opened = true;
         select_comp.focused_option = "option_1";
-        select_comp.prvt_processKeyEvent(new_key_event(KeyCode.ENTER));
+        select_comp.prvt_processKeyDownEvent(new_key_event(KeyCode.ENTER));
         expect(select_comp.input_value, equals("option_1"));
         verify(behaviors.toggle()).called(1);
       });
 
       test("sets previous option as value after hitting UP", () {
-        select_comp.prvt_processKeyEvent(new_key_event(KeyCode.UP));
+        select_comp.prvt_processKeyDownEvent(new_key_event(KeyCode.UP));
         expect(select_comp.input_value, equals("option_5"));
       });
 
       test("sets next option as value after hitting DOWN", () {
-        select_comp.prvt_processKeyEvent(new_key_event(KeyCode.DOWN));
+        select_comp.prvt_processKeyDownEvent(new_key_event(KeyCode.DOWN));
         expect(select_comp.input_value, equals("option_1"));
       });
 
       test("sets previous option as focused after hitting UP", () {
         select_comp.opened = true;
-        select_comp.prvt_processKeyEvent(new_key_event(KeyCode.UP));
+        select_comp.prvt_processKeyDownEvent(new_key_event(KeyCode.UP));
         expect(select_comp.input_value, equals(null));
         expect(select_comp.focused_option, equals("option_5"));
       });
 
       test("sets next option as focused after hitting DOWN", () {
         select_comp.opened = true;
-        select_comp.prvt_processKeyEvent(new_key_event(KeyCode.DOWN));
+        select_comp.prvt_processKeyDownEvent(new_key_event(KeyCode.DOWN));
         expect(select_comp.input_value, equals(null));
         expect(select_comp.focused_option, equals("option_1"));
       });
