@@ -12,6 +12,7 @@ class SelectComponent extends Component {
 
   LinkedHashMap options = new LinkedHashMap();
   int lines_to_show = 10;
+  
 
   /** When user presses a key with selectbox focused,
     * we put the character typed by this key into a stack which holds it there for some
@@ -23,6 +24,8 @@ class SelectComponent extends Component {
   String keypress_stack = "";
   int    keypress_stack_last_updated = new DateTime.now().millisecondsSinceEpoch;
   static const keypress_stack_timeout = 1;
+
+  List special_keys = [32,38,40,27,13];
 
   /** The value that's picked and about to be set, but awaits user input - specifically a key press */
   String focused_option;
@@ -97,7 +100,7 @@ class SelectComponent extends Component {
     */
   updateOptionsInDom() {
     var options_container = this.dom_element.querySelector("[data-component-part=\"options_container\"]");
-    options_container.children.clear();
+    options_container.querySelectorAll("[data-component-part=option]").forEach((el) => el.remove());
     options.forEach((k,v) {
       var option = this.dom_element.querySelector("[data-component-part=\"option_template\"]").clone(true);
       option.attributes["data-component-part"] = "option";
@@ -121,6 +124,8 @@ class SelectComponent extends Component {
   String getNextValue(String current) {
     var key;
     var opt_keys = options.keys.toList();
+    if(opt_keys.isEmpty)
+      return null;
     if(current == null)
       return opt_keys.first;
     try {
@@ -137,6 +142,8 @@ class SelectComponent extends Component {
   String getPrevValue(String current) {
     var key;
     var opt_keys = options.keys.toList();
+    if(opt_keys.isEmpty)
+      return null;
     if(current == null)
       return opt_keys.last;
     try {
@@ -241,7 +248,7 @@ class SelectComponent extends Component {
     this.behave("close");
   }
 
-  /** Sometimes we need an index of the option (int), not it input_value */
+  /** Sometimes we need an index of the option (int), not its input_value */
   get focused_option_id {
     var result = options.keys.toList().indexOf(this.focused_option);
     if(result == -1)
@@ -258,7 +265,7 @@ class SelectComponent extends Component {
   void prvt_processKeyEvent(e) {
     if(this.event_locks.contains("keydown") || this.event_locks.contains(#any))
      return;
-    if(e.target == this.dom_element && this.disabled != 'disabled' && [32,38,40,27,13].contains(e.keyCode)) {
+    if(this.prvt_hasNode(e.target) && this.disabled != 'disabled' && special_keys.contains(e.keyCode)) {
       switch(e.keyCode) {
         case KeyCode.ESC:
           _toggleOpenedStatus();
@@ -277,7 +284,7 @@ class SelectComponent extends Component {
           this.setFocusedAndToggle();
           break;
       }
-    e.preventDefault();
+      e.preventDefault();
     } 
   }
 

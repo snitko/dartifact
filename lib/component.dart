@@ -86,11 +86,13 @@ class Component extends Object with observable.Subscriber,
    *  when the constructor is called. If you want to define custom Behaviors, simply create
    *  a MyBehaviors class and add into the #behaviors list.
    */
-  void behave(behavior) {
+  void behave(behavior, [Map attrs=null]) {
+    if(attrs == null)
+      attrs = [];
     behavior_instances.forEach((b) {
       if(!ignore_misbehavior || methods_of(b).contains(behavior)) {
         var im = reflect(b);
-        im.invoke(new Symbol(behavior), []);
+        im.invoke(new Symbol(behavior), attrs);
         return;
       }
     });
@@ -192,6 +194,9 @@ class Component extends Object with observable.Subscriber,
     *
     * This method first gets read of ALL existing listeners, the creates new listeners
     * for all events listed in `native_events` property.
+    *
+    * TODO: potential improvement would be to only cancel and re-create native events
+    * for parts because it is unlikely we'll remove the dom_element itself.
     */
   void reCreateNativeEventListeners() {
     _cancelEventListeners();

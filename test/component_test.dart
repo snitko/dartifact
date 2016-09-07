@@ -217,6 +217,8 @@ void main() {
         expect(c.events_history.length, equals(3));
         c.events_history.clear();
 
+        // Checking we don't yet catch events for the newly added element,
+        // because we haven't re-created listeners.
         el.append(component_part2);
         component_part2.click();
         expect(c.events_history[0], isNot(equals("MyComponent.text_field#clicked")));
@@ -225,6 +227,7 @@ void main() {
         expect(c.events_history.length, equals(2));
         c.events_history.clear();
 
+        // Now we re-create listeners and check the event is caught.
         c.reCreateNativeEventListeners();
         component_part2.click();
         expect(c.events_history[0], equals("MyComponent.text_field#clicked"));
