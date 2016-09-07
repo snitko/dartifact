@@ -8,9 +8,19 @@ class EditableSelectComponent extends SelectComponent {
   List behaviors       = [SelectComponentBehaviors, EditableSelectComponentBehaviors];
 
   static const keypress_stack_timeout = 0.5;
-  bool fetching_options       = false;
+  bool fetching_options               = false;
+
+  /** We need this additional property to store ALL loaded properties.
+    * When options are filtered, this one stores all options, regardless of whether they
+    * were filterd or not.
+    */
   LinkedHashMap original_options;
-  List special_keys = [38,40,27,13]; // ingore SPACE, because we might want to type it!
+
+  /** We need to ingore a press of SPACE key, because it is a actually a character
+    * used while typing field value, whereas in traditional SelectComponent (from which this
+    * class inherits) pressing SPACE opens the select options.
+    */
+  List special_keys = [38,40,27,13];
 
   EditableSelectComponent() {
   
@@ -79,6 +89,8 @@ class EditableSelectComponent extends SelectComponent {
 
   }
 
+  get current_input_value => this.dom_element.querySelector("[data-component-part=\"input\"]").value;
+
   /** Determines whether we allow custom options to be set as the value of the select
     * when we type something in, but no matches were fetched.
     */
@@ -95,7 +107,7 @@ class EditableSelectComponent extends SelectComponent {
     if(this.query_param_name == null)
       this.query_param_name = "q";
 
-    original_options = options;
+    this.original_options = options;
     _listenToOptionClickEvents();
 
   }
@@ -113,8 +125,9 @@ class EditableSelectComponent extends SelectComponent {
     });
   }
 
-  /** Only fetches options if fetch_url is specified.
-    * Otherwise filters existing options.
+  /** Decides between fetching an option from a remote URL (if fetch_url is set)
+    * or just filtering them out of existing pre-loaded ones.
+    * Once finished, opens the select box options.
     */
   void prvt_prepareOptions() {
 
@@ -130,6 +143,11 @@ class EditableSelectComponent extends SelectComponent {
 
   }
 
+  /** Filters options by the value typed in by user.
+    * This method is used when we don't want to fetch any options from
+    * the server and simply want to allow a more flexibler SelectComponent
+    * with the ability to enter value and see explicitly which values match.
+    */
   void prvt_filterOptions() {
     this.options = new LinkedHashMap.from(original_options);
     this.original_options.forEach((k,v) {
@@ -145,6 +163,13 @@ class EditableSelectComponent extends SelectComponent {
     _listenToOptionClickEvents();
   }
 
+  /** Makes a request to the remote server at the URL specified in `fetch_url`.
+    * Sends along an additional `q` param containing the value entered by user.
+    *
+    * Expects a json string to be returned containing key/values. However, please note,
+    * that for EditableSelectComponent currently only keys are used as values and as options
+    * text presented to the user.
+    */
   void prvt_fetchOptions() {
     var request_url_with_params = this.fetch_url;
     if(!request_url_with_params.contains("?"))
@@ -170,6 +195,9 @@ class EditableSelectComponent extends SelectComponent {
     });
   }
 
+  /** Cleares the select box input and sets it to the previous value. Usually
+    * called when user presses ESC key or focus is lost on the select element.
+    */
   prvt_clearCustomValue([force=false]) {
     if((!this.options.containsKey(this.input_value) && this.allow_custom_value == false) || force) {
       this.input_value = this.input_value;
@@ -198,7 +226,5 @@ class EditableSelectComponent extends SelectComponent {
     super.externalClickCallback();
     prvt_clearCustomValue();
   }
-
-  get current_input_value => this.dom_element.querySelector("[data-component-part=\"input\"]").value;
 
 }
