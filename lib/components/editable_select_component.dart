@@ -7,8 +7,8 @@ class EditableSelectComponent extends SelectComponent {
   List native_events   = ["arrow.click", "option.click", "!input.keyup", "!input.keydown", "!input.change", "!input.blur"];
   List behaviors       = [SelectComponentBehaviors, EditableSelectComponentBehaviors];
 
-  static const keypress_stack_timeout = 0.5;
-  bool fetching_options               = false;
+  int  keypress_stack_timeout = 500;
+  bool fetching_options       = false;
 
   /** We need this additional property to store ALL loaded properties.
     * When options are filtered, this one stores all options, regardless of whether they
@@ -29,32 +29,8 @@ class EditableSelectComponent extends SelectComponent {
     event_handlers.remove(event: 'keypress', role: #self);
 
     event_handlers.addForRole("self.input", {
-      "keyup": (self,event) {
 
-        switch(event.keyCode) {
-          case KeyCode.ESC:
-            self.prvt_clearCustomValue(true);
-            return;
-          case KeyCode.ENTER:
-            self.prvt_clearCustomValue();
-            return;
-          case KeyCode.UP:
-            return;
-          case KeyCode.DOWN:
-            return;
-        }
-
-
-        if(event.target.value.length > 0)
-          self.prvt_tryPrepareOptions();
-        else {
-          self.input_value = null;
-          self.focused_option = null;
-          self.behave("hideNoOptionsFound");
-          self.behave("close");
-          self.opened = false;
-        }
-      },
+      "keyup": (self,event) => self.prvt_processInputKeyUpEvent(event),
       
       "keydown": (self,event) {
         if(event.keyCode == KeyCode.ENTER)
@@ -69,14 +45,14 @@ class EditableSelectComponent extends SelectComponent {
        */
 
       //
-      //"change"  : (self,event) => self.prvt_prepareOptions()
+      //"change"  : (self,event) => self.prepareOptions()
     });
 
     // Instead of catchig a click on any part of the select component,
     // we're only catching it on arrow, because the rest of it is actually an input field.
     event_handlers.add(event: 'click', role: 'self.arrow', handler: (self,event) {
       if(self.opened)
-        self.prvt_clearCustomValue();
+        self.clearCustomValue();
       else {
         self.behave('open');
         self.opened = true;
@@ -90,6 +66,7 @@ class EditableSelectComponent extends SelectComponent {
   }
 
   get current_input_value => this.dom_element.querySelector("[data-component-part=\"input\"]").value;
+  ajax_request(url) => HttpRequest.getString(url);
 
   /** Determines whether we allow custom options to be set as the value of the select
     * when we type something in, but no matches were fetched.
@@ -116,25 +93,29 @@ class EditableSelectComponent extends SelectComponent {
     * let's wait a bit more, maybe user is still typing. If enough time passed,
     * let's start fetching options from the remote server / filtering.
     */
-  void prvt_tryPrepareOptions() {
-    keypress_stack_last_updated = new DateTime.now().millisecondsSinceEpoch;
-    new Timer(new Duration(seconds: 0.5), () {
-      var now = new DateTime.now().millisecondsSinceEpoch;
-      if((now - this.keypress_stack_last_updated >= keypress_stack_timeout*1000) && !this.fetching_options)
-        prvt_prepareOptions();
-    });
+  void tryPrepareOptions() {
+    if(this.keypress_stack_timeout == 0)
+      prepareOptions();
+    else {
+      keypress_stack_last_updated = new DateTime.now().millisecondsSinceEpoch;
+      new Timer(new Duration(milliseconds: this.keypress_stack_timeout), () {
+        var now = new DateTime.now().millisecondsSinceEpoch;
+        if((now - this.keypress_stack_last_updated >= this.keypress_stack_timeout) && !this.fetching_options)
+          prepareOptions();
+      });
+    }
   }
 
   /** Decides between fetching an option from a remote URL (if fetch_url is set)
     * or just filtering them out of existing pre-loaded ones.
     * Once finished, opens the select box options.
     */
-  void prvt_prepareOptions() {
+  void prepareOptions() {
 
     if(this.fetch_url == null)
-      prvt_filterOptions();
+      filterOptions();
     else
-      prvt_fetchOptions();
+      fetchOptions();
 
     if(this.current_input_value.length > 0) {
       behave('open');
@@ -148,7 +129,7 @@ class EditableSelectComponent extends SelectComponent {
     * the server and simply want to allow a more flexibler SelectComponent
     * with the ability to enter value and see explicitly which values match.
     */
-  void prvt_filterOptions() {
+  void filterOptions() {
     this.options = new LinkedHashMap.from(original_options);
     this.original_options.forEach((k,v) {
       if(!k.toLowerCase().startsWith(this.current_input_value.toLowerCase()))
@@ -170,7 +151,7 @@ class EditableSelectComponent extends SelectComponent {
     * that for EditableSelectComponent currently only keys are used as values and as options
     * text presented to the user.
     */
-  void prvt_fetchOptions() {
+  void fetchOptions() {
     var request_url_with_params = this.fetch_url;
     if(!request_url_with_params.contains("?"))
       request_url_with_params = request_url_with_params + "?";
@@ -178,8 +159,7 @@ class EditableSelectComponent extends SelectComponent {
 
     this.fetching_options = true;
     this.behave('showAjaxIndicator');
-    HttpRequest.getString(request_url_with_params)
-    .then((String response) {
+    this.ajax_request(request_url_with_params).then((String response) {
       this.options = new LinkedHashMap.from(JSON.decode(response));
       this.behave('hideAjaxIndicator');
 
@@ -198,7 +178,7 @@ class EditableSelectComponent extends SelectComponent {
   /** Cleares the select box input and sets it to the previous value. Usually
     * called when user presses ESC key or focus is lost on the select element.
     */
-  prvt_clearCustomValue([force=false]) {
+  clearCustomValue([force=false]) {
     if((!this.options.containsKey(this.input_value) && this.allow_custom_value == false) || force) {
       this.input_value = this.input_value;
     }
@@ -221,10 +201,36 @@ class EditableSelectComponent extends SelectComponent {
     this.reCreateNativeEventListeners();
   }
 
+  void prvt_processInputKeyUpEvent(e) {
+    switch(e.keyCode) {
+      case KeyCode.ESC:
+        clearCustomValue(true);
+        return;
+      case KeyCode.ENTER:
+        clearCustomValue();
+        return;
+      case KeyCode.UP:
+        return;
+      case KeyCode.DOWN:
+        return;
+    }
+
+    if(e.target.value.length > 0)
+      tryPrepareOptions();
+    else {
+      this.input_value = null;
+      this.focused_option = null;
+      this.behave("hideNoOptionsFound");
+      this.behave("close");
+      this.opened = false;
+    }
+
+  }
+
   @override
   void externalClickCallback() {
     super.externalClickCallback();
-    prvt_clearCustomValue();
+    clearCustomValue();
   }
 
 }

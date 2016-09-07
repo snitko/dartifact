@@ -86,7 +86,7 @@ class Component extends Object with observable.Subscriber,
    *  when the constructor is called. If you want to define custom Behaviors, simply create
    *  a MyBehaviors class and add into the #behaviors list.
    */
-  void behave(behavior, [Map attrs=null]) {
+  void behave(behavior, [List attrs=null]) {
     if(attrs == null)
       attrs = [];
     behavior_instances.forEach((b) {

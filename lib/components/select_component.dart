@@ -23,7 +23,7 @@ class SelectComponent extends Component {
     */
   String keypress_stack = "";
   int    keypress_stack_last_updated = new DateTime.now().millisecondsSinceEpoch;
-  static const keypress_stack_timeout = 1;
+  int    keypress_stack_timeout = 1000;
 
   List special_keys = [32,38,40,27,13];
 
@@ -53,7 +53,7 @@ class SelectComponent extends Component {
 
     // Workaround. Dart doesn't catch keydown events on divs, only on document -
     // but, surprise, it corretly sets the target, so we can still get it!
-    document.onKeyDown.listen((e) => prvt_processKeyEvent(e));
+    document.onKeyDown.listen((e) => prvt_processKeyDownEvent(e));
 
     event_handlers.add(event: 'click', role: 'self.selectbox', handler: (self,event) {
       self.behave('toggle');
@@ -221,7 +221,7 @@ class SelectComponent extends Component {
     */
   void updateKeypressStackWithChar(String c) {
     var time = new DateTime.now().millisecondsSinceEpoch;
-    if(this.keypress_stack_last_updated < time-(keypress_stack_timeout*1000)) {
+    if(this.keypress_stack_last_updated < time-keypress_stack_timeout) {
       this.keypress_stack_last_updated = time;
       this.keypress_stack = c;
     } else {
@@ -262,7 +262,7 @@ class SelectComponent extends Component {
     this.opened = !this.opened;
   }
 
-  void prvt_processKeyEvent(e) {
+  void prvt_processKeyDownEvent(e) {
     if(this.event_locks.contains("keydown") || this.event_locks.contains(#any))
      return;
     if(this.prvt_hasNode(e.target) && this.disabled != 'disabled' && special_keys.contains(e.keyCode)) {
