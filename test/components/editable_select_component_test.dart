@@ -116,6 +116,17 @@ void main() {
       expect(select_comp.input_value, equals("abcde"));
     });
 
+    test("manipulates fetch_url params", () {
+      select_comp.fetch_url = "/locations";
+      select_comp.updateFetchUrlParams({ "hello" : "world" });
+      expect(select_comp.fetch_url, equals("/locations?hello=world"));
+      select_comp.updateFetchUrlParams({ "param2" : "value2" });
+      expect(select_comp.fetch_url, equals("/locations?hello=world&param2=value2"));
+      select_comp.updateFetchUrlParams({ "hello" : null });
+      expect(select_comp.fetch_url, equals("/locations?param2=value2"));
+    });
+    
+
   });
 
 }

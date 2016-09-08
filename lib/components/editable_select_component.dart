@@ -183,10 +183,14 @@ class EditableSelectComponent extends SelectComponent {
 
   void updateFetchUrlParams(Map params) {
     params.forEach((k,v) {
-      if(fetch_url.contains("$name="))
-        this.fetch_url = this.fetch_url.replaceFirst(new RegExp("$k=.*(&|\$)"), "$k=$v[\$1]");
-      else
-        _addFetchUrlParam(k,v);
+      if(v == null || v == "")
+        this.fetch_url = this.fetch_url.replaceFirst(new RegExp("$k=.*?(&|\$)"), "");
+      else {
+        if(this.fetch_url.contains("$name="))
+          this.fetch_url = this.fetch_url.replaceFirst(new RegExp("$k=.*(&|\$)"), "$k=$v[\$1]");
+        else
+          _addFetchUrlParam(k,v);
+      }
     });
   }
 
