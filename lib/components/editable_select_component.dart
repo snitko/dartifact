@@ -148,16 +148,12 @@ class EditableSelectComponent extends SelectComponent {
     * text presented to the user.
     */
   void fetchOptions() {
-    var request_url_with_params = this.fetch_url;
-    if(!request_url_with_params.contains("?"))
-      request_url_with_params = request_url_with_params + "?";
-    if(!request_url_with_params.endsWith("?"))
-      request_url_with_params = request_url_with_params + "&";
-    request_url_with_params   = request_url_with_params + "${this.query_param_name}=${this.current_input_value}";
+
+    _addFetchUrlParam(this.query_param_name, this.input_value);
 
     this.fetching_options = true;
     this.behave('showAjaxIndicator');
-    this.ajax_request(request_url_with_params).then((String response) {
+    this.ajax_request(this.fetch_url).then((String response) {
       this.options = new LinkedHashMap.from(JSON.decode(response));
       this.behave('hideAjaxIndicator');
 
@@ -176,12 +172,22 @@ class EditableSelectComponent extends SelectComponent {
   /** Cleares the select box input and sets it to the previous value. Usually
     * called when user presses ESC key or focus is lost on the select element.
     */
-  clearCustomValue([force=false]) {
+  void clearCustomValue([force=false]) {
     if((!this.options.containsKey(this.input_value) && this.allow_custom_value == false) || force) {
       this.input_value = this.input_value;
     }
     this.behave('close');
     this.opened = false;
+  }
+
+
+  void updateFetchUrlParams(Map params) {
+    params.forEach((k,v) {
+      if(fetch_url.contains("$name="))
+        this.fetch_url = this.fetch_url.replaceFirst(new RegExp("$k=.*(&|\$)"), "$k=$v[\$1]");
+      else
+        _addFetchUrlParam(k,v);
+    });
   }
 
   /** This methd is called not once, but every time we fetch new options from the server,
@@ -223,6 +229,15 @@ class EditableSelectComponent extends SelectComponent {
       this.opened = false;
     }
 
+  }
+
+  void _addFetchUrlParam(String name, String value) {
+    var new_fetch_url = this.fetch_url;
+    if(!new_fetch_url.contains("?"))
+      new_fetch_url = new_fetch_url + "?";
+    if(!new_fetch_url.endsWith("?"))
+      new_fetch_url = new_fetch_url + "&";
+    this.fetch_url = new_fetch_url + "${name}=${value}";
   }
 
   @override
