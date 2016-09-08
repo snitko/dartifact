@@ -18,3 +18,5 @@ dev_dependencies:
   mockito: '>=0.11.0'
 
 dependency_overrides:
+  attributable:
+    path: "../attributable"

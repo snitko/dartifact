@@ -185,6 +185,7 @@ class Component extends Object with observable.Subscriber,
     * you'll be left without behaviors!
     */
   void afterInitialize() {
+    this.setDefaultAttributeValues();
     _createBehaviors();
   }
 

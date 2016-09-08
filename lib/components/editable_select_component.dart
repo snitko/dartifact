@@ -3,12 +3,14 @@ part of nest_ui;
 class EditableSelectComponent extends SelectComponent {
 
   List attribute_names = ["display_value", "input_value", "disabled", "name", "fetch_url", "allow_custom_value", "query_param_name"];
+  Map default_attribute_values = { "query_param_name": "q", "allow_custom_value": false };
 
   List native_events   = ["arrow.click", "option.click", "!input.keyup", "!input.keydown", "!input.change", "!input.blur"];
   List behaviors       = [SelectComponentBehaviors, EditableSelectComponentBehaviors];
 
   int  keypress_stack_timeout = 500;
   bool fetching_options       = false;
+
 
   /** We need this additional property to store ALL loaded properties.
     * When options are filtered, this one stores all options, regardless of whether they
@@ -77,12 +79,6 @@ class EditableSelectComponent extends SelectComponent {
     super.afterInitialize();
 
     updatePropertiesFromNodes(attrs: ["fetch_url", "allow_custom_value"], invoke_callbacks: false);
-
-    if(this.allow_custom_value == null)
-      this.allow_custom_value = false;
-
-    if(this.query_param_name == null)
-      this.query_param_name = "q";
 
     this.original_options = options;
     _listenToOptionClickEvents();
@@ -155,7 +151,7 @@ class EditableSelectComponent extends SelectComponent {
     var request_url_with_params = this.fetch_url;
     if(!request_url_with_params.contains("?"))
       request_url_with_params = request_url_with_params + "?";
-    request_url_with_params   = request_url_with_params + "q=${this.current_input_value}";
+    request_url_with_params   = request_url_with_params + "${this.query_param_name}=${this.current_input_value}";
 
     this.fetching_options = true;
     this.behave('showAjaxIndicator');

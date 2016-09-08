@@ -21,9 +21,9 @@ packages:
     version: "1.11.1"
   attributable:
     description:
-      name: attributable
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../attributable"
+      relative: true
+    source: path
     version: "0.1.0"
   barback:
     description:

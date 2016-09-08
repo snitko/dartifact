@@ -117,7 +117,6 @@ void main() {
       expect(c.prvt_hasNode(el1), isTrue);
       expect(c.prvt_hasNode(el2), isFalse);
     });
-    
 
     group("removing a component", () {
 
