@@ -108,7 +108,7 @@ void main() {
       select_comp.options["option_2"] = "option 2";
       select_comp.updateOptionsInDom();
 
-      var option_els = select_el.querySelectorAll("[data-component-part=\"option\"]");
+      var option_els = select_comp.findAllParts("option");
       expect(option_els[0].attributes["data-option-value"], equals("option_1"));
       expect(option_els[0].text, equals("option 1"));
       expect(option_els[1].attributes["data-option-value"], equals("option_2"));

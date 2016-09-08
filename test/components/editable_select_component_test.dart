@@ -112,7 +112,7 @@ void main() {
       input_el.value = "ab";
       select_comp.filterOptions();
       select_comp.opened = true;
-      select_el.querySelectorAll("[data-component-part=\"option\"]").last.click();
+      select_comp.findAllParts("option").last.click();
       expect(select_comp.input_value, equals("abcde"));
     });
 

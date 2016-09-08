@@ -33,21 +33,21 @@ class EditableSelectComponentBehaviors extends BaseComponentBehaviors {
   }
 
   disable() {
-    var input = this.dom_element.querySelector("[data-component-part=\"input\"]");
-    input.attributes["disabled"]    = "disabled";
-    input.attributes["data-placeholder"] = input.attributes["placeholder"];
-    input.attributes["placeholder"] = "";
+    this.input.attributes["disabled"]         = "disabled";
+    this.input.attributes["data-placeholder"] = input.attributes["placeholder"];
+    this.input.attributes["placeholder"]      = "";
   }
 
   enable() {
-    var input = this.dom_element.querySelector("[data-component-part=\"input\"]");
-    this.dom_element.querySelector("[data-component-part=\"input\"]").attributes.remove("disabled");
-    input.attributes["placeholder"] = input.attributes["data-placeholder"];
+    this.input.attributes.remove("disabled");
+    this.input.attributes["placeholder"] = input.attributes["data-placeholder"];
   }
 
   HtmlElement get ajaxIndicator {
     return this.dom_element.querySelector(".ajaxIndicator");
   }
+
+  HtmlElement get input => this.component.findPart("input");
 
 
 }

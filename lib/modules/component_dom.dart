@@ -51,6 +51,16 @@ abstract class ComponentDom {
     return elements;
   }
 
+  /** Finds all HtmlElements representing parts of the current component which match the name provided. */
+  List<HtmlElement> findAllParts(name) {
+    return allDomDescendantsAndSelfWithAttr(this.dom_element, attr_name: 'data-component-part', attr_value: name);
+  }
+
+  /** Finds the first HtmlElement representing a part of the current component which matches the name provided. */
+  HtmlElement findPart(name) {
+    return firstDomDescendantOrSelfWithAttr(this.dom_element, attr_name: 'data-component-part', attr_value: name);
+  }
+
   /** Updates all properties values from their DOM nodes values.
     * If provided with an optional List of property names, updates only
     * properties that are on that List.

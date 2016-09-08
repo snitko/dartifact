@@ -62,12 +62,12 @@ class EditableSelectComponent extends SelectComponent {
     });
 
     attribute_callbacks["input_value"] = (attr_name, self) {
-      this.dom_element.querySelector("[data-component-part=\"input\"]").value = self.input_value;
+      findPart("input").value = self.input_value;
     };
 
   }
 
-  get current_input_value => this.dom_element.querySelector("[data-component-part=\"input\"]").value;
+  get current_input_value => findPart("input").value;
   ajax_request(url) => HttpRequest.getString(url);
 
   /** Determines whether we allow custom options to be set as the value of the select

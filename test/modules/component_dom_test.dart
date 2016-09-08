@@ -16,7 +16,7 @@ void main() {
 
   group("ComponentDom", () {
 
-    var d1, d2, d3;
+    var d1, d2, d3, part1, part2;
 
     setUp(() {
       d1 = new DivElement();
@@ -55,6 +55,20 @@ void main() {
       c.prvt_readPropertyFromNode("test_attr");
       expect(c.attributes["test_attr"], equals("5a"));
     });
+
+    test("finds component parts with a particular name", () {
+      part1 = new DivElement();
+      part2 = new DivElement();
+      part1.attributes["data-component-part"] = "some_part";
+      part2.attributes["data-component-part"] = "some_part";
+      el.append(part1);
+      el.append(part2);
+      expect(c.findAllParts("some_part"), equals([part1, part2]));
+      expect(c.findPart("some_part"), equals(part1));
+      expect(c.findAllParts("some_other_part"), isEmpty);
+      expect(c.findPart("some_other_part"), equals(null));
+    });
+    
     
   });
 

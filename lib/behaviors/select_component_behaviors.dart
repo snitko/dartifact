@@ -9,8 +9,8 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
 
   SelectComponentBehaviors(Component c) : super(c) {
     this.component = c;
-    this.options_container = this.dom_element.querySelector('[data-component-part="options_container"');
-    this.selectbox         = this.dom_element.querySelector('[data-component-part="selectbox"');
+    this.options_container = this.component.findPart("options_container");
+    this.selectbox         = this.component.findPart("selectbox");
   }
 
   toggle() {
@@ -57,7 +57,7 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
   }
   
   _scroll() {
-    var option_height = pos.getDimensions(this.options_container.querySelector('[data-component-part="option"]'))['y'];
+    var option_height = pos.getDimensions(this.component.findPart("option"))['y'];
     scrollDown() => this.options_container.scrollTop = option_height.toInt()*this.component.focused_option_id;
     scrollUp() => this.options_container.scrollTop   = option_height.toInt()*this.component.focused_option_id-((this.component.lines_to_show-1)*option_height.toInt());
     if(this.scroll_pos_bottom < this.component.focused_option_id) {
