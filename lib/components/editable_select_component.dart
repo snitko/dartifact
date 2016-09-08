@@ -62,7 +62,7 @@ class EditableSelectComponent extends SelectComponent {
     });
 
     attribute_callbacks["input_value"] = (attr_name, self) {
-      findPart("input").value = self.input_value;
+      self.findPart("input").value = self.input_value;
     };
 
   }

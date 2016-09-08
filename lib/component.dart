@@ -103,8 +103,10 @@ class Component extends Object with observable.Subscriber,
     * 2. The actual code that adds new functionality:
     *    publish event to the parent with the current component roles.
     *
-    * Only those events that are called on #self or self's parts (prefixed with "self.")
-    * are propagated up to the parent.
+    * Only those events that are called on #self are propagated up to the parent.
+    * As of now, it was decided to exclude events from component parts to propagate
+    * upwards - now the component itself is responsible for issuing publishEvent() calls
+    * manually for each component part event handler.
   */
   bool captureEvent(e, publisher_roles, { data: null, prevent_default: false, is_native: false}) {
 
@@ -126,14 +128,13 @@ class Component extends Object with observable.Subscriber,
     addEventLock(e, publisher_roles: publisher_roles);
 
     super.captureEvent(e, publisher_roles, data: data);
-    var roles_regexp = new RegExp(r"^self.");
 
-    publisher_roles.forEach((r) {
-      if(r == #self || roles_regexp.hasMatch(r.toString())) {
-        this.publishEvent(e, data);
-        return;
-      }
-    });
+    // Only publish if event is the actual event of the dom_element, and
+    // is not a native event on one of the component parts.
+    if(publisher_roles.contains(#self)) {
+      this.publishEvent(e, data);
+      return;
+    }
 
     return true;
   }
@@ -248,7 +249,7 @@ class Component extends Object with observable.Subscriber,
           this.captureEvent(e, [#self], prevent_default: prevent_default, is_native: true);
         });
       }
-   }); 
+    }); 
   }
 
   /** Cancels all existing event listeners for all native events
@@ -258,6 +259,7 @@ class Component extends Object with observable.Subscriber,
     * event listeners listed in it will be cancelled.
     */
   void _cancelEventListeners([List event_names=null]) {
+    /*this.native_event_listeners.keys.forEach((k) => print(k));*/
     if(event_names == null) {
       this.native_event_listeners.forEach((k,v) => v.cancel());
       this.native_event_listeners = {};
