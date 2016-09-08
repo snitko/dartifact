@@ -151,6 +151,8 @@ class EditableSelectComponent extends SelectComponent {
     var request_url_with_params = this.fetch_url;
     if(!request_url_with_params.contains("?"))
       request_url_with_params = request_url_with_params + "?";
+    if(!request_url_with_params.endsWith("?"))
+      request_url_with_params = request_url_with_params + "&";
     request_url_with_params   = request_url_with_params + "${this.query_param_name}=${this.current_input_value}";
 
     this.fetching_options = true;

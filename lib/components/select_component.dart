@@ -100,7 +100,7 @@ class SelectComponent extends Component {
     */
   updateOptionsInDom() {
     var options_container = this.findPart("options_container");
-    this.findAllParts("options").forEach((el) => el.remove());
+    this.findAllParts("option").forEach((el) => el.remove());
     options.forEach((k,v) {
       var option = this.findPart("option_template").clone(true);
       option.attributes["data-component-part"] = "option";
