@@ -53,6 +53,8 @@ class EditableSelectComponent extends SelectComponent {
     // Instead of catchig a click on any part of the select component,
     // we're only catching it on arrow, because the rest of it is actually an input field.
     event_handlers.add(event: 'click', role: 'self.arrow', handler: (self,event) {
+      if(this.disabled)
+        return;
       if(self.opened)
         self.clearCustomValue();
       else {
@@ -64,6 +66,13 @@ class EditableSelectComponent extends SelectComponent {
     attribute_callbacks["input_value"] = (attr_name, self) {
       self.publishEvent("change", self);
       self.findPart("input").value = self.input_value;
+    };
+
+    attribute_callbacks["disabled"] = (attr_name, self) {
+      if(self.disabled)
+        this.behave("disable");
+      else
+        this.behave("enable");
     };
 
   }
@@ -78,7 +87,7 @@ class EditableSelectComponent extends SelectComponent {
 
   void afterInitialize() {
     super.afterInitialize();
-    updatePropertiesFromNodes(attrs: ["fetch_url", "allow_custom_value"], invoke_callbacks: false);
+    updatePropertiesFromNodes(attrs: ["fetch_url", "allow_custom_value", "disabled"], invoke_callbacks: false);
     this.original_options = options;
     _listenToOptionClickEvents();
   }
