@@ -20,6 +20,7 @@ export 'package:logmaster/logmaster.dart';
 
 // parts of the current lib
 part 'class_dynamic_operations.dart';
+part 'util_functions.dart';
 part 'modules/component_dom.dart';
 part 'modules/component_heritage.dart';
 part 'modules/component_validation.dart';

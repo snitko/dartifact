@@ -62,6 +62,7 @@ class EditableSelectComponent extends SelectComponent {
     });
 
     attribute_callbacks["input_value"] = (attr_name, self) {
+      self.publishEvent("change", self);
       self.findPart("input").value = self.input_value;
     };
 
@@ -77,12 +78,9 @@ class EditableSelectComponent extends SelectComponent {
 
   void afterInitialize() {
     super.afterInitialize();
-
     updatePropertiesFromNodes(attrs: ["fetch_url", "allow_custom_value"], invoke_callbacks: false);
-
     this.original_options = options;
     _listenToOptionClickEvents();
-
   }
 
   /** Looks at how much time has passed since the last keystroke. If not much,
@@ -202,7 +200,7 @@ class EditableSelectComponent extends SelectComponent {
     this.event_handlers.remove(event: 'click', role: 'self.option');
     this.event_handlers.add(event: 'click', role: 'self.option', handler: (self,event) {
       var t = event.target;
-      setValueByInputValue(t.getAttribute('data-option-value'));
+      this.input_value = t.getAttribute('data-option-value');
       this.behave('close');
       this.opened = false;
     });
