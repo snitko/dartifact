@@ -40,7 +40,8 @@ class EditableSelectComponentBehaviors extends BaseComponentBehaviors {
 
   enable() {
     this.input.attributes.remove("disabled");
-    this.input.attributes["placeholder"] = input.attributes["data-placeholder"];
+    if(input.attributes["data-placeholder"] != null)
+      this.input.attributes["placeholder"] = input.attributes["data-placeholder"];
   }
 
   HtmlElement get ajaxIndicator {
