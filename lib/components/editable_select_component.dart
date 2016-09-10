@@ -160,7 +160,7 @@ class EditableSelectComponent extends SelectComponent {
     */
   void fetchOptions() {
 
-    _addFetchUrlParam(this.query_param_name, this.input_value);
+    _addFetchUrlParam(this.query_param_name, this.current_input_value);
 
     this.fetching_options = true;
     this.behave('showAjaxIndicator');
