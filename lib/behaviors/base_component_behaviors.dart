@@ -50,6 +50,16 @@ class BaseComponentBehaviors {
       behaviors[1]();
   }
 
+  prvt_switchBlockVisibilityIfExists(selector, switch_to, { display: "block" }) {
+    var b = this.dom_element.querySelector(selector);
+    if(b != null) {
+      if(switch_to == #show)
+        b.style.display = display;
+      else
+        b.style.display = "none";
+    }
+  }
+
   get dom_element => this.component.dom_element;
 
 }

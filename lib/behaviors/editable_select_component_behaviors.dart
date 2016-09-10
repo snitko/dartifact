@@ -8,29 +8,10 @@ class EditableSelectComponentBehaviors extends BaseComponentBehaviors {
     this.component = c;
   }
 
-  showAjaxIndicator() {
-    var i = ajaxIndicator;
-    if(i != null)
-      i.style.display = "inline";
-  }
-
-  hideAjaxIndicator() {
-    var i = ajaxIndicator;
-    if(i != null)
-      i.style.display = "none";
-  }
-
-  showNoOptionsFound() {
-    var el = this.dom_element.querySelector(".noOptionsFoundMessage");
-    if(el != null)
-      el.style.display = "block";
-  }
-
-  hideNoOptionsFound() {
-    var el = this.dom_element.querySelector(".noOptionsFoundMessage");
-    if(el != null)
-      el.style.display = "none";
-  }
+  showAjaxIndicator()  => prvt_switchBlockVisibilityIfExists(".ajaxIndicator", #show, display: "inline");
+  hideAjaxIndicator()  => prvt_switchBlockVisibilityIfExists(".ajaxIndicator", #hide);
+  showNoOptionsFound() => prvt_switchBlockVisibilityIfExists(".noOptionsFoundMessage", #show);
+  hideNoOptionsFound() => prvt_switchBlockVisibilityIfExists(".noOptionsFoundMessage", #hide);
 
   disable() {
     this.input.attributes["disabled"]         = "disabled";
@@ -44,11 +25,6 @@ class EditableSelectComponentBehaviors extends BaseComponentBehaviors {
       this.input.attributes["placeholder"] = input.attributes["data-placeholder"];
   }
 
-  HtmlElement get ajaxIndicator {
-    return this.dom_element.querySelector(".ajaxIndicator");
-  }
-
-  HtmlElement get input => this.component.findPart("input");
-
+  HtmlElement get input                    => this.component.findPart("input");
 
 }

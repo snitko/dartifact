@@ -3,7 +3,7 @@ part of nest_ui;
 class EditableSelectComponent extends SelectComponent {
 
   List attribute_names = ["display_value", "input_value", "disabled", "name", "fetch_url", "allow_custom_value", "query_param_name"];
-  Map default_attribute_values = { "query_param_name": "q", "allow_custom_value": false };
+  Map default_attribute_values = { "query_param_name": "q", "allow_custom_value": false, "disabled": false };
 
   List native_events   = ["arrow.click", "option.click", "!input.keyup", "!input.keydown", "!input.change", "!input.blur"];
   List behaviors       = [SelectComponentBehaviors, EditableSelectComponentBehaviors];
