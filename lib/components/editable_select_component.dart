@@ -64,15 +64,12 @@ class EditableSelectComponent extends SelectComponent {
     });
 
     attribute_callbacks["input_value"] = (attr_name, self) {
-      self.publishEvent("change", self);
-
       self.display_value = self.options[self.input_value];
       if(self.display_value == null)
         self.display_value = self.input_value;
-
       self.findPart("input").value = self.display_value;
-      print("Input value: ${this.input_value}");
-      print("Display value: ${this.display_value}");
+
+      self.publishEvent("change", self);
     };
 
     attribute_callbacks["disabled"] = (attr_name, self) {
@@ -142,7 +139,7 @@ class EditableSelectComponent extends SelectComponent {
   void filterOptions() {
     this.options = new LinkedHashMap.from(original_options);
     this.original_options.forEach((k,v) {
-      if(!k.toLowerCase().startsWith(this.current_input_value.toLowerCase()))
+      if(!v.toLowerCase().startsWith(this.current_input_value.toLowerCase()))
         this.options.remove(k);
     });
     if(this.options.isEmpty)
