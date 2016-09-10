@@ -8,8 +8,8 @@ class EditableSelectComponent extends SelectComponent {
   List native_events   = ["arrow.click", "option.click", "!input.keyup", "!input.keydown", "!input.change", "!input.blur"];
   List behaviors       = [SelectComponentBehaviors, EditableSelectComponentBehaviors];
 
-  int  keypress_stack_timeout = 500;
-  bool fetching_options       = false;
+  int    keypress_stack_timeout = 500;
+  bool   fetching_options       = false;
 
 
   /** We need this additional property to store ALL loaded properties.
@@ -65,7 +65,14 @@ class EditableSelectComponent extends SelectComponent {
 
     attribute_callbacks["input_value"] = (attr_name, self) {
       self.publishEvent("change", self);
-      self.findPart("input").value = self.input_value;
+
+      self.display_value = self.options[self.input_value];
+      if(self.display_value == null)
+        self.display_value = self.input_value;
+
+      self.findPart("input").value = self.display_value;
+      print("Input value: ${this.input_value}");
+      print("Display value: ${this.display_value}");
     };
 
     attribute_callbacks["disabled"] = (attr_name, self) {
@@ -182,6 +189,8 @@ class EditableSelectComponent extends SelectComponent {
   void clearCustomValue([force=false]) {
     if((!this.options.containsKey(this.input_value) && this.allow_custom_value == false) || force) {
       this.input_value = this.input_value;
+    } else {
+      this.input_value = this.current_input_value;
     }
     this.behave('close');
     this.opened = false;
@@ -254,7 +263,8 @@ class EditableSelectComponent extends SelectComponent {
   @override
   void externalClickCallback() {
     super.externalClickCallback();
-    clearCustomValue();
+    if(this.current_input_value != this.display_value)
+      clearCustomValue();
   }
 
 }
