@@ -55,9 +55,10 @@ class EditableSelectComponent extends SelectComponent {
     event_handlers.add(event: 'click', role: 'self.arrow', handler: (self,event) {
       if(this.disabled)
         return;
-      if(self.opened)
-        self.clearCustomValue();
-      else {
+      if(self.opened) {
+        self.behave('close');
+        self.opened = false;
+      } else {
         self.behave('open');
         self.opened = true;
       }
