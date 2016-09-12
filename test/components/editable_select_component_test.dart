@@ -42,6 +42,7 @@ void main() {
 
   var select_el;
   var input_el;
+  var display_input_el;
   var select_comp;
   var behaviors;
   var option_els = [];
@@ -66,12 +67,17 @@ void main() {
   setUp(() {
     select_el   = new DivElement();
     input_el    = new InputElement();
+    display_input_el = new InputElement();
     select_comp = new MyEditableSelectComponent();
     select_comp.dom_element = select_el;
-    input_el.attributes["data-component-part"]     = "input";
-    input_el.attributes["data-component-property"] = "input_value";
+    input_el.attributes["data-component-part"]                 = "input";
+    input_el.attributes["data-component-property"]             = "input_value";
     input_el.attributes["data-component-attribute-properties"] = "input_value:value";
+    display_input_el.attributes["data-component-part"]         = "display_input";
+    display_input_el.attributes["data-component-property"]     = "display_value";
+    display_input_el.attributes["data-component-attribute-properties"] = "display_value:value";
     select_el.append(input_el);
+    select_el.append(display_input_el);
 
     createOptionsInDom();
     select_comp.afterInitialize();
@@ -93,25 +99,25 @@ void main() {
     });
 
     test("filters existing options", () {
-      input_el.value = "ab";
+      display_input_el.value = "ab";
       select_comp.filterOptions();
       expect(select_comp.options.keys, equals(["ab", "abc", "abcd", "abcde"]));
-      input_el.value = "abcd";
+      display_input_el.value = "abcd";
       select_comp.filterOptions();
       expect(select_comp.options.keys, equals(["abcd", "abcde"]));
-      input_el.value = "abcdef";
+      display_input_el.value = "abcdef";
       select_comp.filterOptions();
       expect(select_comp.options.keys, isEmpty);
     });
     
     test("clears value from the input", () {
-      input_el.value = "ab";
+      display_input_el.value = "ab";
       select_comp.prvt_processInputKeyUpEvent(new_key_event(KeyCode.ENTER));
       expect(input_el.value, equals(""));
     });
 
     test("re-creates even listeners for options when they're loaded or filtered", () {
-      input_el.value = "ab";
+      display_input_el.value = "ab";
       select_comp.filterOptions();
       select_comp.opened = true;
       select_comp.findAllParts("option").last.click();
@@ -122,11 +128,23 @@ void main() {
       select_comp.fetch_url = "/locations";
       select_comp.updateFetchUrlParams({ "hello" : "world" });
       expect(select_comp.fetch_url, equals("/locations?hello=world"));
+      select_comp.updateFetchUrlParams({ "hello" : "hi" });
+      expect(select_comp.fetch_url, equals("/locations?hello=hi"));
       select_comp.updateFetchUrlParams({ "param2" : "value2" });
+      expect(select_comp.fetch_url, equals("/locations?hello=hi&param2=value2"));
+      select_comp.updateFetchUrlParams({ "hello" : "world" });
       expect(select_comp.fetch_url, equals("/locations?hello=world&param2=value2"));
       select_comp.updateFetchUrlParams({ "hello" : null });
       expect(select_comp.fetch_url, equals("/locations?param2=value2"));
     });
+
+    test("sets custom value to input_value if no corresponding input_value is found in options", () {
+      select_comp.allow_custom_value = true;
+      display_input_el.value = "custom value";
+      select_comp.prvt_processInputKeyUpEvent(new_key_event(KeyCode.ENTER));
+      expect(select_comp.input_value, equals("custom value"));
+    });
+    
     
 
   });

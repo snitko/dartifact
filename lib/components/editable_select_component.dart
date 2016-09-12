@@ -5,7 +5,7 @@ class EditableSelectComponent extends SelectComponent {
   List attribute_names = ["display_value", "input_value", "disabled", "name", "fetch_url", "allow_custom_value", "query_param_name"];
   Map default_attribute_values = { "query_param_name": "q", "allow_custom_value": false, "disabled": false };
 
-  List native_events   = ["arrow.click", "option.click", "!input.keyup", "!input.keydown", "!input.change", "!input.blur"];
+  List native_events   = ["arrow.click", "option.click", "!display_input.keyup", "!display_input.keydown", "!display_input.change", "!display_input.blur"];
   List behaviors       = [SelectComponentBehaviors, EditableSelectComponentBehaviors, FormFieldComponentBehaviors];
 
   int    keypress_stack_timeout = 500;
@@ -30,7 +30,7 @@ class EditableSelectComponent extends SelectComponent {
     event_handlers.remove(event: 'click', role: 'self.option');
     event_handlers.remove(event: 'keypress', role: #self);
 
-    event_handlers.addForRole("self.input", {
+    event_handlers.addForRole("self.display_input", {
 
       "keyup": (self,event) => self.prvt_processInputKeyUpEvent(event),
       
@@ -80,7 +80,7 @@ class EditableSelectComponent extends SelectComponent {
 
   }
 
-  get current_input_value => findPart("input").value;
+  get current_input_value => findPart("display_input").value;
   ajax_request(url) => HttpRequest.getString(url);
 
   /** Determines whether we allow custom options to be set as the value of the select
@@ -159,7 +159,7 @@ class EditableSelectComponent extends SelectComponent {
     */
   void fetchOptions() {
 
-    _addFetchUrlParam(this.query_param_name, this.current_input_value);
+    updateFetchUrlParams({ this.query_param_name : this.current_input_value });
 
     this.fetching_options = true;
     this.behave('showAjaxIndicator');
@@ -198,11 +198,13 @@ class EditableSelectComponent extends SelectComponent {
       if(v == null || v == "")
         this.fetch_url = this.fetch_url.replaceFirst(new RegExp("$k=.*?(&|\$)"), "");
       else {
-        if(this.fetch_url.contains("$name="))
-          this.fetch_url = this.fetch_url.replaceFirst(new RegExp("$k=.*(&|\$)"), "$k=$v[\$1]");
+        if(this.fetch_url.contains("$k="))
+          this.fetch_url = this.fetch_url.replaceFirst(new RegExp("$k=.*?(&|\$)"), "$k=$v&");
         else
           _addFetchUrlParam(k,v);
       }
+      if(this.fetch_url.endsWith("&"))
+        this.fetch_url = this.fetch_url.replaceFirst(new RegExp(r'&$'), "");
     });
   }
 
