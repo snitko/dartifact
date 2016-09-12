@@ -78,7 +78,7 @@ class SelectComponent extends Component {
     readOptionsFromDom();
     updatePropertiesFromNodes(attrs: ["input_value", "disabled", "name"], invoke_callbacks: true);
     if(this.input_value != null)
-      this.display_value = options[this.input_value];
+      this.display_value = options[this.input_value.toString()];
   }
 
   /** Does what it says. Parses those options from DOM and puts both input values and
