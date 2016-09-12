@@ -8,7 +8,7 @@ class SelectComponent extends Component {
   List attribute_names = ["display_value", "input_value", "disabled", "name"];
 
   List native_events   = ["selectbox.click", "keypress", "keydown", "option.click"];
-  List behaviors       = [SelectComponentBehaviors];
+  List behaviors       = [SelectComponentBehaviors, FormFieldComponentBehaviors];
 
   LinkedHashMap options = new LinkedHashMap();
   int lines_to_show = 10;
