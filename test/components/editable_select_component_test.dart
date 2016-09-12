@@ -68,7 +68,9 @@ void main() {
     input_el    = new InputElement();
     select_comp = new MyEditableSelectComponent();
     select_comp.dom_element = select_el;
-    input_el.attributes["data-component-part"] = "input";
+    input_el.attributes["data-component-part"]     = "input";
+    input_el.attributes["data-component-property"] = "input_value";
+    input_el.attributes["data-component-attribute-properties"] = "input_value:value";
     select_el.append(input_el);
 
     createOptionsInDom();

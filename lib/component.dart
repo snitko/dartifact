@@ -259,7 +259,6 @@ class Component extends Object with observable.Subscriber,
     * event listeners listed in it will be cancelled.
     */
   void _cancelEventListeners([List event_names=null]) {
-    /*this.native_event_listeners.keys.forEach((k) => print(k));*/
     if(event_names == null) {
       this.native_event_listeners.forEach((k,v) => v.cancel());
       this.native_event_listeners = {};

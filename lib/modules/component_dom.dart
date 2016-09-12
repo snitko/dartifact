@@ -86,10 +86,16 @@ abstract class ComponentDom {
         property_el.text = this.attributes[property_name].toString();
       else {
         var attr_property_name = prvt_getHtmlAttributeNameForProperty(pa, property_name);
-        if(this.attributes[property_name] == null)
+        if(this.attributes[property_name] == null) {
+          if(attr_property_name == "value")
+            property_el.value = null;
           property_el.attributes.remove(attr_property_name);
-        else
+        }
+        else {
           property_el.setAttribute(attr_property_name, this.attributes[property_name].toString());
+          if(attr_property_name == "value")
+            property_el.value = this.attributes[property_name].toString();
+        }
       }
     }
   }
