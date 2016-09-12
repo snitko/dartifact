@@ -118,7 +118,7 @@ abstract class ComponentDom {
         var v = property_el.getAttribute(attr_property_name);
 
         if(v != null)
-          if(new RegExp(r"^\d+.\d+$").hasMatch(v)) // it's a double!
+          if(new RegExp(r"^\d+\.\d+$").hasMatch(v)) // it's a double!
             v = double.parse(v);
           else if(new RegExp(r"^\d+$").hasMatch(v)) // it's an integer!
             v = int.parse(v);
