@@ -144,8 +144,6 @@ void main() {
       select_comp.prvt_processInputKeyUpEvent(new_key_event(KeyCode.ENTER));
       expect(select_comp.input_value, equals("custom value"));
     });
-    
-    
 
   });
 

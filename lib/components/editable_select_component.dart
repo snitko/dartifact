@@ -171,8 +171,11 @@ class EditableSelectComponent extends SelectComponent {
         updateOptionsInDom();
         behave("hideNoOptionsFound");
       }
-      else
+      else {
+        this.options = {};
+        updateOptionsInDom();
         behave("showNoOptionsFound");
+      }
 
       _listenToOptionClickEvents();
       this.fetching_options = false;
