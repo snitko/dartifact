@@ -167,6 +167,13 @@ class SelectComponent extends Component {
     this.display_value  = (ip == null ? null : this.options[ip]);
     this.publishEvent("change", this);
   }
+
+  /** Using `input_value` as a key, simply pulls a new value
+    * for `display_value` from the `options` Map.
+    */
+  void setDisplayValueFromInputValue() {
+    this.display_value = this.options[this.input_value.toString()];
+  }
   /**************************************************************************/
 
 

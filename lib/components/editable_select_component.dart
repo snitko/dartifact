@@ -158,13 +158,12 @@ class EditableSelectComponent extends SelectComponent {
     * that for EditableSelectComponent currently only keys are used as values and as options
     * text presented to the user.
     */
-  void fetchOptions() {
-
+  Future fetchOptions() {
     updateFetchUrlParams({ this.query_param_name : this.current_input_value });
 
     this.fetching_options = true;
     this.behave('showAjaxIndicator');
-    this.ajax_request(this.fetch_url).then((String response) {
+    return this.ajax_request(this.fetch_url).then((String response) {
       this.options = new LinkedHashMap.from(JSON.decode(response));
       this.behave('hideAjaxIndicator');
 
