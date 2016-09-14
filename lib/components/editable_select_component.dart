@@ -178,9 +178,9 @@ class EditableSelectComponent extends SelectComponent {
         return;
     }
 
-    if(e.target.value.length > 0)
-      tryPrepareOptions();
-    else {
+    tryPrepareOptions();
+
+    if(e.target.value.length == 0) {
       this.input_value = null;
       this.focused_option = null;
       this.behave("hideNoOptionsFound");
