@@ -1,6 +1,7 @@
 import "package:test/test.dart";
 import 'package:mockito/mockito.dart';
 import "dart:html";
+import "dart:async";
 import '../../lib/nest_ui.dart';
 part '../../lib/behaviors/select_component_behaviors.dart';
 part '../../lib/components/select_component.dart';
@@ -14,6 +15,11 @@ class MySelectComponentBehaviors extends Mock {
 
 class MySelectComponent extends SelectComponent {
   List behaviors = [MySelectComponentBehaviors];
+  var http_request_completer;
+  ajax_request(url) {
+    http_request_completer = new Completer();
+    return http_request_completer.future;
+  }
 }
 
 class MyParentComponent extends Component {
@@ -49,6 +55,10 @@ void main() {
   setUp(() {
     select_el   = new DivElement();
     select_comp = new MySelectComponent();
+    var options_container = new DivElement();
+    options_container.attributes["data-component-part"] = "options_container";
+    select_el.append(options_container);
+
     select_comp.dom_element = select_el;
     select_comp.afterInitialize();
     select_comp.ignore_misbehavior = false;
@@ -61,12 +71,15 @@ void main() {
   });
 
   createOptionsInDom() {
+    var option_template_el = new DivElement();
+    option_template_el.attributes["data-component-part"] = "option_template";
+    select_el.append(option_template_el);
     ["option_1", "option_2", "option_3", "option_4", "option_5"].forEach((o) {
       var option = new DivElement();
       option.attributes["data-component-part"] = "option";
       option.attributes["data-option-value"]   = o;
       option.text = o.replaceAll('_', '');
-      select_comp.dom_element.append(option);
+      select_el.append(option);
       option_els.add(option);
     });
   }
@@ -95,10 +108,6 @@ void main() {
     });
 
     test("writes option input and display values to DOM", () {
-      var options_container = new DivElement();
-      options_container.attributes["data-component-part"] = "options_container";
-      select_el.append(options_container);
-      
       var option_template = new DivElement();
       option_template.attributes["data-component-part"] = "option_template";
       select_el.append(option_template);
@@ -123,7 +132,7 @@ void main() {
 
     test("sets display value and focused option to null if input value is null", () {
       select_comp.setValueByInputValue("null");
-      expect(select_comp.display_value,     isNull);
+      expect(select_comp.display_value,     isEmpty);
       expect(select_comp.focused_option_id, isNull);
     });
 
@@ -176,7 +185,29 @@ void main() {
       expect(select_comp.getNextValue("option_1"), equals("option_2"));
       expect(select_comp.getNextValue("option_5"), equals("option_1"));
     });
+
+    test("fetches options from a remote server", () {
+      createOptionsInDom();
+      select_comp.fetch_url = "/locations";
+      select_comp.fetchOptions();
+      select_comp.http_request_completer.future.then((response) {
+        expect(select_comp.options.keys, equals(["hello"]));
+      });
+      select_comp.http_request_completer.complete("{ \"hello\": \"world\"}");
+    });
     
+    test("re-assigns native click events for newly fetched options in DOM", () {
+      createOptionsInDom();
+      select_comp.fetch_url = "/locations";
+      select_comp.fetchOptions();
+      select_comp.http_request_completer.future.then((response) {
+        var first_option = select_comp.findAllParts("option").first;
+        first_option.click();
+        expect(select_comp.input_value, equals("hello"));
+        expect(select_comp.display_value, equals("world"));
+      });
+      select_comp.http_request_completer.complete("{ \"hello\": \"world\"}");
+    });
 
     group("character keypresses", () {
       

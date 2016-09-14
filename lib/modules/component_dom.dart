@@ -35,7 +35,7 @@ abstract class ComponentDom {
     else if(attr_name == null || node.getAttribute(attr_name) == attr_value)
       return [node];
     else if(node.children.length == 0)
-      return null;
+      return [];
 
     List elements = [];
     for(var c in node.children) {

@@ -8,11 +8,6 @@ class EditableSelectComponentBehaviors extends BaseComponentBehaviors {
     this.component = c;
   }
 
-  showAjaxIndicator()  => prvt_switchBlockVisibilityIfExists(".ajaxIndicator", #show, display: "inline");
-  hideAjaxIndicator()  => prvt_switchBlockVisibilityIfExists(".ajaxIndicator", #hide);
-  showNoOptionsFound() => prvt_switchBlockVisibilityIfExists(".noOptionsFoundMessage", #show);
-  hideNoOptionsFound() => prvt_switchBlockVisibilityIfExists(".noOptionsFoundMessage", #hide);
-
   disable() {
     this.input.attributes["disabled"]         = "disabled";
     this.input.attributes["data-placeholder"] = input.attributes["placeholder"];

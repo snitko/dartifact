@@ -5,13 +5,14 @@ class SelectComponent extends Component {
   /* display_value - the one we show to the user,
    * input_value - the one we'd want to send to the server.
    */
-  List attribute_names = ["display_value", "input_value", "disabled", "name"];
+  List attribute_names = ["display_value", "input_value", "disabled", "name", "fetch_url"];
 
   List native_events   = ["selectbox.click", "keypress", "keydown", "option.click"];
   List behaviors       = [SelectComponentBehaviors, FormFieldComponentBehaviors];
 
   LinkedHashMap options = new LinkedHashMap();
-  int lines_to_show = 10;
+  int  lines_to_show    = 10;
+  bool fetching_options = false;
   
 
   /** When user presses a key with selectbox focused,
@@ -64,21 +65,16 @@ class SelectComponent extends Component {
       updateKeypressStackWithChar(char);
       setValueFromKeypressStack();
     });
-    event_handlers.add(event: 'click', role: 'self.option', handler: (self,event) {
-      var t = event.target;
-      setValueByInputValue(t.getAttribute('data-option-value'));
-      self.behave('close');
-      _toggleOpenedStatus();
-    });
 
   }
 
   void afterInitialize() {
     super.afterInitialize();
     readOptionsFromDom();
-    updatePropertiesFromNodes(attrs: ["input_value", "disabled", "name"], invoke_callbacks: true);
+    updatePropertiesFromNodes(attrs: ["input_value", "disabled", "name", "fetch_url"], invoke_callbacks: true);
     if(this.input_value != null)
       this.display_value = options[this.input_value.toString()];
+    prvt_listenToOptionClickEvents();
   }
 
   /** Does what it says. Parses those options from DOM and puts both input values and
@@ -101,7 +97,7 @@ class SelectComponent extends Component {
   updateOptionsInDom() {
     var options_container = this.findPart("options_container");
     this.findAllParts("option").forEach((el) => el.remove());
-    options.forEach((k,v) {
+    this.options.forEach((k,v) {
       var option = this.findPart("option_template").clone(true);
       option.attributes["data-component-part"] = "option";
       option.attributes["data-option-value"]   = k;
@@ -164,7 +160,7 @@ class SelectComponent extends Component {
       ip = null;
     this.input_value    = ip;
     this.focused_option = ip;
-    this.display_value  = (ip == null ? null : this.options[ip]);
+    this.display_value  = (ip == null ? "" : this.options[ip]);
     this.publishEvent("change", this);
   }
 
@@ -173,6 +169,8 @@ class SelectComponent extends Component {
     */
   void setDisplayValueFromInputValue() {
     this.display_value = this.options[this.input_value.toString()];
+    if(this.display_value == null)
+      this.display_value = "";
   }
   /**************************************************************************/
 
@@ -250,6 +248,52 @@ class SelectComponent extends Component {
     _toggleOpenedStatus();
   }
 
+  /** Makes a request to the remote server at the URL specified in `fetch_url`.
+    * Sends along an additional `q` param containing the value entered by user.
+    *
+    * Expects a json string to be returned containing key/values. However, please note,
+    * that for EditableSelectComponent currently only keys are used as values and as options
+    * text presented to the user.
+    */
+  Future fetchOptions() {
+
+    this.fetching_options = true;
+    this.behave('showAjaxIndicator');
+    return this.ajax_request(this.fetch_url).then((String response) {
+      this.options = new LinkedHashMap.from(JSON.decode(response));
+      this.behave('hideAjaxIndicator');
+
+      if(this.options.length > 0) {
+        updateOptionsInDom();
+        behave("hideNoOptionsFound");
+      }
+      else {
+        this.options = {};
+        updateOptionsInDom();
+        behave("showNoOptionsFound");
+      }
+
+      setDisplayValueFromInputValue();
+      prvt_listenToOptionClickEvents();
+      this.fetching_options = false;
+    });
+  }
+
+  void updateFetchUrlParams(Map params) {
+    params.forEach((k,v) {
+      if(v == null || v == "")
+        this.fetch_url = this.fetch_url.replaceFirst(new RegExp("$k=.*?(&|\$)"), "");
+      else {
+        if(this.fetch_url.contains("$k="))
+          this.fetch_url = this.fetch_url.replaceFirst(new RegExp("$k=.*?(&|\$)"), "$k=$v&");
+        else
+          _addFetchUrlParam(k,v);
+      }
+      if(this.fetch_url.endsWith("&"))
+        this.fetch_url = this.fetch_url.replaceFirst(new RegExp(r'&$'), "");
+    });
+  }
+
   void externalClickCallback() {
     this.opened = false;
     this.behave("close");
@@ -264,9 +308,25 @@ class SelectComponent extends Component {
   }
 
   get value => this.input_value;
+  ajax_request(url) => HttpRequest.getString(url);
 
   void _toggleOpenedStatus() {
     this.opened = !this.opened;
+  }
+
+  /** This methd is called not once, but every time we fetch new options from the server,
+    * because the newly added option elements are not being monitored by the previously
+    * created listener.
+   */
+  prvt_listenToOptionClickEvents() {
+    this.event_handlers.remove(event: 'click', role: 'self.option');
+    this.event_handlers.add(event: 'click', role: 'self.option', handler: (self,event) {
+      var t = event.target;
+      setValueByInputValue(t.getAttribute('data-option-value'));
+      this.behave('close');
+      this.opened = false;
+    });
+    this.reCreateNativeEventListeners();
   }
 
   void prvt_processKeyDownEvent(e) {
@@ -293,6 +353,15 @@ class SelectComponent extends Component {
       }
       e.preventDefault();
     } 
+  }
+
+  void _addFetchUrlParam(String name, String value) {
+    var new_fetch_url = this.fetch_url;
+    if(!new_fetch_url.contains("?"))
+      new_fetch_url = new_fetch_url + "?";
+    if(!new_fetch_url.endsWith("?"))
+      new_fetch_url = new_fetch_url + "&";
+    this.fetch_url = new_fetch_url + "${name}=${value}";
   }
 
 }

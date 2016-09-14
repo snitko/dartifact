@@ -13,6 +13,11 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
     this.selectbox         = this.component.findPart("selectbox");
   }
 
+  showAjaxIndicator()  => prvt_switchBlockVisibilityIfExists(".ajaxIndicator", #show, display: "inline");
+  hideAjaxIndicator()  => prvt_switchBlockVisibilityIfExists(".ajaxIndicator", #hide);
+  showNoOptionsFound() => prvt_switchBlockVisibilityIfExists(".noOptionsFoundMessage", #show);
+  hideNoOptionsFound() => prvt_switchBlockVisibilityIfExists(".noOptionsFoundMessage", #hide);
+
   toggle() {
     if(this.component.opened)
       close();

@@ -73,6 +73,54 @@ void main() {
       behaviors.focusCurrentOption();
       expect(option_els[2].classes, contains('focused'));
     });
+
+    group("ajax indicator", () {
+
+      var ai;
+
+      setUp(() {
+        ai = new ImageElement();
+        ai.classes.add("ajaxIndicator");
+        ai.style.display = "none";
+        select_el.append(ai);
+      });
+
+      test("is shown", () {
+        behaviors.showAjaxIndicator();
+        expect(ai.style.display, equals("inline"));
+      });
+
+      test("is hidden", () {
+        ai.style.display = "inline";
+        behaviors.hideAjaxIndicator();
+        expect(ai.style.display, equals("none"));
+      });
+      
+    });
+
+    group("no options found warning", () {
+
+      var warning;
+
+      setUp(() {
+        warning = new DivElement();
+        warning.classes.add("noOptionsFoundMessage");
+        warning.style.display = "none";
+        select_el.append(warning);
+      });
+
+      test("is shown", () {
+        behaviors.showNoOptionsFound();
+        expect(warning.style.display, equals("block"));
+      });
+
+      test("is hidden", () {
+        warning.style.display = "block";
+        behaviors.hideNoOptionsFound();
+        expect(warning.style.display, equals("none"));
+      });
+      
+    });
     
   });
 

@@ -8,9 +8,7 @@ class EditableSelectComponent extends SelectComponent {
   List native_events   = ["arrow.click", "option.click", "!display_input.keyup", "!display_input.keydown", "!display_input.change", "!display_input.blur"];
   List behaviors       = [SelectComponentBehaviors, EditableSelectComponentBehaviors, FormFieldComponentBehaviors];
 
-  int    keypress_stack_timeout = 500;
-  bool   fetching_options       = false;
-
+  int keypress_stack_timeout = 500;
 
   /** We need this additional property to store ALL loaded properties.
     * When options are filtered, this one stores all options, regardless of whether they
@@ -27,7 +25,6 @@ class EditableSelectComponent extends SelectComponent {
   EditableSelectComponent() {
   
     event_handlers.remove(event: 'click', role: 'self.selectbox');
-    event_handlers.remove(event: 'click', role: 'self.option');
     event_handlers.remove(event: 'keypress', role: #self);
 
     event_handlers.addForRole("self.display_input", {
@@ -82,7 +79,6 @@ class EditableSelectComponent extends SelectComponent {
   }
 
   get current_input_value => findPart("display_input").value;
-  ajax_request(url) => HttpRequest.getString(url);
 
   /** Determines whether we allow custom options to be set as the value of the select
     * when we type something in, but no matches were fetched.
@@ -91,9 +87,8 @@ class EditableSelectComponent extends SelectComponent {
 
   void afterInitialize() {
     super.afterInitialize();
-    updatePropertiesFromNodes(attrs: ["fetch_url", "allow_custom_value", "disabled"], invoke_callbacks: false);
+    updatePropertiesFromNodes(attrs: ["allow_custom_value"], invoke_callbacks: false);
     this.original_options = options;
-    _listenToOptionClickEvents();
   }
 
   /** Looks at how much time has passed since the last keystroke. If not much,
@@ -148,38 +143,12 @@ class EditableSelectComponent extends SelectComponent {
       behave("hideNoOptionsFound");
       
     updateOptionsInDom();
-    _listenToOptionClickEvents();
+    prvt_listenToOptionClickEvents();
   }
 
-  /** Makes a request to the remote server at the URL specified in `fetch_url`.
-    * Sends along an additional `q` param containing the value entered by user.
-    *
-    * Expects a json string to be returned containing key/values. However, please note,
-    * that for EditableSelectComponent currently only keys are used as values and as options
-    * text presented to the user.
-    */
   Future fetchOptions() {
     updateFetchUrlParams({ this.query_param_name : this.current_input_value });
-
-    this.fetching_options = true;
-    this.behave('showAjaxIndicator');
-    return this.ajax_request(this.fetch_url).then((String response) {
-      this.options = new LinkedHashMap.from(JSON.decode(response));
-      this.behave('hideAjaxIndicator');
-
-      if(this.options.length > 0) {
-        updateOptionsInDom();
-        behave("hideNoOptionsFound");
-      }
-      else {
-        this.options = {};
-        updateOptionsInDom();
-        behave("showNoOptionsFound");
-      }
-
-      _listenToOptionClickEvents();
-      this.fetching_options = false;
-    });
+    return super.fetchOptions();
   }
 
   /** Cleares the select box input and sets it to the previous value. Usually
@@ -193,37 +162,6 @@ class EditableSelectComponent extends SelectComponent {
     }
     this.behave('close');
     this.opened = false;
-  }
-
-
-  void updateFetchUrlParams(Map params) {
-    params.forEach((k,v) {
-      if(v == null || v == "")
-        this.fetch_url = this.fetch_url.replaceFirst(new RegExp("$k=.*?(&|\$)"), "");
-      else {
-        if(this.fetch_url.contains("$k="))
-          this.fetch_url = this.fetch_url.replaceFirst(new RegExp("$k=.*?(&|\$)"), "$k=$v&");
-        else
-          _addFetchUrlParam(k,v);
-      }
-      if(this.fetch_url.endsWith("&"))
-        this.fetch_url = this.fetch_url.replaceFirst(new RegExp(r'&$'), "");
-    });
-  }
-
-  /** This methd is called not once, but every time we fetch new options from the server,
-    * because the newly added option elements are not being monitored by the previously
-    * created listener.
-   */
-  _listenToOptionClickEvents() {
-    this.event_handlers.remove(event: 'click', role: 'self.option');
-    this.event_handlers.add(event: 'click', role: 'self.option', handler: (self,event) {
-      var t = event.target;
-      this.input_value = t.getAttribute('data-option-value');
-      this.behave('close');
-      this.opened = false;
-    });
-    this.reCreateNativeEventListeners();
   }
 
   void prvt_processInputKeyUpEvent(e) {
@@ -250,15 +188,6 @@ class EditableSelectComponent extends SelectComponent {
       this.opened = false;
     }
 
-  }
-
-  void _addFetchUrlParam(String name, String value) {
-    var new_fetch_url = this.fetch_url;
-    if(!new_fetch_url.contains("?"))
-      new_fetch_url = new_fetch_url + "?";
-    if(!new_fetch_url.endsWith("?"))
-      new_fetch_url = new_fetch_url + "&";
-    this.fetch_url = new_fetch_url + "${name}=${value}";
   }
 
   @override
