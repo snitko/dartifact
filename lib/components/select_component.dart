@@ -11,9 +11,9 @@ class SelectComponent extends Component {
   List behaviors       = [SelectComponentBehaviors, FormFieldComponentBehaviors];
 
   LinkedHashMap options = new LinkedHashMap();
+  Map  options_data     = {};
   int  lines_to_show    = 10;
   bool fetching_options = false;
-  
 
   /** When user presses a key with selectbox focused,
     * we put the character typed by this key into a stack which holds it there for some
@@ -260,7 +260,8 @@ class SelectComponent extends Component {
     this.fetching_options = true;
     this.behave('showAjaxIndicator');
     return this.ajax_request(this.fetch_url).then((String response) {
-      this.options = new LinkedHashMap.from(JSON.decode(response));
+
+      _setOptionsFromFetchedJson(response);
       this.behave('hideAjaxIndicator');
 
       if(this.options.length > 0) {
@@ -314,6 +315,25 @@ class SelectComponent extends Component {
     this.opened = !this.opened;
   }
 
+  /** The goal of this method is to detect whether the returned JSON contains
+    * any additional data and if it does, it will store it in a separate property.
+    */
+  void _setOptionsFromFetchedJson(json) {
+    var parsed_json = {};
+    JSON.decode(json).forEach((k,v) {
+      if(v is String)
+        parsed_json[k] = v;
+      else if(v is Map) {
+        parsed_json[k] = v["display_value"];
+        v.remove("display_value");
+        this.options_data[k] = v;
+      }
+      else
+        print("Warning: cannot parse the fetched json!");
+    });
+    this.options = new LinkedHashMap.from(parsed_json);
+  }
+  
   /** This methd is called not once, but every time we fetch new options from the server,
     * because the newly added option elements are not being monitored by the previously
     * created listener.

@@ -209,6 +209,17 @@ void main() {
       select_comp.http_request_completer.complete("{ \"hello\": \"world\"}");
     });
 
+    test("assigns options an additional data that comes from fetched json", () {
+      createOptionsInDom();
+      select_comp.fetch_url = "/locations";
+      select_comp.fetchOptions();
+      select_comp.http_request_completer.future.then((response) {
+        expect(select_comp.options_data["hello"], equals({ "some_numbers": [1,2,3]}));
+      });
+      select_comp.http_request_completer.complete("{ \"hello\": { \"display_value\": \"world\", \"some_numbers\": [1,2,3]}}");
+      
+    });
+
     group("character keypresses", () {
       
       test("updates keypress_stack with a new character", () {
