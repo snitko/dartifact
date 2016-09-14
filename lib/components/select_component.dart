@@ -274,7 +274,6 @@ class SelectComponent extends Component {
         behave("showNoOptionsFound");
       }
 
-      setDisplayValueFromInputValue();
       prvt_listenToOptionClickEvents();
       this.fetching_options = false;
     });
