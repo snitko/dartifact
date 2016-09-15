@@ -70,10 +70,13 @@ class EditableSelectComponent extends SelectComponent {
     };
 
     attribute_callbacks["disabled"] = (attr_name, self) {
-      if(self.disabled)
+      if(self.disabled) {
         this.behave("disable");
+        this.input_value = null;
+      }
       else
         this.behave("enable");
+      
     };
 
   }
