@@ -20,6 +20,6 @@ class EditableSelectComponentBehaviors extends BaseComponentBehaviors {
       this.input.attributes["placeholder"] = input.attributes["data-placeholder"];
   }
 
-  HtmlElement get input                    => this.component.findPart("input");
+  HtmlElement get input => this.component.findPart("display_input");
 
 }
