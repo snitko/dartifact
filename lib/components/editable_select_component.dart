@@ -156,12 +156,11 @@ class EditableSelectComponent extends SelectComponent {
     */
   void clearCustomValue([force=false]) {
     if((!this.options.containsKey(this.input_value) && this.allow_custom_value == false) || force) {
-      this.input_value = this.input_value;
+      this.display_value = this.display_value;
     } else {
-      this.input_value = this.current_input_value;
+      this.attributes["input_value"]   = this.current_input_value;
+      this.attributes["display_value"] = this.current_input_value;
     }
-    this.behave('close');
-    this.opened = false;
   }
 
   void prvt_processInputKeyUpEvent(e) {
@@ -194,7 +193,7 @@ class EditableSelectComponent extends SelectComponent {
   void externalClickCallback() {
     super.externalClickCallback();
     if(this.current_input_value != this.display_value)
-      clearCustomValue();
+      clearCustomValue(true);
   }
 
 }

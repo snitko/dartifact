@@ -145,6 +145,23 @@ void main() {
       expect(select_comp.input_value, equals("custom value"));
     });
 
+    test("resets the value to the previous one if on ESC keypress or on external click", () {
+      select_comp.allow_custom_value = true;
+      select_comp.input_value = "ab";
+
+      select_comp.findPart("display_input").value = "abc";
+      select_comp.externalClickCallback();
+      expect(select_comp.input_value, equals("ab"));
+      expect(select_comp.display_value, equals("ab"));
+      expect(select_comp.current_input_value, equals("ab"));
+
+      select_comp.findPart("display_input").value = "abc";
+      select_comp.prvt_processInputKeyUpEvent(new_key_event(KeyCode.ESC));
+      expect(select_comp.input_value, equals("ab"));
+      expect(select_comp.display_value, equals("ab"));
+      expect(select_comp.current_input_value, equals("ab"));
+    });
+
   });
 
 }
