@@ -158,8 +158,7 @@ class EditableSelectComponent extends SelectComponent {
     if((!this.options.containsKey(this.input_value) && this.allow_custom_value == false) || force) {
       this.display_value = this.display_value;
     } else {
-      this.attributes["input_value"]   = this.current_input_value;
-      this.attributes["display_value"] = this.current_input_value;
+      this.input_value = this.current_input_value;
     }
   }
 

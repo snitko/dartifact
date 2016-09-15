@@ -162,6 +162,14 @@ void main() {
       expect(select_comp.current_input_value, equals("ab"));
     });
 
+    test("sets custom value when it's allowed", () {
+      select_comp.allow_custom_value = true;
+      select_comp.findPart("display_input").value = "hello world";
+      select_comp.prvt_processInputKeyUpEvent(new_key_event(KeyCode.ENTER));
+      expect(select_comp.input_value, equals("hello world"));
+      expect(select_comp.display_value, equals("hello world"));
+    });
+
   });
 
 }

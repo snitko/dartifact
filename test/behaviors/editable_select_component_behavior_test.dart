@@ -36,7 +36,7 @@ void main() {
     select_el   = new DivElement();
     selectbox   = new DivElement();
     input       = new InputElement();
-    input.attributes["data-component-part"] = "input";
+    input.attributes["data-component-part"] = "display_input";
     input.attributes["placeholder"] = "Start typing...";
     selectbox.attributes["data-component-part"] = "selectbox";
     select_el.append(selectbox);
