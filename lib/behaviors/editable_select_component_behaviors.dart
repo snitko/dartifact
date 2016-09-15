@@ -9,9 +9,11 @@ class EditableSelectComponentBehaviors extends BaseComponentBehaviors {
   }
 
   disable() {
-    this.input.attributes["disabled"]         = "disabled";
-    this.input.attributes["data-placeholder"] = input.attributes["placeholder"];
-    this.input.attributes["placeholder"]      = "";
+    this.input.attributes["disabled"] = "disabled";
+    if(!isBlank(this.input.attributes["placeholder"])) {
+      this.input.attributes["data-placeholder"] = input.attributes["placeholder"];
+      this.input.attributes["placeholder"] = "";
+    }
   }
 
   enable() {
