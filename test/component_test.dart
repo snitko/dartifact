@@ -226,12 +226,18 @@ void main() {
         expect(c.events_history.length, equals(2));
         c.events_history.clear();
 
+
         // Now we re-create listeners and check the event is caught.
         c.reCreateNativeEventListeners();
         component_part2.click();
         expect(c.events_history[0], equals("MyComponent.text_field#clicked"));
         expect(c.events_history[1], isNot(equals("MyComponent.text_field#clicked")));
         expect(c.events_history.length, equals(3));
+
+        // Checking the right number of event listeners.
+        // We should have two event listeners for the text_field#click because there
+        // are two text_field components!
+        expect(c.native_event_listeners["text_field.click"].length, equals(2));
 
       });
 
