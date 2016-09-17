@@ -66,7 +66,13 @@ class EditableSelectComponent extends SelectComponent {
       self.display_value = self.options[self.input_value];
       if(self.display_value == null)
         self.display_value = self.input_value;
-      self.publishEvent("change", self);
+
+      // This is a special case of publishing a "change" event. Normally, the change
+      // event is published by the code in SelectComponent (parent class), but
+      // parent class doesn't know how to set input_value to null or custom_value,
+      // this we need to handle it here.
+      if(self.input_value == null || self.input_value == self.display_value)
+        self.publishEvent("change", self);
     };
 
     attribute_callbacks["disabled"] = (attr_name, self) {
