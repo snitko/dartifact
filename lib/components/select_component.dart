@@ -345,7 +345,7 @@ class SelectComponent extends Component {
       this.behave('close');
       this.opened = false;
     });
-    this.reCreateNativeEventListeners();
+    reCreateNativeEventListeners();
   }
 
   void prvt_processKeyDownEvent(e) {

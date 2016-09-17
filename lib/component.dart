@@ -236,10 +236,13 @@ class Component extends Object with observable.Subscriber,
           attr_value: part_name
         );
         if(part_els != null && part_els.length > 0) {
+          this.native_event_listeners[original_native_event_name] = [];
           for(var part_el in part_els) {
-            this.native_event_listeners[original_native_event_name] = part_el.on[event_name].listen((e) {
-              this.captureEvent(e, ["self.$part_name"], prevent_default: prevent_default, is_native: true);
-            });
+            this.native_event_listeners[original_native_event_name].add(
+              part_el.on[event_name].listen((e) {
+                this.captureEvent(e, ["self.$part_name"], prevent_default: prevent_default, is_native: true);
+              })
+            );
           }
         }
       }
@@ -260,15 +263,27 @@ class Component extends Object with observable.Subscriber,
     */
   void _cancelEventListeners([List event_names=null]) {
     if(event_names == null) {
-      this.native_event_listeners.forEach((k,v) => v.cancel());
+      this.native_event_listeners.forEach((k,v) => _cancelEventListenersForEventName(v));
       this.native_event_listeners = {};
     }
     else {
       event.names.forEach((e) {
-        this.native_event_listeners[e].cancel();
+        _cancelEventListenersForEventName(this.native_event_listeners[e]);
         this.native_event_listeners.remove(e);
       });
     }
+  }
+
+  /** This one primarily takes care of whether an object in #native_event_listener is
+    * a Subscription or a List of Subscriptions and acts accordingly.
+    * It may be a List of subscriptions for events for Component parts and a
+    * Subscription object itself for the native events on #dom_element.
+    */
+  void _cancelEventListenersForEventName(event) {
+    if(event is List)
+      event.forEach((e) => e.cancel());
+    else
+      event.cancel();
   }
 
   /**
