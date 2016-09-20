@@ -6,7 +6,7 @@ class NumericFormFieldComponent extends FormFieldComponent {
 
   void afterInitialize() {
     super.afterInitialize();
-    updatePropertiesFromNodes(attrs: ["value", "disabled", "name", "max_length"], invoke_callbacks: true);
+    updatePropertiesFromNodes(attrs: ["disabled", "name", "max_length"], invoke_callbacks: true);
   }
 
   @override

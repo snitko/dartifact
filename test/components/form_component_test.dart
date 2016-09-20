@@ -14,15 +14,17 @@ class MyFormFieldComponent extends FormFieldComponent {
 
 void main() {
 
-  var c;
+  var c, value_holder;
 
   setUp(() {
     c = new MyFormFieldComponent();
+    value_holder = new TextAreaElement();
+    value_holder.attributes["data-component-part"] = "value_holder";
+    c.dom_element = value_holder;
     c.afterInitialize();
   });
 
   test("catches change event from the dom_element", () {
-    c.dom_element = new TextAreaElement();
     c.dom_element.value = 'some text';
     c.dom_element.dispatchEvent(new Event("change"));
     expect(c.value, equals('some text'));
@@ -39,6 +41,7 @@ void main() {
   });
 
   test("show and hide validation_errors_summary block accordingly", () {
+    c = new MyFormFieldComponent();
     c.dom_element           = new DivElement();
     var text_area           = new TextAreaElement();
     var validations_summary = new DivElement();
@@ -46,6 +49,7 @@ void main() {
     validations_summary.setAttribute('data-component-property', 'validation_errors_summary');
     c.dom_element.append(text_area);
     c.dom_element.append(validations_summary);
+    c.afterInitialize();
     c.validate();
     expect(c.dom_element.children[1].style.display, equals('block'));
     c.value = 1;
@@ -54,7 +58,6 @@ void main() {
   });
 
   test("resets an element value", () {
-    c.dom_element       = new TextAreaElement();
     c.dom_element.value = 'some text';
     c.dom_element.dispatchEvent(new Event("change"));
     c.reset();
@@ -63,10 +66,17 @@ void main() {
   });
 
   test("sets value to the DOM element after the attribute has been changed", () {
-    c.dom_element = new TextAreaElement();
-    c.value       = 'some text';
+    c.value = 'some text';
     expect(c.dom_element.value, equals("some text"));
     expect(c.dom_element.text,  equals("some text"));
+  });
+
+  test("loads existing value from DOM upon initialization", () {
+    c = new MyFormFieldComponent();
+    c.dom_element = value_holder;
+    c.dom_element.value = "hello world";
+    c.afterInitialize();
+    expect(c.value, equals("hello world"));
   });
   
   

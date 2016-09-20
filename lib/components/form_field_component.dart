@@ -26,10 +26,14 @@ class FormFieldComponent extends Component {
 
   }
 
+  void afterInitialize() {
+    super.afterInitialize();
+    prvt_updateValueFromDom();
+  }
+
   @override
   bool validate({ deep: true }) {
     super.validate();
-    this.valid ? this.behave('hideErrors') : this.behave('showErrors');
     return valid;
   }
 
@@ -56,7 +60,7 @@ class FormFieldComponent extends Component {
   }
 
   void prvt_updateValueFromDom() {
-    this.updateAttributes({ "$value_property" : value_holder_element.value });
+    this.updateAttributes({ "$value_property" : (value_holder_element.value == "" ? null : value_holder_element.value)});
   }
 
 }
