@@ -12,6 +12,7 @@ class FormFieldComponent extends Component {
     attribute_names.add(this.value_property);
     attribute_callbacks[this.value_property] = (attr_name, self) {
       prvt_setValueForValueHolderElement(self.attributes[self.value_property]);
+      self.publishEvent("change", self);
     };
 
     event_handlers.addForEvent('change', {
