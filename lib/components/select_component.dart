@@ -280,6 +280,8 @@ class SelectComponent extends Component {
   }
 
   void updateFetchUrlParams(Map params) {
+    if(isBlank(this.fetch_url))
+      return;
     params.forEach((k,v) {
       if(v == null || v == "")
         this.fetch_url = this.fetch_url.replaceFirst(new RegExp("$k=.*?(&|\$)"), "");

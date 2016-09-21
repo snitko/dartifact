@@ -23,7 +23,7 @@ List findSubclasses(name) {
 Object new_instance_of(String class_name, [List args, String library='']) {
 
   // Arguments for the class constructor out which
-  // then new instance will be obtained.
+  // the new instance will be obtained.
   if(args is Null)
     args = [];
 
