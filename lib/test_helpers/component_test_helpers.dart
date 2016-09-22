@@ -60,7 +60,7 @@ HtmlElement createDomEl(class_name, { and: null, el: null, roles: "", part: "", 
   el.attributes["data-component-property"]             = property;
   el.attributes["data-component-attribute-properties"] = attr_properties;
   attrs.forEach((a,v) {
-    el.attributes[a] = v;
+    el.attributes[a] = v.toString();
   });
   el.attributes.keys.forEach((k) {
     if(el.attributes[k] == "")

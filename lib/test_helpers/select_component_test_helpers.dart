@@ -17,20 +17,24 @@ class TestEditableSelectComponent extends EditableSelectComponent {
   }
 }
 
-HtmlElement createEditableSelect({ roles: null, and: null }) {
+HtmlElement createEditableSelect({ roles: null, value: null, and: null }) {
   return createDomEl("TestEditableSelectComponent", roles: roles, and: (el) {
     return [
+      createDomEl("", el: new InputElement(), part: "input", attr_properties: "input_value:value", attrs: { "value" : value }),
       createDomEl("", el: new InputElement(), part: "display_input", property: "display_input"),
-      createDomEl("", el: new InputElement(), part: "input")
+      createDomEl("", part: "option_template"),
+      createDomEl("", part: "options_container")
     ];
   });
 }
 
-HtmlElement createSelect({ roles: null, and: null }) {
+HtmlElement createSelect({ roles: null, value: null, and: null }) {
   return createDomEl("TestSelectComponent", roles: roles, and: (el) {
     return [
-      createDomEl("", el: new InputElement(), property: "input_value", attr_properties: "input_value:value"),
-      createDomEl("", el: new InputElement(), property: "display_value")
+      createDomEl("", el: new InputElement(), property: "input_value", attr_properties: "input_value:value", attrs: { "value" : value }),
+      createDomEl("", el: new InputElement(), property: "display_value"),
+      createDomEl("", part: "option_template"),
+      createDomEl("", part: "options_container")
     ];
   });
 }
