@@ -13,15 +13,14 @@ Component createComponent(class_name, { and: null, el: null, roles: "", part: ""
     el = new DivElement();
 
   var c = new_instance_of_component(class_name);
-  c.dom_element = el;
-  c.dom_element.attributes["data-component-class"]    = class_name;
-  c.dom_element.attributes["data-component-roles"]    = roles;
-  c.dom_element.attributes["data-component-part"]     = part;
-  c.dom_element.attributes["data-component-property"] = property;
-  c.dom_element.attributes["data-component-attribute-properties"] = attr_properties;
-  c.dom_element.attributes.keys.forEach((k) {
-    if(c.dom_element.attributes[k] == "")
-      c.dom_element.attributes.remove(k);
+  el.attributes["data-component-class"]    = class_name;
+  el.attributes["data-component-roles"]    = roles;
+  el.attributes["data-component-part"]     = part;
+  el.attributes["data-component-property"] = property;
+  el.attributes["data-component-attribute-properties"] = attr_properties;
+  el.attributes.keys.forEach((k) {
+    if(el.attributes[k] == "")
+      el.attributes.remove(k);
   });
 
   if(and != null) {
@@ -31,8 +30,10 @@ Component createComponent(class_name, { and: null, el: null, roles: "", part: ""
     // First, add all HtmlElements
     children.forEach((child) {
       if(child is HtmlElement)
-        c.dom_element.append(child);
+        el.append(child);
     });
+
+    c.dom_element = el;
 
     // Initialize child Components
     c.initChildComponents();
@@ -43,6 +44,8 @@ Component createComponent(class_name, { and: null, el: null, roles: "", part: ""
       if(child is Component)
         c.addChild(child);
     });
+  } else {
+    c.dom_element = el;
   }
   return c;
 }
