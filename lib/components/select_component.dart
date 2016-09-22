@@ -296,6 +296,10 @@ class SelectComponent extends Component {
     });
   }
 
+  void reset() {
+    setValueByInputValue(null);
+  }
+
   void externalClickCallback() {
     this.opened = false;
     this.behave("close");
