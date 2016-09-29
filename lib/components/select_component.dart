@@ -78,6 +78,8 @@ class SelectComponent extends Component {
       updatePropertiesFromNodes(attrs: ["input_value", ], invoke_callbacks: true);
       if(this.input_value != null)
         this.display_value = options[this.input_value.toString()];
+    } else {
+      this.input_value = this.display_value;
     }
 
     prvt_listenToOptionClickEvents();
