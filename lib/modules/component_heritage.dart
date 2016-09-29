@@ -19,7 +19,7 @@ abstract class ComponentHeritage {
           // component as a child to its parent and init its own children. Only then we
           // call afterInitialize() giving users access to everything we possible can.
           component.dom_element = el;
-          this.addChild(component);
+          this.addChild(component, initialize: false);
           if(recursive)
             component.initChildComponents();
           component.afterInitialize();
@@ -110,7 +110,7 @@ abstract class ComponentHeritage {
     * Obviously, you might not always want (2), so just redefine #_appendChildDomElement()
     * method in your class to change this behavior.
     */
-  void _addChild(Component child) {
+  void _addChild(Component child, { initialize: true }) {
     _addValidationsToChild(child);
     child.addObservingSubscriber(this);
     // We only do it if this element is clearly not in the DOM.
@@ -118,6 +118,9 @@ abstract class ComponentHeritage {
       child.initDomElementFromTemplate();
       _appendChildDomElement(child.dom_element);
     }
+
+    if(initialize)
+      child.afterInitialize();
   }
 
 }

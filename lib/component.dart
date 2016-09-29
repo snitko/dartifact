@@ -167,8 +167,8 @@ class Component extends Object with observable.Subscriber,
     * Thus, the actual functionality is in _addChild() method inside the ComponentHeritage module
     * and this is just a front calling _addChild() and then super.addChild();
     */
-  void addChild(child) {
-    _addChild(child);
+  void addChild(child, { initialize: true }) {
+    _addChild(child, initialize: initialize);
     super.addChild(child);
   }
 
