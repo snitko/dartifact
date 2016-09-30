@@ -1,6 +1,6 @@
 part of nest_ui;
 
-HtmlElement createFormField(class_name, { input_el: null, roles: null, value: null, and: null }) {
+HtmlElement createFormFieldElement(class_name, { input_el: null, roles: null, value: null, and: null }) {
 
   if(input_el == null)
     input_el = new InputElement();
@@ -14,9 +14,20 @@ HtmlElement createFormField(class_name, { input_el: null, roles: null, value: nu
     else
       input_el = createDomEl("", el: input_el, part: "value_holder", attr_properties: "name:name", attrs: { "value" : value });
 
+    var errors_el = createDomEl("", property: "validation_errors_summary");
+    errors_el.style.display = "none";
+    
     return [
       createDomEl("", part: "input", attr_properties: "disabled:data-disabled, max_length:data-max-length"),
-      input_el
+      input_el, errors_el
     ];
   });
+}
+
+Component createFormFieldComponent({ roles: null, value: null }) {
+
+  var el = createFormFieldElement("FormFieldComponent", roles: roles, value: value);
+  var component = createComponent("FormFieldComponent", el: el);
+
+  return component;
 }
