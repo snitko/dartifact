@@ -1,10 +1,5 @@
 part of nest_ui;
 
-class NoOptionWithSuchValue implements Exception {
-  String cause;
-  NoOptionWithSuchValue(this.cause);
-}
-
 // Extends Component and FormFieldComponent, because there isn't any value holder element
 class RadioButtonComponent extends Component {
 
@@ -15,7 +10,7 @@ class RadioButtonComponent extends Component {
   RadioButtonComponent() {
 
     event_handlers.add(event: 'change', role: "self.option", handler: (self,event) {
-      self.prvt_setValueFromOptions(event.target);
+      setValueFromSelectedOption();
     });
 
     attribute_callbacks["value"] = (self, name) => selectOptionFromValue();
@@ -25,8 +20,11 @@ class RadioButtonComponent extends Component {
   void afterInitialize() {
     super.afterInitialize();
     updatePropertiesFromNodes(attrs: ["disabled", "name"], invoke_callbacks: true);
-    selectOptionFromValue();
     findAllParts("option").forEach((p) => this.options[p.value] = p);
+    if(isBlank(this.value))
+      setValueFromSelectedOption();
+    else
+      selectOptionFromValue();
  }
 
   void selectOptionFromValue() {
@@ -38,18 +36,16 @@ class RadioButtonComponent extends Component {
     }
   }
 
-  void prvt_setValueFromOptions(option_el) {
-    if(option_el.checked) {
-      this.attributes["value"] = option_el.value;
-      this.publishEvent("change", this);
-    }
-  }
-
-  void prvt_setValueFromSelectedOption() {
+  void setValueFromSelectedOption() {
     options.values.forEach((o) {
       if(o.checked)
         this.value = o.value;
     });
   }
 
+}
+
+class NoOptionWithSuchValue implements Exception {
+  String cause;
+  NoOptionWithSuchValue(this.cause);
 }

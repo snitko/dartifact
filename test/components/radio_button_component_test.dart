@@ -53,7 +53,7 @@ void main() {
 
   test("sets value from the selected DOM option", () {
     radio.findAllParts("option")[1].checked = true;
-    radio.prvt_setValueFromSelectedOption();
+    radio.setValueFromSelectedOption();
     expect(radio.value, equals("value2"));
   });
 
