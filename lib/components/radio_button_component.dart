@@ -1,17 +1,24 @@
 part of nest_ui;
 
+class NoOptionWithSuchValue implements Exception {
+  String cause;
+  NoOptionWithSuchValue(this.cause);
+}
+
 // Extends Component and FormFieldComponent, because there isn't any value holder element
 class RadioButtonComponent extends Component {
 
   List native_events   = ["option.change"];
   List attribute_names = ["validation_errors_summary", "name", "disabled", "value"];
-  Map  options         = {};
+  Map options          = {};
 
   RadioButtonComponent() {
 
     event_handlers.add(event: 'change', role: "self.option", handler: (self,event) {
       self.prvt_setValueFromOptions(event.target);
     });
+
+    attribute_callbacks["value"] = (self, name) => selectOptionFromValue();
   
   }
 
@@ -19,17 +26,23 @@ class RadioButtonComponent extends Component {
     super.afterInitialize();
     updatePropertiesFromNodes(attrs: ["disabled", "name"], invoke_callbacks: true);
     selectOptionFromValue();
-    // Load all options from DOM into options Map: value => dom_el;
+    findAllParts("option").forEach((p) => this.options[p.value] = p);
  }
 
   void selectOptionFromValue() {
-    // 1. Find option with current value
-    // 2. Select this option
+    if(this.options.keys.contains(this.value)) {
+      this.options.values.forEach((el) => el.checked = false);
+      this.options[this.value].checked = true;
+    } else if(!isBlank(this.value)) {
+      throw new NoOptionWithSuchValue("No option found with value `${this.value}`. You can't set a value that's not in the this.options.keys List.");
+    }
   }
 
-  void _setValueFromOptions(radio_button_element) {
-    // 1. Check if this option is checked or not
-    // 2. Set new value to the value of the checked option
+  void prvt_setValueFromOptions(option_el) {
+    if(option_el.checked) {
+      this.attributes["value"] = option_el.value;
+      this.publishEvent("change", this);
+    }
   }
 
 }

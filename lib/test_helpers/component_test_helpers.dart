@@ -37,7 +37,6 @@ Component createComponent(class_name, { and: null, el: null, roles: "", part: ""
 
     // Initialize child Components
     c.initChildComponents();
-    c.afterInitialize();
 
     // Then add child Components that were created manually
     children.forEach((child) {
@@ -47,6 +46,7 @@ Component createComponent(class_name, { and: null, el: null, roles: "", part: ""
   } else {
     c.dom_element = el;
   }
+  c.afterInitialize();
   return c;
 }
 
