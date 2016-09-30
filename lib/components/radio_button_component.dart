@@ -9,7 +9,7 @@ class NoOptionWithSuchValue implements Exception {
 class RadioButtonComponent extends Component {
 
   List native_events   = ["option.change"];
-  List attribute_names = ["validation_errors_summary", "name", "disabled", "value"];
+  List attribute_names = ["validation_errors_summary", "disabled", "value"];
   Map options          = {};
 
   RadioButtonComponent() {
@@ -43,6 +43,13 @@ class RadioButtonComponent extends Component {
       this.attributes["value"] = option_el.value;
       this.publishEvent("change", this);
     }
+  }
+
+  void prvt_setValueFromSelectedOption() {
+    options.values.forEach((o) {
+      if(o.checked)
+        this.value = o.value;
+    });
   }
 
 }

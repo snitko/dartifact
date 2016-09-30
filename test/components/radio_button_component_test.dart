@@ -51,4 +51,10 @@ void main() {
     expect(() => radio.value = "some other value", throwsA(new isInstanceOf<NoOptionWithSuchValue>()));
   });
 
+  test("sets value from the selected DOM option", () {
+    radio.findAllParts("option")[1].checked = true;
+    radio.prvt_setValueFromSelectedOption();
+    expect(radio.value, equals("value2"));
+  });
+
 }
