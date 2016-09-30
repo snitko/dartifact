@@ -181,6 +181,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
+  queries:
+    description:
+      name: queries
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.15"
   shelf:
     description:
       name: shelf
@@ -283,4 +289,5 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.10"
-sdk: ">=1.17.0-dev.6.2 <2.0.0"
+sdks:
+  dart: ">=1.17.0-dev.6.2 <2.0.0"

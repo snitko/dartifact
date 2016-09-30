@@ -11,7 +11,10 @@ import 'dart:collection';
 export 'dart:collection';
 export 'dart:convert';
 
-// local libs
+// vendor libs from pub packages
+import 'package:queries/collections.dart';
+
+// nest_ui satellite libs
 import 'package:observable_roles/observable_roles.dart' as observable;
 import 'package:heritage_tree/heritage_tree.dart';
 import 'package:attributable/attributable.dart';

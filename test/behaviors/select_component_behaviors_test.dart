@@ -44,7 +44,7 @@ void main() {
     select_comp = new SelectComponent();
     select_comp.dom_element = select_el;
     select_comp.afterInitialize();
-    behaviors = select_comp.behavior_instances[0];
+    behaviors = select_comp.behavior_instances.last;
   });
 
   group("SelectComponentBeahviors", () {

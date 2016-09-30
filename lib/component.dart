@@ -89,13 +89,13 @@ class Component extends Object with observable.Subscriber,
   void behave(behavior, [List attrs=null]) {
     if(attrs == null)
       attrs = [];
-    behavior_instances.forEach((b) {
+    for(var b in behavior_instances.reversed) {
       if(!ignore_misbehavior || methods_of(b).contains(behavior)) {
         var im = reflect(b);
         im.invoke(new Symbol(behavior), attrs);
         return;
       }
-    });
+    }
   }
 
   /** Reloading obervable_roles.Subscriber's method.
@@ -294,7 +294,7 @@ class Component extends Object with observable.Subscriber,
    */
   void _createBehaviors() {
     behaviors.forEach((b) {
-      [Component.app_library, 'nest_ui'].forEach((l) {
+      new Collection([Component.app_library, 'nest_ui']).distinct().toList().forEach((l) {
         var behavior_instance = new_instance_of(b.toString(), [this], l);
         if(behavior_instance != null)
           behavior_instances.add(behavior_instance);

@@ -46,7 +46,7 @@ void main() {
     select_comp = new EditableSelectComponent();
     select_comp.dom_element = select_el;
     select_comp.afterInitialize();
-    behaviors = select_comp.behavior_instances[1];
+    behaviors = select_comp.behavior_instances.last;
   });
 
   group("EditableSelectComponentBeahviors", () {
