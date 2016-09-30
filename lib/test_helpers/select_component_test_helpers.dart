@@ -17,7 +17,7 @@ class TestEditableSelectComponent extends EditableSelectComponent {
   }
 }
 
-HtmlElement createEditableSelect({ roles: null, value: null, and: null }) {
+HtmlElement createEditableSelectElement({ roles: null, value: null, and: null }) {
   return createDomEl("TestEditableSelectComponent", roles: roles, and: (el) {
     return [
       createDomEl("", el: new InputElement(), part: "input", attr_properties: "input_value:value", attrs: { "value" : value }),
@@ -28,7 +28,7 @@ HtmlElement createEditableSelect({ roles: null, value: null, and: null }) {
   });
 }
 
-HtmlElement createSelect({ roles: null, value: null, and: null }) {
+HtmlElement createSelectElement({ roles: null, value: null, and: null }) {
   return createDomEl("TestSelectComponent", roles: roles, and: (el) {
     return [
       createDomEl("", el: new InputElement(), property: "input_value", attr_properties: "input_value:value", attrs: { "value" : value }),

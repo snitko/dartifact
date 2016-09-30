@@ -5,7 +5,7 @@ HtmlElement createFormFieldElement(class_name, { input_el: null, roles: null, va
   if(input_el == null)
     input_el = new InputElement();
 
-  return createDomEl(class_name, roles: roles, and: (el) {
+  var el = createDomEl(class_name, roles: roles, and: (el) {
 
     if(input_el is TextAreaElement) {
       input_el = createDomEl("", el: input_el, part: "value_holder", attr_properties: "name:name");
@@ -22,12 +22,13 @@ HtmlElement createFormFieldElement(class_name, { input_el: null, roles: null, va
       input_el, errors_el
     ];
   });
+  return el;
 }
 
 Component createFormFieldComponent({ roles: null, value: null }) {
 
-  var el = createFormFieldElement("FormFieldComponent", roles: roles, value: value);
-  var component = createComponent("FormFieldComponent", el: el);
+  var el = createFormFieldElement("FormFieldComponent", value: value);
+  var component = createComponent("FormFieldComponent", el: el, roles: roles);
 
   return component;
 }

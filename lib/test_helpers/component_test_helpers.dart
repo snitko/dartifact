@@ -3,6 +3,8 @@ part of nest_ui;
 Component new_instance_of_component(class_name) {
   var c = new_instance_of(class_name, [], Component.app_library);
   if(c == null)
+    c = new_instance_of(class_name, [], "nest_ui");
+  if(c == null)
     c = new_instance_of(class_name, [], "");
   return c;
 }
@@ -41,7 +43,7 @@ Component createComponent(class_name, { and: null, el: null, roles: "", part: ""
     // Then add child Components that were created manually
     children.forEach((child) {
       if(child is Component)
-        c.addChild(child);
+        c.addChild(child, initialize: false);
     });
   } else {
     c.dom_element = el;
