@@ -72,10 +72,11 @@ class SelectComponent extends Component {
     super.afterInitialize();
     readOptionsFromDom();
 
-    updatePropertiesFromNodes(attrs: ["display_value", "disabled", "name", "fetch_url"], invoke_callbacks: false);
+    updatePropertiesFromNodes(attrs: ["display_value", "name", "fetch_url"], invoke_callbacks: false);
+    updatePropertiesFromNodes(attrs: ["disabled"], invoke_callbacks: true);
 
     if(isBlank(this.display_value)) {
-      updatePropertiesFromNodes(attrs: ["input_value", ], invoke_callbacks: true);
+      updatePropertiesFromNodes(attrs: ["input_value"], invoke_callbacks: true);
       if(this.input_value != null)
         this.display_value = options[this.input_value.toString()];
     } else {
