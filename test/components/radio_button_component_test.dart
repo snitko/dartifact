@@ -3,7 +3,7 @@ import "dart:html";
 import "dart:async";
 import '../../lib/nest_ui.dart';
 part '../../lib/test_helpers/component_test_helpers.dart';
-part '../../lib/test_helpers/radio_button_component_helpers.dart';
+part '../../lib/test_helpers/radio_button_component_test_helpers.dart';
 
 @TestOn("browser")
 
