@@ -7,23 +7,9 @@ part '../../lib/behaviors/select_component_behaviors.dart';
 part '../../lib/components/select_component.dart';
 part '../../lib/behaviors/editable_select_component_behaviors.dart';
 part '../../lib/components/editable_select_component.dart';
+part '../../lib/test_helpers/select_component_test_helpers.dart';
 
 @TestOn("browser")
-
-class MyEditableSelectComponentBehaviors extends Mock {
-  MyEditableSelectComponentBehaviors(Component c) {}
-  noSuchMethod(i) => super.noSuchMethod(i);
-}
-
-class MyEditableSelectComponent extends EditableSelectComponent {
-  int keypress_stack_timeout = 0;
-  var http_request_completer;
-  List behaviors = [MyEditableSelectComponentBehaviors];
-  ajax_request(url) {
-    http_request_completer = new Completer();
-    return http_request_completer.future;
-  }
-}
 
 class EditableSelectKeyEventMock {
   String type;
@@ -68,7 +54,7 @@ void main() {
     select_el   = new DivElement();
     input_el    = new InputElement();
     display_input_el = new InputElement();
-    select_comp = new MyEditableSelectComponent();
+    select_comp = new TestEditableSelectComponent();
     select_comp.dom_element = select_el;
     input_el.attributes["data-component-part"]                 = "input";
     input_el.attributes["data-component-property"]             = "input_value";

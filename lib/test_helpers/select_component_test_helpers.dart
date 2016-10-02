@@ -1,6 +1,12 @@
 part of nest_ui;
 
+class TestSelectComponentBehaviors extends Mock {
+  TestSelectComponentBehaviors(Component c) {}
+  noSuchMethod(i) => super.noSuchMethod(i);
+}
+
 class TestSelectComponent extends SelectComponent {
+  List behaviors = [TestEditableSelectComponentBehaviors];
   var http_request_completer;
   ajax_request(url) {
     http_request_completer = new Completer();
@@ -9,6 +15,7 @@ class TestSelectComponent extends SelectComponent {
 }
 
 class TestEditableSelectComponent extends EditableSelectComponent {
+  List behaviors = [TestSelectComponentBehaviors];
   int keypress_stack_timeout = 0;
   var http_request_completer;
   ajax_request(url) {
