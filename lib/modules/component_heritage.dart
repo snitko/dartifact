@@ -8,7 +8,7 @@ abstract class ComponentHeritage {
    *  specified in this attribute. Obviously, you should define such a class beforehand and
    *  inherit from Component.
   */
-  void initChildComponents({ recursive: true }) {
+  void initChildComponents({ recursive: true, after_initialize: true }) {
 
     var elements = _findChildComponentDomElements(this.dom_element);
     elements.forEach((el) {
@@ -26,6 +26,7 @@ abstract class ComponentHeritage {
         }
       });
     });
+    this.publishEvent("children_initialized");
   }
 
   /** Finds immediate children with a specific role */

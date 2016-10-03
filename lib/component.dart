@@ -190,6 +190,8 @@ class Component extends Object with observable.Subscriber,
     _createBehaviors();
   }
 
+  void afterChildrenInitialize() {}
+
   /** Sometimes we need to re-create all or some event listeners for native events. This
     * is usually necessary when new elements are added onto the page - previously created
     * listeners don't really monitor them. This method is created for this specific reason.

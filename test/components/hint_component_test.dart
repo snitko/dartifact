@@ -13,19 +13,20 @@ part '../../lib/test_helpers/hint_component_test_helpers.dart';
 void main() {
 
   var hint, parent, anchor;
-  Component.app_library = "nest_ui";
 
   setUp(() {
     cookie.remove("hint_test_hint");
     parent = createComponent("Component", and: (c) {
-      hint = createHintComponent(and: (h) {
-        h.anchor  = "part:hint_anchor";
-        h.hint_id = "test_hint";
-      });
+      var hint_el = createHintElement(attrs: {
+        "data-anchor"      : "part:hint_anchor",
+        "data-hint-id"     : "test_hint",
+        "data-show-events" : "click",
+        "data-force-show-events" : "mouseup"
+      }, roles: "hint");
       anchor = createDomEl(null, part: "hint_anchor");
-      return [hint, anchor];
+      return [hint_el, anchor];
     });
-    
+    hint = parent.findFirstChildByRole("hint");
   });
 
   group("HintComponent", () {
@@ -43,7 +44,7 @@ void main() {
         parent.dom_element.append(
           anchor = createDomEl(null, attrs: { "data-component-property" : "hint_anchor" })
         );
-        expect(hint.anchor_object, equals(anchor));
+        expect(hint.anchor_object.attributes["data-component-property"], equals("hint_anchor"));
       });
 
       test("finds anchor element in his parents DOM el descendants using HTML id attribute", () {
@@ -51,7 +52,7 @@ void main() {
         parent.dom_element.append(
           anchor = createDomEl(null, attrs: { "id" : "hint_anchor" })
         );
-        expect(hint.anchor_object, equals(anchor));
+        expect(hint.anchor_object.attributes["id"], equals("hint_anchor"));
       });
 
       test("finds anchor element in his parent's children", () {
@@ -61,6 +62,65 @@ void main() {
         expect(hint.anchor_object, equals(anchor));
       });
       
+    });
+
+    group("creating events", () {
+
+      test("creates an event handler triggering show for a native event on an anchor when it's an HTML element", () {
+        hint.display_limit = 1;
+        anchor.click();
+        expect(hint.visible, equals(true));
+        hint.visible = false;
+        anchor.click();
+        expect(hint.visible, equals(false));
+      });
+
+      test("creates an event handler triggering forced show for a native event on an anchor when it's an HTML element", () {
+        hint.display_limit = 1;
+        anchor.click();
+        expect(hint.visible, equals(true));
+        hint.visible = false;
+        anchor.dispatchEvent(new Event("mouseup"));
+        expect(hint.visible, equals(true));
+      });
+
+      group("for Components as hint anchors", () {
+
+        setUp(() {
+          parent = createComponent("Component", and: (c) {
+            var hint_el = createHintElement(attrs: {
+              "data-anchor"      : "role:hint_anchor",
+              "data-hint-id"     : "test_hint",
+              "data-show-events" : "change1",
+              "data-force-show-events" : "change2"
+            }, roles: "hint");
+            anchor = createDomEl("Component", roles: "hint_anchor");
+            return [hint_el,anchor];
+          });
+          hint = parent.findFirstChildByRole("hint");
+          anchor = parent.findFirstChildByRole("hint_anchor");
+        });
+
+        test("creates an event handler triggering show for a component event on an anchor when it's a Component", () {
+          hint.display_limit = 1;
+          anchor.publishEvent("change1");
+          expect(hint.visible, equals(true));
+          hint.visible = false;
+          anchor.publishEvent("change1");
+          expect(hint.visible, equals(false));
+        });
+
+        test("creates an event handler triggering forced show for a component event on an anchor when it's a Component", () {
+          hint.display_limit = 1;
+          anchor.publishEvent("change1");
+          expect(hint.visible, equals(true));
+          hint.visible = false;
+          anchor.publishEvent("change2");
+          expect(hint.visible, equals(true));
+        });
+
+      });
+
     });
 
     test("updates cookie with a display limit incrementing it by 1", () {
@@ -81,9 +141,6 @@ void main() {
       expect(hint.isDisplayLimitReached, equals(false));
       hint.incrementDisplayLimit();
       expect(hint.isDisplayLimitReached, equals(true));
-    });
-
-    test("creates an event handler for the anchor el", () {
     });
     
   });
