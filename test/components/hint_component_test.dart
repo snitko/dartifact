@@ -2,6 +2,7 @@ import "package:test/test.dart";
 import "dart:html";
 import "dart:async";
 import '../../lib/nest_ui.dart';
+import 'package:cookie/cookie.dart' as cookie;
 
 part '../../lib/components/hint_component.dart';
 part '../../lib/test_helpers/component_test_helpers.dart';
@@ -17,7 +18,8 @@ void main() {
   setUp(() {
     parent = createComponent("Component", and: (c) {
       hint = createHintComponent(and: (h) {
-        h.anchor = "part:hint_anchor";
+        h.anchor  = "part:hint_anchor";
+        h.hint_id = "test_hint";
       });
       anchor = createDomEl(null, part: "hint_anchor");
       return [hint, anchor];
@@ -60,16 +62,18 @@ void main() {
       
     });
 
-
-
-    test("creates an event handler for the anchor el", () {
-    });
-
-    test("updates cookie with a display limit", () {
+    test("updates cookie with a display limit incrementing it by 1", () {
+      hint.incrementDisplayLimit();
+      expect(cookie.get("hint_${hint.hint_id}"), "1");
+      hint.incrementDisplayLimit();
+      expect(cookie.get("hint_${hint.hint_id}"), "2");
     });
 
     test("checks wether disaply limit is reached", () {
       
+    });
+
+    test("creates an event handler for the anchor el", () {
     });
     
   });

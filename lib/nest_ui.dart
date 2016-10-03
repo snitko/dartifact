@@ -13,6 +13,7 @@ export 'dart:convert';
 
 // vendor libs from pub packages
 import 'package:queries/collections.dart';
+import 'package:cookie/cookie.dart' as cookie;
 
 // nest_ui satellite libs
 import 'package:observable_roles/observable_roles.dart' as observable;

@@ -45,7 +45,15 @@ class HintComponent extends Component {
     // 2. Call behavior 
   }
 
-  void updateDisplayLimit() {}
+  void incrementDisplayLimit() {
+    var i = cookie.get("hint_${this.hint_id}");
+    if(i == null)
+      i = 1;
+    else
+      i = int.parse(i) + 1;
+    cookie.set("hint_${hint_id}", i.toString(), expires: 1780);
+  }
+
   bool isDisplayLimitReached() {}
 
   get anchor_object {
