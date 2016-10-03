@@ -4,13 +4,13 @@ class HintComponent extends Component {
 
   List native_events   = ["close.click", "close_and_never_show.click"];
   List attribute_names = ["anchor", "open_events", "force_open_events", "autodisplay_delay",
-                          "autohide_delay", "display_times_limit", "keep_open_when_hover", "hint_id"];
+                          "autohide_delay", "display_limit", "keep_open_when_hover", "hint_id"];
 
   var _anchor_object;
 
   Map default_attribute_values = {
     "keep_open_when_hover": true,
-    "display_times_limit" : 0
+    "display_limit" : null
   };
 
   bool visible = false;
@@ -46,15 +46,22 @@ class HintComponent extends Component {
   }
 
   void incrementDisplayLimit() {
-    var i = cookie.get("hint_${this.hint_id}");
-    if(i == null)
-      i = 1;
-    else
-      i = int.parse(i) + 1;
-    cookie.set("hint_${hint_id}", i.toString(), expires: 1780);
+    var i = times_displayed + 1;
+    if(!this.isDisplayLimitReached)
+      cookie.set("hint_${hint_id}", i.toString(), expires: 1780);
   }
 
-  bool isDisplayLimitReached() {}
+  bool get isDisplayLimitReached {
+    return this.display_limit != null && this.display_limit <= this.times_displayed;
+  }
+
+  get times_displayed {
+    var i = cookie.get("hint_${this.hint_id}");
+    if(i == null)
+      return 0;
+    else
+      return int.parse(i);
+  }
 
   get anchor_object {
 
@@ -78,6 +85,5 @@ class HintComponent extends Component {
 
     return _anchor_object;
   }
-
 
 }

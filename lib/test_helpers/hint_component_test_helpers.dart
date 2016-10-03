@@ -9,7 +9,7 @@ HtmlElement createHintElement({ roles: null, and: null, attr_properties: null })
      "force_open_events:data-force-open-events",
      "autodisplay_delay:data-autodisplay-delay",
      "autohide_delay:data-autohide-delay",
-     "display_times_limit:data-display-times-limit",
+     "display_limit:data-display-limit",
      "keep_open_when_hover:data-keep-open-when-hover",
      "hint_id:data-hint-id"
     ].join(",");

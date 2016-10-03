@@ -16,6 +16,7 @@ void main() {
   Component.app_library = "nest_ui";
 
   setUp(() {
+    cookie.remove("hint_test_hint");
     parent = createComponent("Component", and: (c) {
       hint = createHintComponent(and: (h) {
         h.anchor  = "part:hint_anchor";
@@ -63,14 +64,23 @@ void main() {
     });
 
     test("updates cookie with a display limit incrementing it by 1", () {
+      hint.display_limit = 2;
       hint.incrementDisplayLimit();
       expect(cookie.get("hint_${hint.hint_id}"), "1");
       hint.incrementDisplayLimit();
       expect(cookie.get("hint_${hint.hint_id}"), "2");
+      hint.incrementDisplayLimit();
+      expect(cookie.get("hint_${hint.hint_id}"), "2");
     });
 
-    test("checks wether disaply limit is reached", () {
-      
+    test("checks wether display limit is reached", () {
+      hint.incrementDisplayLimit();
+      expect(hint.isDisplayLimitReached, equals(false));
+      hint.display_limit = 3;
+      hint.incrementDisplayLimit();
+      expect(hint.isDisplayLimitReached, equals(false));
+      hint.incrementDisplayLimit();
+      expect(hint.isDisplayLimitReached, equals(true));
     });
 
     test("creates an event handler for the anchor el", () {
