@@ -12,28 +12,21 @@ Component new_instance_of_component(class_name) {
 Component createComponent(class_name, { and: null, el: null, roles: "", part: "", property: "", attr_properties: ""}) {
 
   if(el == null)
-    el = new DivElement();
+    el = createDomEl(class_name, roles: roles, part: part, property: property, attr_properties: attr_properties);
 
   var c = new_instance_of_component(class_name);
-  el.attributes["data-component-class"]    = class_name;
-  el.attributes["data-component-roles"]    = roles;
-  el.attributes["data-component-part"]     = part;
-  el.attributes["data-component-property"] = property;
-  el.attributes["data-component-attribute-properties"] = attr_properties;
-  el.attributes.keys.forEach((k) {
-    if(el.attributes[k] == "")
-      el.attributes.remove(k);
-  });
 
   if(and != null) {
 
     var children = and(c);
 
     // First, add all HtmlElements
-    children.forEach((child) {
-      if(child is HtmlElement)
-        el.append(child);
-    });
+    if(children != null) {
+      children.forEach((child) {
+        if(child is HtmlElement)
+          el.append(child);
+      });
+    }
 
     c.dom_element = el;
 
@@ -41,13 +34,17 @@ Component createComponent(class_name, { and: null, el: null, roles: "", part: ""
     c.initChildComponents();
 
     // Then add child Components that were created manually
-    children.forEach((child) {
-      if(child is Component)
-        c.addChild(child, initialize: false);
-    });
+    if(children != null) {
+      children.forEach((child) {
+        if(child is Component)
+          c.addChild(child, initialize: false);
+      });
+    }
+
   } else {
     c.dom_element = el;
   }
+
   c.afterInitialize();
   return c;
 }
