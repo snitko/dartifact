@@ -3,16 +3,20 @@ import "dart:html";
 import "dart:async";
 import '../../lib/nest_ui.dart';
 import 'package:cookie/cookie.dart' as cookie;
+import 'package:mockito/mockito.dart';
 
 part '../../lib/components/hint_component.dart';
+part '../../lib/behaviors/hint_component_behaviors.dart';
 part '../../lib/test_helpers/component_test_helpers.dart';
 part '../../lib/test_helpers/hint_component_test_helpers.dart';
 
 @TestOn("browser")
 
+class MockHintComponentBehaviors extends Mock implements HintComponentBehaviors {}
+
 void main() {
 
-  var hint, parent, anchor;
+  var hint, parent, anchor, behavior;
 
   setUp(() {
     cookie.remove("hint_test_hint");
@@ -27,6 +31,9 @@ void main() {
       return [hint_el, anchor];
     });
     hint = parent.findFirstChildByRole("hint");
+    behavior = new MockHintComponentBehaviors();
+    hint.behavior_instances = [behavior];
+    hint.ignore_misbehavior = false;
   });
 
   group("HintComponent", () {
@@ -141,6 +148,18 @@ void main() {
       expect(hint.isDisplayLimitReached, equals(false));
       hint.incrementDisplayLimit();
       expect(hint.isDisplayLimitReached, equals(true));
+    });
+
+    test("calls the show behavior after a show event is invoked", () {
+      anchor.click();
+      verify(behavior.show());
+      expect(hint.visible, isTrue);
+    });
+
+    test("calls the hide behavior and sets visible to false", () {
+      hint.hide();
+      verify(behavior.hide());
+      expect(hint.visible, isFalse);
     });
     
   });

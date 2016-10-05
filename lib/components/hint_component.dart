@@ -72,10 +72,8 @@ class HintComponent extends Component {
         incrementDisplayLimit();
       this.visible = true;
     }
-    // 1. Check if display times limit is reached.
-    // 2. Set visible to true
-    // 3. Call behavior
-    // 4. Update display_times_limit
+
+    behave("show");
 
     // If autohide_delay is set
       // 3. Create a timer
@@ -83,8 +81,8 @@ class HintComponent extends Component {
   }
 
   void hide() {
-    // 1. Set visible to false
-    // 2. Call behavior 
+    behave("hide");
+    this.visible = false;
   }
 
   void incrementDisplayLimit() {
