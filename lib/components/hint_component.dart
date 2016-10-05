@@ -3,7 +3,7 @@ part of nest_ui;
 class HintComponent extends Component {
 
   List native_events   = ["close.click", "close_and_never_show.click"];
-  List attribute_names = ["anchor", "show_events", "force_show_events", "autodisplay_delay",
+  List attribute_names = ["anchor", "show_events", "force_show_events", "autoshow_delay",
                           "autohide_delay", "display_limit", "keep_open_when_hover", "hint_id"];
 
   var _anchor_object;
@@ -13,6 +13,8 @@ class HintComponent extends Component {
     "keep_visible_when_hover": true,
     "display_limit" : null
   };
+
+  Future autoshow_future, autohide_future;
 
   bool visible = false;
 
@@ -53,6 +55,9 @@ class HintComponent extends Component {
 
       }
 
+      if(this.autoshow_delay != null)
+        this.autoshow_future = new Future.delayed(new Duration(seconds: autoshow_delay), this.show);
+
     });
     //-------------------------------------------------------------------------------/
 
@@ -60,10 +65,6 @@ class HintComponent extends Component {
       // 3. Create a timer
       // 4. Call show()
 
-  }
-
-  void afterAllChildrenInitialized() {
-  
   }
 
   void show({force: false}) {
@@ -75,9 +76,9 @@ class HintComponent extends Component {
 
     behave("show");
 
-    // If autohide_delay is set
-      // 3. Create a timer
-      // 4. Call hide() behavior
+    if(this.autohide_delay != null)
+      this.autohide_future = new Future.delayed(new Duration(seconds: autohide_delay), this.hide);
+
   }
 
   void hide() {

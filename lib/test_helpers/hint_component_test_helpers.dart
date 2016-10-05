@@ -7,7 +7,7 @@ HtmlElement createHintElement({ roles: null, and: null, attr_properties: null, a
      "anchor:data-anchor",
      "show_events:data-show-events",
      "force_show_events:data-force-show-events",
-     "autodisplay_delay:data-autodisplay-delay",
+     "autoshow_delay:data-autoshow-delay",
      "autohide_delay:data-autohide-delay",
      "display_limit:data-display-limit",
      "keep_visible_when_hover:data-keep-visible-when-hover",

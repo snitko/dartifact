@@ -170,14 +170,25 @@ void main() {
       expect(hint.visible, isFalse);
     });
 
-    test("shows itself automatically after initialization", () {
+    group("auto show/hide", () {
+
+      setUp(() {
+        createTestHintComponent(attrs: {
+          "data-autoshow-delay" : "0",
+          "data-autohide-delay" : "0"
+        });
+      });
+
+      test("shows itself automatically after initialization", () {
+        hint.autoshow_future.then((r) => expect(hint.visible, isTrue));
+      });
+
+      test("hides itself automatically after a `autodisplay_delay` seconds pass", () {
+        hint.autoshow_future.then((r) => expect(hint.visible, isFalse));
+      });
       
     });
 
-    test("hides itself automatically after a `autodisplay_delay` seconds pass", () {
-      
-    });
-    
   });
 
 }
