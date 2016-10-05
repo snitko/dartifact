@@ -8,3 +8,10 @@ bool isBlank(v) {
   else
     return false;
 }
+
+Map mergeMaps(map1, map2) {
+  map2.forEach((k,v) {
+    map1[k] = v;
+  });
+  return map1;
+}

@@ -18,22 +18,35 @@ void main() {
 
   var hint, parent, anchor, behavior;
 
-  setUp(() {
-    cookie.remove("hint_test_hint");
+  createTestHintComponent({attrs: null, anchor_type: "dom_element"}) {
+
+    if(attrs == null)
+      attrs = {};
+    var std_attrs = {
+      "data-anchor"      : "part:hint_anchor",
+      "data-hint-id"     : "test_hint",
+      "data-show-events" : "click",
+      "data-force-show-events" : "mouseup"
+    };
+    attrs = mergeMaps(std_attrs, attrs);
+
     parent = createComponent("Component", and: (c) {
-      var hint_el = createHintElement(attrs: {
-        "data-anchor"      : "part:hint_anchor",
-        "data-hint-id"     : "test_hint",
-        "data-show-events" : "click",
-        "data-force-show-events" : "mouseup"
-      }, roles: "hint");
-      anchor = createDomEl(null, part: "hint_anchor");
+      var hint_el = createHintElement(attrs: attrs, roles: "hint");
+      if(anchor_type == "dom_element")
+        anchor = createDomEl(null, part: "hint_anchor");
+      else
+        anchor = createDomEl("Component", roles: "hint_anchor");
       return [hint_el, anchor];
     });
     hint = parent.findFirstChildByRole("hint");
     behavior = new MockHintComponentBehaviors();
     hint.behavior_instances = [behavior];
     hint.ignore_misbehavior = false;
+  }
+
+  setUp(() {
+    cookie.remove("hint_test_hint");
+    createTestHintComponent();
   });
 
   group("HintComponent", () {
@@ -94,18 +107,13 @@ void main() {
       group("for Components as hint anchors", () {
 
         setUp(() {
-          parent = createComponent("Component", and: (c) {
-            var hint_el = createHintElement(attrs: {
-              "data-anchor"      : "role:hint_anchor",
-              "data-hint-id"     : "test_hint",
-              "data-show-events" : "change1",
-              "data-force-show-events" : "change2"
-            }, roles: "hint");
-            anchor = createDomEl("Component", roles: "hint_anchor");
-            return [hint_el,anchor];
-          });
-          hint = parent.findFirstChildByRole("hint");
-          anchor = parent.findFirstChildByRole("hint_anchor");
+          createTestHintComponent(attrs: {
+            "data-anchor"      : "role:hint_anchor",
+            "data-hint-id"     : "test_hint",
+            "data-show-events" : "change1",
+            "data-force-show-events" : "change2"
+          }, anchor_type: "component");
+          anchor = hint.anchor_object;
         });
 
         test("creates an event handler triggering show for a component event on an anchor when it's a Component", () {
@@ -160,6 +168,14 @@ void main() {
       hint.hide();
       verify(behavior.hide());
       expect(hint.visible, isFalse);
+    });
+
+    test("shows itself automatically after initialization", () {
+      
+    });
+
+    test("hides itself automatically after a `autodisplay_delay` seconds pass", () {
+      
     });
     
   });

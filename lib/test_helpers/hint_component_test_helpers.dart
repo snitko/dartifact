@@ -1,6 +1,6 @@
 part of nest_ui;
 
-HtmlElement createHintElement({ roles: null, and: null, attr_properties: null, attrs: null }) {
+HtmlElement createHintElement({ roles: null, and: null, attr_properties: null, attrs: null}) {
 
   if(attr_properties == null)
     attr_properties = [
