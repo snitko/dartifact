@@ -7,6 +7,7 @@ import 'package:mockito/mockito.dart';
 
 part '../../lib/components/hint_component.dart';
 part '../../lib/behaviors/hint_component_behaviors.dart';
+
 part '../../lib/test_helpers/component_test_helpers.dart';
 part '../../lib/test_helpers/hint_component_test_helpers.dart';
 
@@ -19,27 +20,11 @@ void main() {
   var hint, parent, anchor, behavior;
 
   createTestHintComponent({attrs: null, anchor_type: "dom_element"}) {
-
-    if(attrs == null)
-      attrs = {};
-    var std_attrs = {
-      "data-anchor"      : "part:hint_anchor",
-      "data-hint-id"     : "test_hint",
-      "data-show-events" : "click",
-      "data-force-show-events" : "mouseup"
-    };
-    attrs = mergeMaps(std_attrs, attrs);
-
-    parent = createComponent("Component", and: (c) {
-      var hint_el = createHintElement(attrs: attrs, roles: "hint");
-      if(anchor_type == "dom_element")
-        anchor = createDomEl(null, part: "hint_anchor");
-      else
-        anchor = createDomEl("Component", roles: "hint_anchor");
-      return [hint_el, anchor];
-    });
-    hint = parent.findFirstChildByRole("hint");
-    behavior = new MockHintComponentBehaviors();
+    var hint_and_parent     = createHintComponentWithParentAndAnchor(attrs: attrs, anchor_type: anchor_type);
+    hint                    = hint_and_parent["hint"];
+    parent                  = hint_and_parent["parent"];
+    anchor                  = hint_and_parent["anchor"];
+    behavior                = new MockHintComponentBehaviors();
     hint.behavior_instances = [behavior];
     hint.ignore_misbehavior = false;
   }

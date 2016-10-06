@@ -59,11 +59,6 @@ class HintComponent extends Component {
         this.autoshow_future = new Future.delayed(new Duration(seconds: autoshow_delay), this.show);
 
     });
-    //-------------------------------------------------------------------------------/
-
-    // If autodisplay_delay is set
-      // 3. Create a timer
-      // 4. Call show()
 
   }
 

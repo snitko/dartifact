@@ -25,9 +25,35 @@ HtmlElement createHintElement({ roles: null, and: null, attr_properties: null, a
 }
 
 Component createHintComponent({ roles: null, attrs: null, and: null }) {
-
   var el = createHintElement(roles: roles);
-  var component = createComponent("HintComponent", el: el, and: and);
-
+  var component = createComponent("HintComponent", el: el, and: and, attrs: attrs);
   return component;
+}
+
+Map<Component> createHintComponentWithParentAndAnchor({attrs: null, anchor_type: "dom_element"}) {
+
+  var anchor;
+
+  if(attrs == null)
+    attrs = {};
+
+  var std_attrs = {
+    "data-anchor"      : "part:hint_anchor",
+    "data-hint-id"     : "test_hint",
+    "data-show-events" : "click",
+    "data-force-show-events" : "mouseup"
+  };
+  attrs = mergeMaps(std_attrs, attrs);
+
+  var parent = createComponent("Component", and: (c) {
+    var hint_el = createHintElement(attrs: attrs, roles: "hint");
+    if(anchor_type == "dom_element")
+      anchor = createDomEl(null, part: "hint_anchor");
+    else
+      anchor = createDomEl("Component", roles: "hint_anchor");
+    return [hint_el, anchor];
+  });
+
+  return { "hint": parent.findFirstChildByRole("hint"), "parent": parent, "anchor": anchor };
+
 }
