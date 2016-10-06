@@ -2,11 +2,13 @@ part of nest_ui;
 
 class BaseComponentBehaviors {
 
-  Component component;
+  Component       component;
   PositionManager pos;
+  Animator        animator;
 
   BaseComponentBehaviors(this.component) {
-    this.pos = new PositionManager();
+    this.pos      = new PositionManager();
+    this.animator = new Animator();
   }
 
   // Show-hide behaviors

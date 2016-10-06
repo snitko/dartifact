@@ -14,7 +14,7 @@ class HintComponentBehaviors extends BaseComponentBehaviors {
     var has_right_space = _hasSpaceOnTheRight();
     var has_above_space = _hasSpaceAbove();
 
-    this.dom_element.style.display = "block";
+    this.animator.show(this.dom_element, 1000);
 
     if(has_right_space && has_above_space) {
       pos.placeAboveTopRightCorner(this.dom_element, this.anchor_el);
@@ -34,6 +34,9 @@ class HintComponentBehaviors extends BaseComponentBehaviors {
     }
 
   }
+
+  @override
+  hide() => this.animator.hide(this.dom_element, 2000);
 
   bool _hasSpaceOnTheRight() {
     var anchor_dimensions = this.anchor_el.getBoundingClientRect();

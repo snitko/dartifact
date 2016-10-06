@@ -14,6 +14,7 @@ dependencies:
   logmaster: '>=0.1.0 <0.2.0'
   queries:
   cookie:
+  animation:
 
 dev_dependencies:
   test: '>=0.12.0'

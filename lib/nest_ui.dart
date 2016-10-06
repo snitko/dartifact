@@ -9,11 +9,14 @@ import 'dart:mirrors';
 // (use decides wether to load it or not). Exporting us required in such cases.
 import 'dart:collection';
 export 'dart:collection';
+import 'dart:async';
+export 'dart:async';
 export 'dart:convert';
 
 // vendor libs from pub packages
 import 'package:queries/collections.dart';
 import 'package:cookie/cookie.dart' as cookie;
+import 'package:animation/animation.dart';
 
 // nest_ui satellite libs
 import 'package:observable_roles/observable_roles.dart' as observable;
@@ -30,6 +33,7 @@ part 'modules/component_heritage.dart';
 part 'modules/component_validation.dart';
 part 'modules/component_event_lock.dart';
 part 'modules/position_manager.dart';
+part 'modules/animator.dart';
 
 part 'component.dart';
 part 'native_events_list.dart';
