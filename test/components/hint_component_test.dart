@@ -31,6 +31,7 @@ void main() {
 
   setUp(() {
     cookie.remove("hint_test_hint");
+    cookie.remove("hint_test_hint_never_show_again");
     createTestHintComponent();
   });
 
@@ -168,10 +169,34 @@ void main() {
         hint.autoshow_future.then((r) => expect(hint.visible, isTrue));
       });
 
-      test("hides itself automatically after a `autodisplay_delay` seconds pass", () {
-        hint.autoshow_future.then((r) => expect(hint.visible, isFalse));
+      test("hides itself automatically after a autodisplay_delay seconds pass", () {
+        hint.autoshow_future.then((r) {
+          hint.autohide_future.then((r) => expect(hint.visible, isFalse));
+        });
       });
       
+    });
+
+    group("closing", () {
+
+      setUp(() {
+        hint.visible = true;
+      });
+
+      test("closes the hint", () {
+        hint.findPart("close_and_never_show").click();
+        expect(hint.visible, isFalse);
+        verify(behavior.hide());
+      });
+
+      test("closes and never shows the hint again", () {
+        hint.findPart("close_and_never_show").click();
+        expect(hint.visible, isFalse);
+        verify(behavior.hide());
+        hint.show();
+        expect(hint.visible, isFalse);
+      });
+    
     });
 
   });

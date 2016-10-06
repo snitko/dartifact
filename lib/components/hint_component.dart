@@ -60,6 +60,11 @@ class HintComponent extends Component {
 
     });
 
+    event_handlers.addForEvent("click", {
+      "self.close":                (self,event) => self.hide(),
+      "self.close_and_never_show": (self,event) => self.hide(never_show_again: true)
+    });
+
   }
 
   void show({force: false}) {
@@ -76,9 +81,11 @@ class HintComponent extends Component {
 
   }
 
-  void hide() {
+  void hide({ never_show_again: false}) {
     behave("hide");
     this.visible = false;
+    if(never_show_again)
+      cookie.set("hint_${hint_id}_never_show_again", "1", expires: 1780);
   }
 
   void incrementDisplayLimit() {
@@ -88,7 +95,7 @@ class HintComponent extends Component {
   }
 
   bool get isDisplayLimitReached {
-    return this.display_limit != null && this.display_limit <= this.times_displayed;
+    return (cookie.get("hint_${this.hint_id}_never_show_again") == "1") || this.display_limit != null && this.display_limit <= this.times_displayed;
   }
 
   get times_displayed {
