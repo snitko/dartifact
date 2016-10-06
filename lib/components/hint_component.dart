@@ -7,16 +7,16 @@ class HintComponent extends Component {
                           "autohide_delay", "display_limit", "keep_open_when_hover", "hint_id"];
 
   var _anchor_object;
+  Future autoshow_future, autohide_future;
   List anchor_events = [];
+  bool visible       = false;
+  List behaviors     = [HintComponentBehaviors];
 
   Map default_attribute_values = {
     "keep_visible_when_hover": true,
-    "display_limit" : null
+    "display_limit": null,
+    "show_events": "click"
   };
-
-  Future autoshow_future, autohide_future;
-
-  bool visible = false;
 
   HintComponent() {}
 
@@ -117,6 +117,13 @@ class HintComponent extends Component {
     }
 
     return _anchor_object;
+  }
+
+  get anchor_el {
+    if(anchor_object is Component)
+      return anchor_object.dom_element;
+    else
+      return anchor_object;
   }
 
   _createNativeShowEvents(List events, handler) {

@@ -38,7 +38,6 @@ class PositionManager {
       base_offset_for_el["x"] = -base_offset_for_el["x"];
     if(new_pos["y"] < el2_pos["y"])
       base_offset_for_el["y"] = -base_offset_for_el["y"];
-    
     new_pos = { "x" : new_pos["x"] + base_offset_for_el["x"], "y" : new_pos["y"] + base_offset_for_el["y"] };
 
     placeAt(el1, new_pos['x'], new_pos['y']);

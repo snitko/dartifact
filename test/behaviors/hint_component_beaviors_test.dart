@@ -14,26 +14,55 @@ part '../../lib/test_helpers/hint_component_test_helpers.dart';
 
 void main() {
 
-  var hint, behaviors;
+  var hint, anchor, parent, behavior;
 
   group("HintComponentBehaviors", () {
 
     setUp(() {
-      behaviors = new HintComponentBehaviors();
+      var hint_and_parent = createHintComponentWithParentAndAnchor();
+      hint                = hint_and_parent["hint"];
+      parent              = hint_and_parent["parent"];
+      anchor              = hint_and_parent["anchor"];
+      behavior            = hint.behavior_instances[0];
+      behavior.pos.base_offset = { "x" : 0, "y" : 0 };
+      document.body.attributes["style"]    = "width: 1000px; height: 1000px";
+      hint.dom_element.attributes["style"] = "width: 22px; height: 11px";
+      anchor.attributes["style"]           = "width: 10px; height: 10px; position: absolute;";
+      document.body.append(parent.dom_element);
     });
 
-    test("positions itself above the anchor, slightly to the left when enough space above and to the left", () {
+    test("positions itself above the anchor, on the right side when enough space above and to the right", () {
+      anchor.style.top  = "30px";
+      anchor.style.left = "10px";
+      behavior.show();
+      expect(hint.dom_element.style.top, equals("19px"));
+      expect(hint.dom_element.style.left, equals("20px"));
     });
 
-    test("positions itself below the anchor, slightly to the left when not enough space above, but enough to the left", () {
-    });
-
-    test("positions itself above the anchor, slightly to the right when enough space above, but not enough to the left", () {
-    });
-
-    test("positions itself below the anchor, slightly to the right when not enough space above and to the left", () {
+    test("positions itself above the anchor, on the left side when enough space above, but NOT enough on the right", () {
+      anchor.style.top  = "30px";
+      anchor.style.left = "990px";
+      behavior.show();
+      expect(hint.dom_element.style.top, equals("19px"));
+      expect(hint.dom_element.style.left, equals("968px"));
     });
     
+    test("positions itself below the anchor, on the right side when NOT enough space above, but enough on the right", () {
+      anchor.style.top  = "0px";
+      anchor.style.left = "10px";
+      behavior.show();
+      expect(hint.dom_element.style.top, equals("10px"));
+      expect(hint.dom_element.style.left, equals("20px"));
+    });
+
+    test("positions itself below the anchor, on the left side when NOT enough space above and NOT enough on the right", () {
+      anchor.style.top  = "0px";
+      anchor.style.left = "990px";
+      behavior.show();
+      expect(hint.dom_element.style.top, equals("10px"));
+      expect(hint.dom_element.style.left, equals("968px"));
+    });
+
   });
 
 }
