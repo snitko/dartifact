@@ -37,6 +37,7 @@ void main() {
       behavior.show();
       expect(hint.dom_element.style.top, equals("19px"));
       expect(hint.dom_element.style.left, equals("20px"));
+      expect(hint.dom_element.classes, contains("arrowBottomLeft"));
     });
 
     test("positions itself above the anchor, on the left side when enough space above, but NOT enough on the right", () {
@@ -45,6 +46,7 @@ void main() {
       behavior.show();
       expect(hint.dom_element.style.top, equals("19px"));
       expect(hint.dom_element.style.left, equals("968px"));
+      expect(hint.dom_element.classes, contains("arrowBottomRight"));
     });
     
     test("positions itself below the anchor, on the right side when NOT enough space above, but enough on the right", () {
@@ -53,6 +55,7 @@ void main() {
       behavior.show();
       expect(hint.dom_element.style.top, equals("10px"));
       expect(hint.dom_element.style.left, equals("20px"));
+      expect(hint.dom_element.classes, contains("arrowTopLeft"));
     });
 
     test("positions itself below the anchor, on the left side when NOT enough space above and NOT enough on the right", () {
@@ -61,6 +64,7 @@ void main() {
       behavior.show();
       expect(hint.dom_element.style.top, equals("10px"));
       expect(hint.dom_element.style.left, equals("968px"));
+      expect(hint.dom_element.classes, contains("arrowTopRight"));
     });
 
   });

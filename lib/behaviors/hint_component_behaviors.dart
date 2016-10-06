@@ -16,14 +16,22 @@ class HintComponentBehaviors extends BaseComponentBehaviors {
 
     this.dom_element.style.display = "block";
 
-    if(has_right_space && has_above_space)
+    if(has_right_space && has_above_space) {
       pos.placeAboveTopRightCorner(this.dom_element, this.anchor_el);
-    else if(has_right_space && !has_above_space)
+      _setPointerArrowClass("arrowBottomLeft");
+    }
+    else if(has_right_space && !has_above_space) {
       pos.placeBelowBottomRightCorner(this.dom_element, this.anchor_el);
-    else if(!has_right_space && has_above_space)
+      _setPointerArrowClass("arrowTopLeft");
+    }
+    else if(!has_right_space && has_above_space) {
       pos.placeAboveTopLeftCorner(this.dom_element, this.anchor_el);
-    else if(!has_right_space && !has_above_space)
+      _setPointerArrowClass("arrowBottomRight");
+    }
+    else if(!has_right_space && !has_above_space) {
       pos.placeBelowBottomLeftCorner(this.dom_element, this.anchor_el);
+      _setPointerArrowClass("arrowTopRight");
+    }
 
   }
 
@@ -35,6 +43,10 @@ class HintComponentBehaviors extends BaseComponentBehaviors {
   bool _hasSpaceAbove() {
     var anchor_dimensions = this.anchor_el.getBoundingClientRect();
     return anchor_dimensions.top > this.dom_element.clientHeight;
+  }
+
+  void _setPointerArrowClass(arrow_position_class) {
+    this.dom_element.classes.add(arrow_position_class);
   }
 
   get anchor_el => this.component.anchor_el;
