@@ -15,8 +15,8 @@ class PositionManager {
   }
   
   void placeAt(el,x,y) {
-    el.style..top  = (y.toString() + 'px')
-            ..left = (x.toString() + 'px');
+    el.style..top  = ((y + document.body.scrollTop).toString() + 'px')
+            ..left = ((x + document.body.scrollLeft).toString() + 'px');
   }
 
   void placeBy(
