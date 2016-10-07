@@ -55,8 +55,14 @@ class HintComponent extends Component {
 
       }
 
-      if(this.autoshow_delay != null)
-        this.autoshow_future = new Future.delayed(new Duration(seconds: autoshow_delay), this.show);
+      if(this.autoshow_delay != null) {
+        var f = new Future.delayed(new Duration(seconds: autoshow_delay));
+        this.autoshow_future = f;
+        f.then((r) {
+          if(this.autoshow_future == f)
+            this.show();
+        });
+      }
 
     });
 
@@ -77,8 +83,14 @@ class HintComponent extends Component {
       this.visible = true;
     }
 
-    if(this.autohide_delay != null)
-      this.autohide_future = new Future.delayed(new Duration(seconds: autohide_delay), this.hide);
+    if(this.autohide_delay != null) {
+      var f = new Future.delayed(new Duration(seconds: this.autohide_delay));
+      this.autohide_future = f;
+      f.then((r) {
+        if(this.autohide_future == f)
+          this.hide();
+      });
+    }
 
   }
 
