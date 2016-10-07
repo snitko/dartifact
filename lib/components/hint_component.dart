@@ -117,7 +117,10 @@ class HintComponent extends Component {
         _anchor_object = parent.findFirstPropertyElement(anchor_name_arr[1]);
         break;
       case "role":
-        _anchor_object = parent.findFirstChildByRole(anchor_name_arr[1]);
+        if(anchor_name_arr.length == 2)
+          _anchor_object = parent.findFirstChildByRole(anchor_name_arr[1]);
+        else if(anchor_name_arr.length == 3)
+          _anchor_object = parent.findFirstChildByRole(anchor_name_arr[1]).findPart(anchor_name_arr[2]);
         break;
       default:
         _anchor_object = parent.firstDomDescendantOrSelfWithAttr(parent.dom_element, attr_name: "id", attr_value: anchor_name_arr[0]);

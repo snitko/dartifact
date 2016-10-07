@@ -67,6 +67,16 @@ void main() {
         parent.addChild(anchor);
         expect(hint.anchor_object, equals(anchor));
       });
+
+      test("finds anchor element in his parent's child parts", () {
+        hint.anchor = "role:hint_anchor:input";
+        var anchor_component = createComponent("Component", roles: "hint_anchor", and: (el) {
+          return [createDomEl("", part: "input")];
+        });
+        var anchor_el = anchor_component.findPart("input");
+        parent.addChild(anchor_component);
+        expect(hint.anchor_object, equals(anchor_el));
+      });
       
     });
 
