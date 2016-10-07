@@ -11,6 +11,9 @@ class HintComponentBehaviors extends BaseComponentBehaviors {
   @override
   show() {
 
+    if(this.component.visible)
+      return;
+
     // We first need to calculate dimensions and available space on the right and below.
     // Thus, we're using this method.
     displayHidden();

@@ -68,13 +68,14 @@ class HintComponent extends Component {
   }
 
   void show({force: false}) {
+
+    behave("show");
+
     if(!this.isDisplayLimitReached || force) {
       if(!force)
         incrementDisplayLimit();
       this.visible = true;
     }
-
-    behave("show");
 
     if(this.autohide_delay != null)
       this.autohide_future = new Future.delayed(new Duration(seconds: autohide_delay), this.hide);
