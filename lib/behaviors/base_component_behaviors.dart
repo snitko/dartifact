@@ -5,6 +5,7 @@ class BaseComponentBehaviors {
   Component       component;
   PositionManager pos;
   Animator        animator;
+  String          _display_value;
 
   BaseComponentBehaviors(this.component) {
     this.pos      = new PositionManager();
@@ -16,9 +17,7 @@ class BaseComponentBehaviors {
   hide() => this.dom_element.style.display="none";
 
   show() {
-    var display_value = this.dom_element.attributes["data-component-display-value"];
-    if(display_value == null)
-      display_value = 'block';
+
     this.dom_element.style.display = display_value;
   }
 
@@ -45,6 +44,13 @@ class BaseComponentBehaviors {
   }
   toggleDisable() => _toggle([enable, disable], this.dom_element.classes.contains('disabled'));
 
+  /** Sometimes, we need to display an element with "display: [type];" to calculate its
+    * dimensions, but actually keep it hidden. This is exactly what this method does. */
+  displayHidden() {
+    this.dom_element.style.opacity = "0";
+    this.dom_element.style.display = this.display_value;
+  }
+
   _toggle(behaviors, condition) {
     if(condition)
       behaviors[0]();
@@ -63,5 +69,14 @@ class BaseComponentBehaviors {
   }
 
   get dom_element => this.component.dom_element;
+
+  get display_value {
+    if(_display_value != null)
+      return _display_value;
+    _display_value = this.dom_element.attributes["data-component-display-value"];
+    if(_display_value == null)
+      _display_value = 'block';
+    return _display_value;
+  }
 
 }

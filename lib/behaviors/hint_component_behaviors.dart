@@ -5,16 +5,18 @@ class HintComponentBehaviors extends BaseComponentBehaviors {
   Component component;
   HintComponentBehaviors(c) : super(c) {
     this.component = c;
-    this.pos.base_offset = { "x": -0.2, "y": 0.2 };
+    this.pos.base_offset = { "x": -0.1, "y": 0.2 };
   }
 
   @override
   show() {
 
+    // We first need to calculate dimensions and available space on the right and below.
+    // Thus, we're using this method.
+    displayHidden();
+
     var has_right_space = _hasSpaceOnTheRight();
     var has_above_space = _hasSpaceAbove();
-
-    this.animator.show(this.dom_element, 1000);
 
     if(has_right_space && has_above_space) {
       pos.placeAboveTopRightCorner(this.dom_element, this.anchor_el);
@@ -33,6 +35,8 @@ class HintComponentBehaviors extends BaseComponentBehaviors {
       _setPointerArrowClass("arrowTopRight");
     }
 
+    this.animator.show(this.dom_element, 1000);
+
   }
 
   @override
@@ -40,15 +44,19 @@ class HintComponentBehaviors extends BaseComponentBehaviors {
 
   bool _hasSpaceOnTheRight() {
     var anchor_dimensions = this.anchor_el.getBoundingClientRect();
-    return (document.body.clientWidth - (anchor_dimensions.left + anchor_dimensions.width)) > this.dom_element.clientWidth;
+    var body_dimensions   = document.body.getBoundingClientRect();
+    var hint_dimensions   = this.dom_element.getBoundingClientRect();
+    return (body_dimensions.width - (anchor_dimensions.left + anchor_dimensions.width)) > hint_dimensions.width;
   }
 
   bool _hasSpaceAbove() {
     var anchor_dimensions = this.anchor_el.getBoundingClientRect();
-    return anchor_dimensions.top > this.dom_element.clientHeight;
+    var hint_dimensions   = this.dom_element.getBoundingClientRect();
+    return anchor_dimensions.top > hint_dimensions.height;
   }
 
   void _setPointerArrowClass(arrow_position_class) {
+    this.dom_element.classes.removeWhere((c) => c.startsWith("arrow"));
     this.dom_element.classes.add(arrow_position_class);
   }
 
