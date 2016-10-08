@@ -5,7 +5,7 @@ class HintComponentBehaviors extends BaseComponentBehaviors {
   Component component;
   HintComponentBehaviors(c) : super(c) {
     this.component = c;
-    this.pos.base_offset = { "x": -0.1, "y": 0.2 };
+    this.pos.base_offset = { "x": -30, "y": 15, "units": "px" };
   }
 
   @override

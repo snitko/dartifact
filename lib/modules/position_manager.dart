@@ -33,7 +33,12 @@ class PositionManager {
     var gravity_offset = { 'x': el1_dim['x']*gravity_left , 'y': el1_dim['y']*gravity_top };
     var new_pos        = { 'x': pos_offset['x']+el2_pos['x']-gravity_offset['x'], 'y': pos_offset['y']+el2_pos['y']-gravity_offset['y'] };
 
-    var base_offset_for_el = { "x": base_offset["x"]*el1_dim["x"], "y": base_offset["y"]*el1_dim["y"] };
+    var base_offset_for_el;
+    if(this.base_offset["units"] == "px")
+      base_offset_for_el = { "x": base_offset["x"], "y": base_offset["y"] };
+    else
+      base_offset_for_el = { "x": base_offset["x"]*el1_dim["x"], "y": base_offset["y"]*el1_dim["y"] };
+
     if(new_pos["x"] < el2_pos["x"])
       base_offset_for_el["x"] = -base_offset_for_el["x"];
     if(new_pos["y"] < el2_pos["y"])
