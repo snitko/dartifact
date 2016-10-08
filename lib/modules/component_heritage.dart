@@ -69,18 +69,37 @@ abstract class ComponentHeritage {
    */
   List<Component> findDescendantsByRole(r) {
     var role_path  = r.split('.');
+    if(role_path.first == "*")
+      return findAllDescendantsByRole(role_path.last);
+    else
+      return findDescendantsByRolePath(role_path);
+  }
+
+  List<Component> findDescendantsByRolePath(role_path) {
     var child_role = role_path.removeAt(0);
     var children_with_roles = findChildrenByRole(child_role);
+
     if(role_path.length > 0) {
       var descendants_with_roles = [];
       for(var c in children_with_roles)
-        descendants_with_roles.addAll(c.findDescendantsByRole(role_path.join('.')));
+        descendants_with_roles.addAll(c.findDescendantsByRolePath(role_path));
       return descendants_with_roles;
     } else {
       return children_with_roles;
     }
   }
-  
+
+  List<Component> findAllDescendantsByRole(role) {
+    var descendants = [];
+    this.children.forEach((c) {
+      if(c.roles.contains(role))
+        descendants.add(c);
+      else
+        descendants.addAll(c.findAllDescendantsByRole(role));
+    });
+    return descendants;
+  }
+
   /** Calls a specific method on all of it's children. If method doesn't exist on one of the
     * children, ignores and doesn't raise an exception. This method is useful when we want to
     * communicate a common an action to all children, such as when we want to reset() all form

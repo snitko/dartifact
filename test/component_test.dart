@@ -405,6 +405,15 @@ void main() {
         expect(c.findDescendantsByRole('role1.role3'), equals([c.children[0].children[0]]));
       });
 
+      test("finds all descendants with a specific without regard for their parent roles", () {
+        var child_component_el2 = new DivElement();
+        child_component_el2.setAttribute('data-component-class', 'MyChildComponent');
+        child_component_el2.setAttribute('data-component-roles', 'role3,role4');
+        child_component_el.append(child_component_el2);
+        c.initChildComponents();
+        expect(c.findDescendantsByRole('*.role3'), equals([c.children[0].children[0]]));
+      });
+
     });
     
   });

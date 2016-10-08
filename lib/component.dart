@@ -76,6 +76,13 @@ class Component extends Object with observable.Subscriber,
       _listenToNativeEvents();
     }
   }
+
+  get root_component {
+    var prnt = this.parent;
+    while(!(prnt is RootComponent) && prnt.parent != null)
+      prnt = prnt.parent;
+    return prnt;
+  }
   
   Component() {
     _separateDescendantValidations();

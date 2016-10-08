@@ -104,7 +104,7 @@ class HintComponent extends Component {
 
   void hideOtherHints() {
     if(!this.roles.isEmpty) {
-      this.parent.findDescendantsByRole(this.roles.first).forEach((d) {
+      this.root_component.findDescendantsByRole("*.${this.roles.first}").forEach((d) {
         if(this != d)
           d.hide();
       });
