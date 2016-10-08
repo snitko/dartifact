@@ -108,7 +108,7 @@ abstract class ComponentHeritage {
     this.children.forEach((c) {
       var current_class_mirror = reflect(c).type;
       if(current_class_mirror != null) {
-        if(current_class_mirror.isSubtypeOf(condition_class_mirror))
+        if(current_class_mirror.isSubclassOf(condition_class_mirror))
           descendants.add(c);
         else
           descendants.addAll(c.findAllDescendantInstancesOf(class_name));
