@@ -12,19 +12,17 @@ abstract class ComponentHeritage {
 
     var elements = _findChildComponentDomElements(this.dom_element);
     elements.forEach((el) {
-      [Component.app_library, 'nest_ui'].forEach((l) {
-        var component = new_instance_of(el.getAttribute('data-component-class'), [], l);
-        if(component != null) {
-          // The order is very important here: we want to first assign dom_element, add
-          // component as a child to its parent and init its own children. Only then we
-          // call afterInitialize() giving users access to everything we possible can.
-          component.dom_element = el;
-          this.addChild(component, initialize: false);
-          if(recursive)
-            component.initChildComponents();
-          component.afterInitialize();
-        }
-      });
+      var component = new_instance_of(el.getAttribute('data-component-class'), [], [Component.app_library, 'nest_ui']);
+      if(component != null) {
+        // The order is very important here: we want to first assign dom_element, add
+        // component as a child to its parent and init its own children. Only then we
+        // call afterInitialize() giving users access to everything we possible can.
+        component.dom_element = el;
+        this.addChild(component, initialize: false);
+        if(recursive)
+          component.initChildComponents();
+        component.afterInitialize();
+      }
     });
     this.publishEvent("children_initialized");
   }

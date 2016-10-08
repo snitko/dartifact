@@ -1,11 +1,11 @@
 part of nest_ui;
 
 Component new_instance_of_component(class_name) {
-  var c = new_instance_of(class_name, [], Component.app_library);
+  var c = new_instance_of(class_name, [], [Component.app_library]);
   if(c == null)
-    c = new_instance_of(class_name, [], "nest_ui");
+    c = new_instance_of(class_name, [], ["nest_ui"]);
   if(c == null)
-    c = new_instance_of(class_name, [], "");
+    c = new_instance_of(class_name, []);
   return c;
 }
 

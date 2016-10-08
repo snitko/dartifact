@@ -303,11 +303,9 @@ class Component extends Object with observable.Subscriber,
    */
   void _createBehaviors() {
     behaviors.forEach((b) {
-      new Collection([Component.app_library, 'nest_ui']).distinct().toList().forEach((l) {
-        var behavior_instance = new_instance_of(b.toString(), [this], l);
-        if(behavior_instance != null)
-          behavior_instances.add(behavior_instance);
-      });
+      var behavior_instance = new_instance_of(b.toString(), [this], [Component.app_library, 'nest_ui']);
+      if(behavior_instance != null)
+        behavior_instances.add(behavior_instance);
     });
   }
 

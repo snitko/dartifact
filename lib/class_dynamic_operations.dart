@@ -20,58 +20,41 @@ List findSubclasses(name) {
 
 }
 
-Object new_instance_of(String class_name, [List args, String library='']) {
+Object new_instance_of(String class_name, [List args, List<String> libraries]) {
 
   // Arguments for the class constructor out which
   // the new instance will be obtained.
   if(args is Null)
     args = [];
 
-  MirrorSystem mirrors = currentMirrorSystem();
-  ClassMirror   cm;
-  List          libs = [];
-  var           reflectee;
+  var reflectee;
+  var cm = class_from_string(class_name, libraries);
 
-  if(library == '') {
-    mirrors.libraries.values.forEach((l){
-      if(l.qualifiedName == new Symbol('')) {
-        libs.add(l);
-      }
-    });
+  if(cm != null) {
+    InstanceMirror im = cm.newInstance(new Symbol(''), args);
+    reflectee = im.reflectee;
   }
-  else
-    libs = [mirrors.findLibrary(new Symbol(library))];
-
-  libs.forEach((lm) {
-    cm = lm.declarations[new Symbol(class_name)];
-
-    if(cm != null) {
-      InstanceMirror im = cm.newInstance(new Symbol(''), args);
-      reflectee = im.reflectee;
-      return;
-    }
-  });
 
   return reflectee;
 
 }
 
-class_from_string(String class_name, [List<String> libraries]) {
+ClassMirror class_from_string(String class_name, [List<String> libraries]) {
+
+  if(libraries == null)
+    libraries = [""];
+  libraries = new Collection(libraries).distinct().toList();
 
   MirrorSystem mirrors = currentMirrorSystem();
   ClassMirror   cm;
   List          libs = [];
   var           reflectee;
 
-  if(libraries == null)
-    libraries = [""];
-
   libraries.forEach((l) {
     if(l == "") {
       mirrors.libraries.values.forEach((l){
-        if(l.qualifiedName == new Symbol('')) {
+        if(l.qualifiedName == new Symbol(''))
           libs.add(l);
-        }
       });
     } else {
       libs.add(mirrors.findLibrary(new Symbol(l)));
@@ -84,7 +67,6 @@ class_from_string(String class_name, [List<String> libraries]) {
   });
 
   return cm;
-
 }
 
 List<String> methods_of(object) {
