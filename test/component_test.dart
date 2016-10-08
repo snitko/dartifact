@@ -2,6 +2,8 @@ import '../lib/nest_ui.dart';
 import "package:test/test.dart";
 import "dart:html";
 
+part "../lib/test_helpers/component_test_helpers.dart";
+
 @TestOn("browser")
 
 class MyComponent extends Component {
@@ -414,6 +416,22 @@ void main() {
         expect(c.findDescendantsByRole('*.role3'), equals([c.children[0].children[0]]));
       });
 
+    });
+
+    test("finds all descendants which are instances of a certain Component class", () { 
+      var el1 = createDomEl("MyComponent");
+      var el2 = createDomEl("MyChildComponent");
+      var el3 = createDomEl("MyChildComponent");
+      var el4 = createDomEl("Component");
+      c.dom_element.innerHtml = "";
+      c.dom_element.append(el1);
+      c.dom_element.append(el2);
+      c.dom_element.append(el3);
+      c.dom_element.append(el4);
+      c.initChildComponents();
+      expect(c.findAllDescendantInstancesOf("Component").length, equals(4));
+      expect(c.findAllDescendantInstancesOf("MyChildComponent").length, equals(2));
+      expect(c.findAllDescendantInstancesOf("MyComponent").length, equals(1));
     });
     
   });

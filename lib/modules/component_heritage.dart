@@ -100,6 +100,25 @@ abstract class ComponentHeritage {
     return descendants;
   }
 
+  List<Component> findAllDescendantInstancesOf(String class_name) {
+    var descendants = [];
+    var condition_class_mirror = class_from_string(class_name, [Component.app_library, 'nest_ui']);
+
+    if(condition_class_mirror == null)
+      return [];
+
+    this.children.forEach((c) {
+      var current_class_mirror = reflect(c).type;
+      if(current_class_mirror != null) {
+        if(current_class_mirror.isSubtypeOf(condition_class_mirror))
+          descendants.add(c);
+        else
+          descendants.addAll(c.findAllDescendantInstancesOf(class_name));
+      }
+    });
+    return descendants;
+  }
+
   /** Calls a specific method on all of it's children. If method doesn't exist on one of the
     * children, ignores and doesn't raise an exception. This method is useful when we want to
     * communicate a common an action to all children, such as when we want to reset() all form

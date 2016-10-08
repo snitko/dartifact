@@ -103,12 +103,11 @@ class HintComponent extends Component {
   }
 
   void hideOtherHints() {
-    if(!this.roles.isEmpty) {
-      this.root_component.findDescendantsByRole("*.${this.roles.first}").forEach((d) {
-        if(this != d)
-          d.hide();
-      });
-    }
+    this.root_component.findAllDescendantInstancesOf(getTypeName(this)).forEach((d) {
+      if(this != d && d.visible) {
+        d.hide();
+      }
+    });
   }
 
   void incrementDisplayLimit() {

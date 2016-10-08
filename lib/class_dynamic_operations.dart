@@ -56,6 +56,37 @@ Object new_instance_of(String class_name, [List args, String library='']) {
 
 }
 
+class_from_string(String class_name, [List<String> libraries]) {
+
+  MirrorSystem mirrors = currentMirrorSystem();
+  ClassMirror   cm;
+  List          libs = [];
+  var           reflectee;
+
+  if(libraries == null)
+    libraries = [""];
+
+  libraries.forEach((l) {
+    if(l == "") {
+      mirrors.libraries.values.forEach((l){
+        if(l.qualifiedName == new Symbol('')) {
+          libs.add(l);
+        }
+      });
+    } else {
+      libs.add(mirrors.findLibrary(new Symbol(l)));
+    }
+  });
+
+  libs.forEach((lm) {
+    if(cm == null)
+      cm = lm.declarations[new Symbol(class_name)];
+  });
+
+  return cm;
+
+}
+
 List<String> methods_of(object) {
   var im = reflect(object);
   List methods = [];
@@ -78,4 +109,8 @@ callMethod(String method_name, Object object, args) {
     args = [];
   InstanceMirror im = reflect(object);
   return im.invoke(new Symbol(method_name), args);
+}
+
+getTypeName(dynamic obj) {
+ return reflect(obj).type.reflectedType.toString();
 }
