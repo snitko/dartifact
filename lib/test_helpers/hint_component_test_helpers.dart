@@ -1,6 +1,6 @@
 part of nest_ui;
 
-HtmlElement createHintElement({ roles: null, and: null, attr_properties: null, attrs: null}) {
+HtmlElement createHintElement({ roles: "hint", and: null, attr_properties: null, attrs: null}) {
 
   if(attr_properties == null)
     attr_properties = [
@@ -24,9 +24,9 @@ HtmlElement createHintElement({ roles: null, and: null, attr_properties: null, a
 
 }
 
-Component createHintComponent({ roles: null, attrs: null, and: null }) {
-  var el = createHintElement(roles: roles);
-  var component = createComponent("HintComponent", el: el, and: and, attrs: attrs);
+Component createHintComponent({ roles: "hint", attrs: null, and: null, parent: null }) {
+  var el = createHintElement(roles: roles, attrs: attrs);
+  var component = createComponent("HintComponent", el: el, and: and, parent: parent);
   return component;
 }
 

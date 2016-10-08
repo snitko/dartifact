@@ -75,6 +75,7 @@ class HintComponent extends Component {
 
   void show({force: false}) {
 
+    hideOtherHints();
     behave("show");
 
     if(!this.isDisplayLimitReached || force) {
@@ -99,6 +100,13 @@ class HintComponent extends Component {
     this.visible = false;
     if(never_show_again)
       cookie.set("hint_${hint_id}_never_show_again", "1", expires: 1780);
+  }
+
+  void hideOtherHints() {
+    this.parent.findDescendantsByRole(this.roles.first).forEach((d) {
+      if(this != d)
+        d.hide();
+    });
   }
 
   void incrementDisplayLimit() {

@@ -166,6 +166,14 @@ void main() {
       expect(hint.visible, isFalse);
     });
 
+    test("hides all other hints for this parent when showing a new one", () {
+      var hint2 = createHintComponent(parent: parent);
+      parent.addChild(hint2);
+      hint2.visible = true;
+      hint.show();
+      expect(hint2.visible, equals(false));
+    });
+
     group("auto show/hide", () {
 
       setUp(() {

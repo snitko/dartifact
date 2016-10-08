@@ -9,12 +9,14 @@ Component new_instance_of_component(class_name) {
   return c;
 }
 
-Component createComponent(class_name, { and: null, el: null, roles: "", part: "", property: "", attr_properties: ""}) {
+Component createComponent(class_name, { and: null, el: null, roles: "", part: "", property: "", attr_properties: "", parent: null}) {
 
   if(el == null)
     el = createDomEl(class_name, roles: roles, part: part, property: property, attr_properties: attr_properties);
 
   var c = new_instance_of_component(class_name);
+  if(parent != null)
+    c.parent = parent;
 
   if(and != null) {
 
