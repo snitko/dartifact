@@ -75,22 +75,22 @@ class HintComponent extends Component {
 
   void show({force: false}) {
 
-    hideOtherHints();
-    behave("show");
-
     if(!this.isDisplayLimitReached || force) {
+      hideOtherHints();
       if(!force)
         incrementDisplayLimit();
+      behave("show");
       this.visible = true;
-    }
 
-    if(this.autohide_delay != null) {
-      var f = new Future.delayed(new Duration(seconds: this.autohide_delay));
-      this.autohide_future = f;
-      f.then((r) {
-        if(this.autohide_future == f)
-          this.hide();
-      });
+      if(this.autohide_delay != null) {
+        var f = new Future.delayed(new Duration(seconds: this.autohide_delay));
+        this.autohide_future = f;
+        f.then((r) {
+          if(this.autohide_future == f)
+            this.hide();
+        });
+      }
+
     }
 
   }
