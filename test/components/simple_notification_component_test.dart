@@ -44,6 +44,15 @@ void main() {
       });
     });
 
+    test("doesn't allow to hide itself if it's permanent", () {
+    });
+
+    test("hides the itself when 'close' part is clicked", () {
+    });
+
+    test("removes itself from it's parent children's collection on hide", () {
+    });
+
   });
 
 }
