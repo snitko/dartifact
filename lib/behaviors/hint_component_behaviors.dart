@@ -9,7 +9,7 @@ class HintComponentBehaviors extends BaseComponentBehaviors {
   }
 
   @override
-  show() {
+  Future show() {
 
     if(this.component.visible)
       return;
@@ -38,12 +38,12 @@ class HintComponentBehaviors extends BaseComponentBehaviors {
       _setPointerArrowClass("arrowTopRight");
     }
 
-    this.animator.show(this.dom_element, 500);
+    return this.animator.show(this.dom_element, 500);
 
   }
 
   @override
-  hide() => this.animator.hide(this.dom_element, 500);
+  Future hide() => this.animator.hide(this.dom_element, 500);
 
   bool _hasSpaceOnTheRight() {
     var anchor_dimensions = this.anchor_el.getBoundingClientRect();

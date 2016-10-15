@@ -16,7 +16,7 @@ class MockSimpleNotificationComponentBehaviors extends Mock implements SimpleNot
 
 void main() {
 
-  var root, sn, behavior;
+  var root, sn, behaviors;
 
   group("SimpleNotificationComponent", () {
 
@@ -26,21 +26,21 @@ void main() {
         return [createSimpleNotificationElement(attrs: { "data-autohide-delay" : "0" })];
       });
       sn = root.children.first;
-      behavior = new MockSimpleNotificationComponentBehaviors();
-      sn.behavior_instances = [behavior];
+      behaviors = new MockSimpleNotificationComponentBehaviors();
+      sn.behavior_instances = [behaviors];
       sn.ignore_misbehavior = false;
     });
 
     test("shows automatically upon initialization", () {
       sn.show();
       expect(sn.visible, equals(true));
-      verify(behavior.show());
+      verify(behaviors.show());
     });
 
     test("hides itself automatically after a autodisplay_delay seconds pass", () {
       sn.autohide_future.then((r) {
         expect(sn.visible, isFalse);
-        verify(behavior.hide());
+        verify(behaviors.hide());
       });
     });
 

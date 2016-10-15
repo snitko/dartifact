@@ -6,6 +6,7 @@ class BaseComponentBehaviors {
   PositionManager pos;
   Animator        animator;
   String          _display_value;
+  int             show_hide_animation_speed = 500;
 
   BaseComponentBehaviors(this.component) {
     this.pos      = new PositionManager();
