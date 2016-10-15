@@ -21,6 +21,7 @@ void main() {
   group("SimpleNotificationComponent", () {
 
     setUp((){
+      document.body.children.clear();
       document.body.append(createDomEl("", attrs: { "id" : "simple_notifications_container" }));
       root = createComponent("RootComponent", el: document.body, and: (c) {
         return [createSimpleNotificationElement(attrs: { "data-autohide-delay" : "0" })];
@@ -44,13 +45,21 @@ void main() {
       });
     });
 
-    test("doesn't allow to hide itself if it's permanent", () {
+    test("hides itself when close button is clicked", () {
+      sn.findPart("close").click();
+      expect(sn.visible, isFalse);
     });
 
-    test("hides the itself when 'close' part is clicked", () {
+    test("doesn't allow to hide itself if it's permanent", () {
+      sn.permanent = true;
+      sn.findPart("close").click();
+      expect(sn.visible, isTrue);
     });
 
     test("removes itself from it's parent children's collection on hide", () {
+      expect(sn.parent.children, contains(sn));
+      sn.hide();
+      expect(sn.parent.children, isNot(contains(sn)));
     });
 
   });

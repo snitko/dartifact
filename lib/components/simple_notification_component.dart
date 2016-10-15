@@ -19,6 +19,7 @@ class SimpleNotificationComponent extends Component {
   SimpleNotificationComponent({ attrs: null }) {
     updateAttributes(attrs);
     this.container = querySelector("#simple_notifications_container");
+    event_handlers.add(event: "click", role: "self.close", handler: (self, event) => self.hide());
   }
 
   @override afterInitialize() {
@@ -43,8 +44,11 @@ class SimpleNotificationComponent extends Component {
   }
 
   void hide() {
-    behave("hide");
-    this.visible = false;
+    if(this.permanent == null || this.permanent == false) {
+      behave("hide");
+      this.visible = false;
+      this.parent.removeChild(this);
+    }
   }
 
 }
