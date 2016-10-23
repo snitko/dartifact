@@ -1,5 +1,8 @@
 part of nest_ui;
 
+/** Numeric field can only contain digits and a period (.) character.
+  * All other characters are automatically erased.
+  */
 class NumericFormFieldComponent extends FormFieldComponent {
 
   List attribute_names = ["validation_errors_summary", "name", "disabled", "max_length"];
@@ -9,8 +12,14 @@ class NumericFormFieldComponent extends FormFieldComponent {
     updatePropertiesFromNodes(attrs: ["disabled", "name", "max_length"], invoke_callbacks: true);
   }
 
-  @override
-  set value(v) {
+  /** This method is reloaded (from FormFieldComponent) to make sure
+    * we only allow digits and period (.) in to be entered into the field.
+    * If a user enters some other character it is immediately erased.
+    *
+    * Additionally, it makes sure the length of the field does not exceed
+    * the value in the #max_length property.
+    */
+  @override set value(v) {
 
     if(v is String) {
 
@@ -39,8 +48,7 @@ class NumericFormFieldComponent extends FormFieldComponent {
     }
   }
 
-  @override
-  void prvt_updateValueFromDom() {
+  @override void prvt_updateValueFromDom() {
     this.value = value_holder_element.value;
   }
 
