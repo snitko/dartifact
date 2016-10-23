@@ -22,7 +22,7 @@ class SimpleNotificationComponent extends Component with AutoShowHide {
     event_handlers.add(event: "click", role: "self.close", handler: (self, event) => self.hide());
   }
 
-  @override afterInitialize() {
+  @override void afterInitialize() {
     super.afterInitialize();
     updatePropertiesFromNodes();
     this.show();
