@@ -1,6 +1,6 @@
 part of nest_ui;
 
-class HintComponent extends Component {
+class HintComponent extends Component with AutoShowHide {
 
   List native_events   = ["close.click", "close_and_never_show.click"];
   List attribute_names = ["anchor", "show_events", "force_show_events", "autoshow_delay",
@@ -55,14 +55,7 @@ class HintComponent extends Component {
 
       }
 
-      if(this.autoshow_delay != null) {
-        var f = new Future.delayed(new Duration(seconds: autoshow_delay));
-        this.autoshow_future = f;
-        f.then((r) {
-          if(this.autoshow_future == f)
-            this.show();
-        });
-      }
+      autoshow();
 
     });
 
@@ -81,16 +74,7 @@ class HintComponent extends Component {
         incrementDisplayLimit();
       behave("show");
       this.visible = true;
-
-      if(this.autohide_delay != null) {
-        var f = new Future.delayed(new Duration(seconds: this.autohide_delay));
-        this.autohide_future = f;
-        f.then((r) {
-          if(this.autohide_future == f)
-            this.hide();
-        });
-      }
-
+      autohide();
     }
 
   }

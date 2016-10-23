@@ -1,6 +1,6 @@
 part of nest_ui;
 
-class SimpleNotificationComponent extends Component {
+class SimpleNotificationComponent extends Component with AutoShowHide {
 
   final List attribute_names = ["message", "autohide_delay", "permanent", "container_selector"];
         List native_events   = ["close.click"];
@@ -31,16 +31,7 @@ class SimpleNotificationComponent extends Component {
   void show() {
     behave("show");
     this.visible = true;
-
-    if(this.autohide_delay != null) {
-      var f = new Future.delayed(new Duration(seconds: this.autohide_delay));
-      this.autohide_future = f;
-      f.then((r) {
-        if(this.autohide_future == f)
-          this.hide();
-      });
-    }
-
+    autohide();
   }
 
   void hide() {
