@@ -25,6 +25,8 @@ class SimpleNotificationComponent extends Component with AutoShowHide {
   @override void afterInitialize() {
     super.afterInitialize();
     updatePropertiesFromNodes();
+    if(this.permanent)
+      this.behave("hideCloseButton");
     this.show();
   }
 

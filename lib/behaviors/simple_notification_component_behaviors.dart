@@ -19,4 +19,8 @@ class SimpleNotificationComponentBehaviors extends BaseComponentBehaviors {
     return f;
   }
 
+  hideCloseButton() {
+    this.component.findPart("close").remove();
+  }
+
 }
