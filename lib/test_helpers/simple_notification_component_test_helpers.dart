@@ -1,6 +1,6 @@
 part of nest_ui;
 
-HtmlElement createSimpleNotificationElement({ roles: "", and: null, attr_properties: null, attrs: null}) {
+HtmlElement createSimpleNotificationElement({ roles: "simple_notification", and: null, attr_properties: null, attrs: null}) {
 
   if(attr_properties == null)
     attr_properties = [
@@ -18,8 +18,8 @@ HtmlElement createSimpleNotificationElement({ roles: "", and: null, attr_propert
 
 }
 
-Component createSimpleNotificationComponent({ roles: "", attrs: null, and: null, parent: null }) {
-  var el = createHintElement(roles: roles, attrs: attrs);
+Component createSimpleNotificationComponent({ roles: "simple_notification", attrs: null, and: null, parent: null }) {
+  var el = createSimpleNotificationElement(roles: roles, attrs: attrs);
   var component = createComponent("SimpleNotificationComponent", el: el, and: and, parent: parent);
   return component;
 }

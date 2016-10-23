@@ -175,8 +175,8 @@ class Component extends Object with observable.Subscriber,
     * and this is just a front calling _addChild() and then super.addChild();
     */
   void addChild(child, { initialize: true }) {
-    _addChild(child, initialize: initialize);
     super.addChild(child);
+    _addChild(child, initialize: initialize);
   }
 
   /** This method is here because dart2js doesn't support super() calls in mixins.

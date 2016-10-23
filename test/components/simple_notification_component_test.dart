@@ -62,6 +62,14 @@ void main() {
       expect(sn.parent.children, isNot(contains(sn)));
     });
 
+    test("doesn't show two notifications with identical messages", () {
+      sn.message = "Hello world";
+      var n = createSimpleNotificationComponent(roles: "simple_notification");
+      n.message = "Hello world";
+      root.addChild(n);
+      expect(n.visible, equals(false));
+    });
+
   });
 
 }
