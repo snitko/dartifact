@@ -288,6 +288,13 @@ class SelectComponent extends Component {
     });
   }
 
+  /** When fetching options from a remote server, you sometimes want to pass additional params,
+    * so that the fetched list is filtered in some way. For instance, if you have two SelectComponents,
+    * one with countries and another one with cities, it is reasonable to fetch cities when a country
+    * is selected. In this case, the first SelectComponent (the one that selects a country) will
+    * call this method and pass it `{ "country": "Chile" }`, so that when the second SelectComponent
+    * calls fetchOptions(), it will send a request with a country name in params.
+    */
   void updateFetchUrlParams(Map params) {
     if(isBlank(this.fetch_url))
       return;
