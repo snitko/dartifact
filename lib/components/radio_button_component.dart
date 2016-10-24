@@ -1,11 +1,16 @@
 part of nest_ui;
 
-// Extends Component and FormFieldComponent, because there isn't any value holder element
+/** RadioButton is a widely used UI element and this component simply provides a wrapper in the
+  * the form of Component for NestUI. There are methods to set value from the current value of the
+  * radio element & set radio element value from RadioButtonComponent#value (a backwards operation).
+  * 
+  * It extends Component and NOT FormFieldComponent, because there isn't any value holder element.
+  */
 class RadioButtonComponent extends Component {
 
   List native_events   = ["option.change"];
   List attribute_names = ["validation_errors_summary", "disabled", "value"];
-  Map options          = {};
+  Map  options         = {};
 
   RadioButtonComponent() {
 
@@ -25,8 +30,11 @@ class RadioButtonComponent extends Component {
       setValueFromSelectedOption();
     else
       selectOptionFromValue();
- }
+  }
 
+  /** Selects the radio button (makes it checked visually) based on the #value of the instance.
+    * If an option with such value doesn't exist, throws an error.
+    */
   void selectOptionFromValue() {
     if(this.options.keys.contains(this.value)) {
       this.options.values.forEach((el) => el.checked = false);
@@ -37,13 +45,19 @@ class RadioButtonComponent extends Component {
     }
   }
 
-  void setValueFromOptions(option_el) {
+  /** When a radio button is clicked, we need to set the #value of the current RadioButtonComponent instance.
+    * That's what this method does. The problem is, a radio element apparantely creates multiple click events
+    * so we need to only react to one single event that's invoked on the radio button being selected - thus the
+    * additional `if` inside.
+    */
+  void setValueFromOptions(HtmlElement option_el) {
     if(option_el.checked) {
       this.attributes["value"] = option_el.value;
       this.publishEvent("change", this);
     }
   }
 
+  /** This method is used to set the default #value for the RadioButtonComponent instance when our Radio is already checked on page load. */
   void setValueFromSelectedOption() {
     options.values.forEach((o) {
       if(o.checked)
