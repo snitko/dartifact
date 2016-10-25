@@ -39,7 +39,7 @@ class SimpleNotificationComponent extends Component with AutoShowHide {
     // Don't do anything if a similar message has been displayed before.
     if(this.ignore_duplicates && this.parent != null) {
       var has_duplicate = false;
-      this.parent.findChildrenByRole("simple_notification").forEach((n) {
+      this.root_component.findAllDescendantInstancesOf(getTypeName(this)).forEach((n) {
         if(n.message == this.message && n != this)
           has_duplicate = true;
       });
