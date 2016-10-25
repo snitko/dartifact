@@ -12,7 +12,7 @@ class RootComponent extends Component {
         // Prevents calling the method if component contains the click target AND
         // the component doesn't have children, that is we're dealing with the lowest
         // component in the hierarchy.
-        return !(child.prvt_hasNode(event.target) && child.children.length == 0);
+        return !(child.prvt_hasNode(event.target));
       });
     });
 

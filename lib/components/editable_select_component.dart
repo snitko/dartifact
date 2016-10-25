@@ -159,7 +159,7 @@ class EditableSelectComponent extends SelectComponent {
     prvt_listenToOptionClickEvents();
   }
 
-  Future fetchOptions() {
+  @override Future fetchOptions() {
     updateFetchUrlParams({ this.query_param_name : this.current_input_value });
     return super.fetchOptions();
   }

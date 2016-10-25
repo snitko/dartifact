@@ -129,12 +129,12 @@ abstract class ComponentHeritage {
     */
   void applyToChildren(method_name, [args=null, recursive=false, condition=null]) {
     for(var c in children) {
-      if(condition == null || (condition != null && condition(c))) {
-        if(hasMethod(method_name, c))
-          callMethod(method_name, c, args);
-        if(recursive != false)
-          c.applyToChildren(method_name, args, #recursive, condition);
-      }
+      if((condition == null || (condition != null && condition(c))) && hasMethod(method_name, c))
+        callMethod(method_name, c, args);
+      // We don't apply condition check to the recursive call. Condition check is the responsibility
+      // of each individual component.
+      if(recursive != false)
+        c.applyToChildren(method_name, args, #recursive, condition);
     }
   }
 

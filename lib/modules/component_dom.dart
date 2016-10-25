@@ -51,6 +51,17 @@ abstract class ComponentDom {
     return elements;
   }
 
+  List<HtmlElement> allDomDescendants(node) {
+    List elements = [];
+    node.children.forEach((c) {
+      if(c.getAttribute('data-component-class') == null) {
+        elements.add(c);
+        elements.addAll(allDomDescendants(c));
+      }
+    });
+    return elements;
+  }
+
   /** Finds all HtmlElements representing parts of the current component which match the name provided. */
   List<HtmlElement> findAllParts(name) {
     return allDomDescendantsAndSelfWithAttr(this.dom_element, attr_name: 'data-component-part', attr_value: name);
@@ -167,7 +178,7 @@ abstract class ComponentDom {
   bool prvt_hasNode(node) {
     if(node == this.dom_element)
       return true;
-    for(final descendant in this.dom_element.querySelectorAll("*"))
+    for(final descendant in allDomDescendants(this.dom_element))
       if(node == descendant)
         return true;
     return false;
