@@ -4,7 +4,7 @@ class HintComponent extends Component with AutoShowHide {
 
   List native_events   = ["close.click", "close_and_never_show.click"];
   List attribute_names = ["anchor", "show_events", "force_show_events", "autoshow_delay",
-                          "autohide_delay", "display_limit", "keep_open_when_hover", "hint_id"];
+                          "autohide_delay", "display_limit", "hint_id"];
 
   var _anchor_object;
   Future autoshow_future, autohide_future;
@@ -13,7 +13,6 @@ class HintComponent extends Component with AutoShowHide {
   List behaviors     = [HintComponentBehaviors];
 
   Map default_attribute_values = {
-    "keep_visible_when_hover": true,
     "display_limit": null,
     "show_events": "click"
   };
