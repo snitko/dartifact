@@ -1,5 +1,8 @@
 part of nest_ui;
 
+/** The purpose of this component is rather simple - display popup hints over other elements on the page
+  * whenever an event happens to this element: user clicks the element or hovers over it or something else.
+  */
 class HintComponent extends Component with AutoShowHide {
 
   List native_events   = ["close.click", "close_and_never_show.click"];
@@ -65,6 +68,10 @@ class HintComponent extends Component with AutoShowHide {
 
   }
 
+  /** This method not only invokes the show() behavior,
+    * but rather makes a check whether the display limit was reached,
+    * updates said limit and sets autohide if applicable.
+    */
   void show({force: false}) {
 
     if(!this.isDisplayLimitReached || force) {
@@ -78,6 +85,9 @@ class HintComponent extends Component with AutoShowHide {
 
   }
 
+  /** Hides the hint and in case it's being closed with `close_and_never_show` part,
+    * sets the appropriate cookie to indicate the hint shouldn't be displayed again.
+    */
   void hide({ never_show_again: false}) {
     behave("hide");
     this.visible = false;
@@ -85,6 +95,9 @@ class HintComponent extends Component with AutoShowHide {
       cookie.set("hint_${hint_id}_never_show_again", "1", expires: 1780);
   }
 
+  /** It's important to not bloat user's screen with many hints. That's why we want to hide
+    * all other hints when displaying the current one.
+    */
   void hideOtherHints() {
     this.root_component.findAllDescendantInstancesOf(getTypeName(this)).forEach((d) {
       if(this != d && d.visible) {
@@ -93,16 +106,23 @@ class HintComponent extends Component with AutoShowHide {
     });
   }
 
+  /** Increments the display_limit counter and updates the corresponding cookie */
   void incrementDisplayLimit() {
     var i = times_displayed + 1;
     if(!this.isDisplayLimitReached)
       cookie.set("hint_${hint_id}", i.toString(), expires: 1780);
   }
 
+  /** Checks whether the display_limit was reached.
+    * Takes into account never_show_again flag (it's a cookie): if it's set, the answer is always true.
+    */
   bool get isDisplayLimitReached {
     return (cookie.get("hint_${this.hint_id}_never_show_again") == "1") || this.display_limit != null && this.display_limit <= this.times_displayed;
   }
 
+  /** Retrieves the cookie and shows how many times this hint was displayed.
+    * Substitutes null for 0 in case the cookie is non-existent.
+    */
   get times_displayed {
     var i = cookie.get("hint_${this.hint_id}");
     if(i == null)
@@ -111,6 +131,19 @@ class HintComponent extends Component with AutoShowHide {
       return int.parse(i);
   }
 
+  /** An anchor is an element in DOM or another component to which events the hint will be listening to.
+    * Normally, you'd want to specify value for the #anchor property in a corresponding attribute to the hint's dom_element.
+    * This getter takes the `#anchor` value, parses it and finds an object to be returned:
+    * it will either be a `Component` or an `HtmlElement`.
+    *
+    * It is possible to specify anchors by their distinctive characteristics:
+    *
+    *   - By role: the prefix is `role:`. Example: `role:submit`.
+    *   - By property name: the prefix is `property:`. Example: `property:caption`
+    *   - By part name: the prefix is `part:`. Example: `part:input_value`
+    *   - By DOM element id: then the prefix is ommited Example: `submit_form_button`
+    *   - When specifying a role, you can also specify this role component's part: `role:button:caption`
+    */
   get anchor_object {
 
     var anchor_name_arr = this.anchor.split(":");
@@ -134,6 +167,10 @@ class HintComponent extends Component with AutoShowHide {
     return _anchor_object;
   }
 
+  /** In cases when anchor_object returns an instance of `Component`, this
+    * getter makes sure it returns the `#dom_element` of that component.
+    * Otherwise it returns the same `HtmlElement` returned by `#anchor_object`.
+    */
   get anchor_el {
     if(anchor_object is Component)
       return anchor_object.dom_element;
