@@ -24,6 +24,12 @@ abstract class ComponentHeritage {
         component.afterInitialize();
       }
     });
+    // When all children are initialized, we can safely call this event, to which some components -
+    // the ones that require all its children to be initialized before proceeding with their initialization code - are subscribed.
+    //
+    // The idea is that you can add an event handler into afterInitialize() or the constructor.
+    // The event handler, of course, won't be executed until all children are initialized, but it will
+    // still be automatic execution/initialization - just slightly delayed.
     this.publishEvent("children_initialized");
   }
 

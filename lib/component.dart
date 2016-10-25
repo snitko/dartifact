@@ -115,7 +115,7 @@ class Component extends Object with observable.Subscriber,
     * upwards - now the component itself is responsible for issuing publishEvent() calls
     * manually for each component part event handler.
   */
-  bool captureEvent(e, publisher_roles, { data: null, prevent_default: false, is_native: false}) {
+  @override bool captureEvent(e, publisher_roles, { data: null, prevent_default: false, is_native: false}) {
 
     // For native events, pass the Event object in data
     if(data == null && e is Event && is_native)
@@ -144,6 +144,17 @@ class Component extends Object with observable.Subscriber,
     }
 
     return true;
+  }
+
+  /** Reloading the obervable_roles.Subscriber's method because
+    * we need to make Component listen to its own events.
+    * It's marginally useful, but is very helfpul in the implementation of
+    * "children_initalized" event handler.
+    */
+  @override publishEvent(e,[data=null]) {
+    if(this.event_handlers.hasHandlerFor(role: this, event: e))
+      captureEvent(e, [this], data: data);
+    super.publishEvent(e,data);
   }
 
   /**
