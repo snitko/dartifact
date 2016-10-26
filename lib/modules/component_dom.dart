@@ -51,6 +51,9 @@ abstract class ComponentDom {
     return elements;
   }
 
+  /** Gets a list of all DOM-descendants of the #dom_element that are not included
+    * into other child Component DOM-structures. THe returned List lacks proper hierarchy.
+    */
   List<HtmlElement> allDomDescendants(node) {
     List elements = [];
     node.children.forEach((c) {
