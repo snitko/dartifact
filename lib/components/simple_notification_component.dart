@@ -8,6 +8,30 @@ part of nest_ui;
   * The best part of this component is that you can invoke the notification in two different ways: programmatically, by writing
   * Dart code and initializing the component or by having a DOM element in your DOM. The latter is convenient to automatically
   * display messages on page load and is, probably, the most common way in which this component is going to be used.
+  *
+  * Properties description:
+  *
+  *   * `message`            - the text that the user sees on the screen inside the element
+  *
+  *   * `message_type`       - This property doesn't affect anything important, but if set, it automatically adds a class
+  *                            to the .dom_element: class="message-type-${message_type}".
+  *                            Then in your CSS code you can specify various styles for different types of messages.
+  *
+  *   * `autohide_delay`     - A common practice is to have notification disappear over time.
+  *                            This property sets the number of seconds before the notification disappears once its displayed.
+  *
+  *   * `permanent`          - If you want to completely disallow closing the notification, you'll need to set the permanent property to true.
+  *                            Then it becomes impossible to close the notification and even the close part HTML element gets hidden.
+  *
+  *   * `container_selector` - All notifications will appear in a special DOM element called notifications container.
+  *                            Normally, you'd want to style it in such a way, so that its position is fixed and it appears somewhere on top.
+  *                            This property defines a selector by which such a container is identified.
+  *
+  *   * `ingore_duplicates`  - Most of the time it's a good idea not to show identical notifications twice.
+  *                            For that reason, the default behavior of SimpleNotificationComponent is to check whether there's
+  *                            another instance of the same class which is currently visible inside the same notifications container.
+  *                            The default is `true`, but if set to `false`, two more identical notifications may be shown.
+  *
   */
 class SimpleNotificationComponent extends Component with AutoShowHide {
 

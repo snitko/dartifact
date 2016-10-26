@@ -1,10 +1,25 @@
 part of nest_ui;
 
+/** SelectComponent does is it emulates native browser experience for <select> tags including the following:
+  *
+  * + Opens/closes on Enter/Space
+  * + Closes on Esc
+  * + Closes when clicked outside of it
+  * + Is navigatable with arrow keys, both when opened and closed
+  * + Is searchable by typing in the first few characters
+  * + Fetches options from a remote server
+  *
+  * Properties description:
+  *
+  *   * `validation_errors_summary`, `name`, `disabled`- inherited from FormFieldComponent.
+  *   *
+  *   * `display_value`                 - the text that the user sees on the screen inside the element
+  *   * `input_value`                   - the value that's sent to the server
+  *   * `fetch_url`                     - if set, this is where an ajax request is made to fetch options
+  *                                       which is used to send the value typed into the field.
+  */
 class SelectComponent extends Component {
 
-  /* display_value - the one we show to the user,
-   * input_value - the one we'd want to send to the server.
-   */
   List attribute_names = ["display_value", "input_value", "disabled", "name", "fetch_url"];
 
   List native_events   = ["selectbox.click", "keypress", "keydown", "option.click"];

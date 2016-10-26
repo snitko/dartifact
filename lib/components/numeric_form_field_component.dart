@@ -2,6 +2,13 @@ part of nest_ui;
 
 /** Numeric field can only contain digits and a period (.) character.
   * All other characters are automatically erased.
+  *
+  * Properties description:
+  *
+  *   * `validation_errors_summary`, `name`, `disabled`- inherited from FormFieldComponent.
+  *   *
+  *   * `display_value`                 - the text that the user sees on the screen inside the element
+  *   * `input_value`                   - the value that's sent to the server
   */
 class NumericFormFieldComponent extends FormFieldComponent {
 

@@ -1,5 +1,27 @@
 part of nest_ui;
 
+/** Sometimes you want to allow users to enter values for the select field manually. Perhaps, you want to give them a more explicit way to filter the options.
+  * Or, perhaps, you actually want to allow them to enter custom values into the select box. This is what this component is designed to do.
+  * It inherits from SelectComponent and the documentation for SelectComponent applies to EditableSelectComponent for the most part too.
+  *
+  * To understand how this component works, it's simply better to observe it in action, but here's a number of distinct behaviors you'll notice:
+  *
+  * When user begins to type, the list of options is automatically reduced to the ones that match the typed text.
+  * The select box automatically expands after the user types something in to present the filtered list of options.
+  * Filtering can occur both by display and input values.
+  * Pressing enter saves the custom entered #display_value as #input_value.
+  *
+  * Properties description:
+  *
+  *   * `validation_errors_summary`, `name`, `disabled`- inherited from FormFieldComponent.
+  *   *
+  *   * `display_value`                 - the text that the user sees on the screen inside the element
+  *   * `input_value`                   - the value that's sent to the server
+  *   * `fetch_url`                     - if set, this is where an ajax request is made to fetch options
+  *   * `query_param_name custom value` - when an ajax request is sent to `fetch_url`, this is the name of the param
+  *                                       which is used to send the value typed into the field.
+  *   * `allow custom value`            - if true, user is allowed to enter custom value into the field
+  */
 class EditableSelectComponent extends SelectComponent {
 
   List attribute_names = ["display_value", "input_value", "disabled", "name", "fetch_url", "allow_custom_value", "query_param_name"];

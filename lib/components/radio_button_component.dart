@@ -5,12 +5,19 @@ part of nest_ui;
   * radio element & set radio element value from RadioButtonComponent#value (a backwards operation).
   * 
   * It extends Component and NOT FormFieldComponent, because there isn't any value holder element.
+  *
+  * Properties description:
+  *
+  *   * `validation_errors_summary`, `disabled`- same as in FormFieldComponent.
+  *   * `value` - is set when a particular option is chosen.
   */
 class RadioButtonComponent extends Component {
 
   List native_events   = ["option.change"];
   List attribute_names = ["validation_errors_summary", "disabled", "value"];
-  Map  options         = {};
+
+  /** Stores all options and their values. Filled with data from the DOM-structure upon initialization. */
+  Map options = {};
 
   RadioButtonComponent() {
 

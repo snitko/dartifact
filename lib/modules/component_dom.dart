@@ -52,7 +52,7 @@ abstract class ComponentDom {
   }
 
   /** Gets a list of all DOM-descendants of the #dom_element that are not included
-    * into other child Component DOM-structures. THe returned List lacks proper hierarchy.
+    * into other child Component DOM-structures. The returned List lacks proper hierarchy.
     */
   List<HtmlElement> allDomDescendants(node) {
     List elements = [];
