@@ -5,26 +5,24 @@ part of nest_ui;
   *
   * Properties description:
   *
-  *   * `anchor`            - An anchor is an element in DOM or another component to which events the hint will be listening to.
-  *                           Normally, you'd want to specify value for the #anchor property in a corresponding attribute to the hint's dom_element.
-  *                           See description for `#anchor_element` getter to learn more.
+  *   * `anchor` - An anchor is an element in DOM or another component to which events the hint will be listening to.
+  *   Normally, you'd want to specify value for the #anchor property in a corresponding attribute to the hint's dom_element.
+  *   See description for `#anchor_element` getter to learn more.
   *
-  *   * `show_events`,
-  *   *`force_show_events`  - These two properties specify on which anchor events the hint appears.
-  *                           The `show_events` only works if the display_limit isn't reached or if the hint isn't
-  *                           permanently closed (never_show_again flag is set). The `force_show_events events` will force the hint to appear
-  *                           regardless of the limitations mentioned above.
+  *   * `show_events`, `force_show_events` - These two properties specify on which anchor events the hint appears.
+  *   The `show_events` only works if the display_limit isn't reached or if the hint isn't
+  *   permanently closed (never_show_again flag is set). The `force_show_events events` will force the hint to appear
+  *   regardless of the limitations mentioned above.
   *
-  *   * `autoshow_delay`,
-  *   * `autohide_delay`    - These two properties are rather self descriptive. Their value is time in seconds.
-  *                           By default, they're both null so hints are not show unless a specified event occurs on an anchor
-  *                           and they don't hide unless the user explicitly closes them by clicking on the close button.
+  *   * `autoshow_delay`, `autohide_delay` - These two properties are rather self descriptive. Their value is time in seconds.
+  *   By default, they're both null so hints are not show unless a specified event occurs on an anchor
+  *   and they don't hide unless the user explicitly closes them by clicking on the close button.
   *
-  *   * `display_limit`     - You don't want to annoy your users by showing them hints every time they visit the page and, for example,
-  *                           happen to mouseover the anchor. In that case, you'll need set the display_limit property to something sensible.
+  *   * `display_limit` - You don't want to annoy your users by showing them hints every time they visit the page and, for example,
+  *   happen to mouseover the anchor. In that case, you'll need set the display_limit property to something sensible.
   *
-  *   * `hint_id`           - The number of times a hint was displayed is saved in a cookie, which needs to uniquely identify a particular HintComponent.
-  *                           For this reason it is important to have a #hint_id (data-hint-id) set to a unique value.
+  *   * `hint_id` - The number of times a hint was displayed is saved in a cookie, which needs to uniquely identify a particular HintComponent.
+  *   For this reason it is important to have a #hint_id (data-hint-id) set to a unique value.
   *
   */
 class HintComponent extends Component with AutoShowHide {
