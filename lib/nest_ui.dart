@@ -35,6 +35,7 @@ part 'modules/component_event_lock.dart';
 part 'modules/position_manager.dart';
 part 'modules/animator.dart';
 part 'modules/auto_show_hide.dart';
+part 'modules/i18n.dart';
 
 part 'component.dart';
 part 'native_events_list.dart';

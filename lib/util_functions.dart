@@ -9,9 +9,12 @@ bool isBlank(v) {
     return false;
 }
 
-Map mergeMaps(map1, map2) {
+Map mergeMaps(map1, map2, { deep: false }) {
   map2.forEach((k,v) {
-    map1[k] = v;
+    if(deep && map1[k] is Map && v is Map)
+      map1[k] = mergeMaps(map1[k], v);
+    else
+      map1[k] = v;
   });
   return map1;
 }
