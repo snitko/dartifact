@@ -49,20 +49,22 @@ part 'components/root_component.dart';
  * explicitly explain that and also so that when documentation is generated,
  * we can uncomment it and include it into the documentation.
  */
-part 'behaviors/select_component_behaviors.dart';
-part 'components/select_component.dart';
-part 'behaviors/editable_select_component_behaviors.dart';
-part 'components/editable_select_component.dart';
-part 'behaviors/hint_component_behaviors.dart';
-part 'components/hint_component.dart';
-part 'behaviors/simple_notification_component_behaviors.dart';
-part 'components/simple_notification_component.dart';
+/*********************************************************************/
+//part 'behaviors/select_component_behaviors.dart';
+//part 'components/select_component.dart';
+//part 'behaviors/editable_select_component_behaviors.dart';
+//part 'components/editable_select_component.dart';
+//part 'behaviors/hint_component_behaviors.dart';
+//part 'components/hint_component.dart';
+//part 'behaviors/simple_notification_component_behaviors.dart';
+//part 'components/simple_notification_component.dart';
 
-part 'test_helpers/component_test_helpers.dart';
-part 'test_helpers/form_field_component_test_helpers.dart';
-part 'test_helpers/hint_component_test_helpers.dart';
-part 'test_helpers/radio_button_component_test_helpers.dart';
-part 'test_helpers/select_component_test_helpers.dart';
-part 'test_helpers/simple_notification_component_test_helpers.dart';
+//part 'test_helpers/component_test_helpers.dart';
+//part 'test_helpers/form_field_component_test_helpers.dart';
+//part 'test_helpers/hint_component_test_helpers.dart';
+//part 'test_helpers/radio_button_component_test_helpers.dart';
+//part 'test_helpers/select_component_test_helpers.dart';
+//part 'test_helpers/simple_notification_component_test_helpers.dart';
+/*********************************************************************/
 
 part 'nest_ui_app.dart';
