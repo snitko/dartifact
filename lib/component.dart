@@ -43,7 +43,7 @@ class Component extends Object with observable.Subscriber,
   bool ignore_misbehavior = true;
 
   /// Translation instances (not null only if HtmlElement holding translation data are found).
-  I18n i18n, i18n_root;
+  static Map i18n = {};
 
   /// Contains an element which will later be cloned and assigned to #dom_element
   /// if needed. Obviously, unless a real element from DOM isn't assigned.
@@ -239,11 +239,13 @@ class Component extends Object with observable.Subscriber,
   /** Finds the translation for the provided key using either its own translator or
     * RootComponent's translator. */
   String t(String key) {
+    var i18n      = Component.i18n[getTypeName(this)];
+    var i18n_root = Component.i18n["RootComponent"];
     var translation;
-    if(this.i18n != null)
+    if(i18n != null)
       translation = i18n.t(key);
-    if(translation == null && this.root_component != null && this.root_component.i18n != null)
-        translation = this.root_component.i18n.t(key);
+    if(translation == null && i18n_root != null)
+        translation = i18n_root.t(key);
     
     if(translation == null)
       translation = "WARNING: Translation missing for \"$key\"";
@@ -356,9 +358,11 @@ class Component extends Object with observable.Subscriber,
   }
 
   void _loadI18n() {
-    i18n = new I18n("i18n_${getTypeName(this)}");
-    if(i18n != null)
+    var i18n = new I18n("i18n_${getTypeName(this)}");
+    if(i18n != null) {
       i18n.print_console_warning = false;
+      Component.i18n[getTypeName(this)] = i18n;
+    }
   }
 
 }

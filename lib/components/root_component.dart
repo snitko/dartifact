@@ -19,7 +19,7 @@ class RootComponent extends Component {
   }
 
   @override void _loadI18n() {
-    i18n = new I18n();
+    Component.i18n["RootComponent"] = new I18n();
   }
 
 }
