@@ -418,6 +418,35 @@ void main() {
 
     });
 
+    group("i18n", () {
+
+      var r;
+
+      setUp(() {
+        var root_data_holder = new InputElement();
+        var component_data_holder = new InputElement();
+        component_data_holder.attributes["data-i18n-json"] = '{ "hello" : "world", "nested" : { "hello" : "world"}}';
+        component_data_holder.attributes["id"] = "i18n_Component_data_holder";
+        root_data_holder.attributes["data-i18n-json"] = '{ "root_hello" : "root_world" }';
+        root_data_holder.attributes["id"] = "i18n_data_holder";
+        document.body.append(root_data_holder);
+        document.body.append(component_data_holder);
+        r = createComponent("RootComponent", and: (r) {
+          c = createComponent("Component");
+          return [c];
+        });
+      });
+
+      test("translates they key using Component's i18n instance", () {
+        expect(c.t("hello"), equals("world"));
+      });
+
+      test("translates they key using RootComponent's i18n instance when key not found in Component's i18n instance", () {
+        expect(c.t("root_hello"), equals("root_world"));
+      });
+      
+    });
+
     test("finds all descendants which are instances of a certain Component class", () { 
       var el1 = createDomEl("MyComponent");
       var el2 = createDomEl("MyChildComponent");

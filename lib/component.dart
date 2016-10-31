@@ -81,7 +81,7 @@ class Component extends Object with observable.Subscriber,
 
   get root_component {
     var prnt = this.parent;
-    while(!(prnt is RootComponent) && prnt.parent != null)
+    while(prnt != null && !(prnt is RootComponent) && prnt.parent != null)
       prnt = prnt.parent;
     return prnt;
   }
@@ -228,6 +228,21 @@ class Component extends Object with observable.Subscriber,
     _listenToNativeEvents();
   }
 
+  /** Finds the translation for the provided key using either its own translator or
+    * RootComponent's translator. */
+  String t(String key) {
+    var translation;
+    if(this.i18n != null)
+      translation = i18n.t(key);
+    if(translation == null && this.root_component != null && this.root_component.i18n != null)
+        translation = this.root_component.i18n.t(key);
+    
+    if(translation == null)
+      translation = "WARNING: Translation missing for \"$key\"";
+
+    return translation;
+  }
+
   /** Starts listening to native events defined in #native_events. It is
    *  called (and thus, listeners are re-initialized) if #dom_element changes.
    *  Native events may come from the #dom_element itself or from one of its descendants.
@@ -333,9 +348,9 @@ class Component extends Object with observable.Subscriber,
   }
 
   void _loadI18n() {
-    i18n = querySelector("i18n_${getTypeName(this)}");
-    if(!(self is RootComponent))
-      i18n_root = root_component.i18n;
+    i18n = new I18n("i18n_${getTypeName(this)}");
+    if(i18n != null)
+      i18n.print_console_warning = false;
   }
 
 }

@@ -55,8 +55,9 @@ Component createComponent(String class_name, { and: null, el: null, part: null, 
     // Then add child Components that were created manually
     if(children != null) {
       children.forEach((child) {
-        if(child is Component)
+        if(child is Component) {
           c.addChild(child, initialize: false);
+        }
       });
     }
 

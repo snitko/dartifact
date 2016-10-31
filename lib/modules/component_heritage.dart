@@ -144,7 +144,7 @@ abstract class ComponentHeritage {
     }
   }
 
-  /** Reloading HeritageTree#add_child to automatically do the following things
+  /** Reloading HeritageTree#addChild to automatically do the following things
     * when a child component is added:
     *
     * 1. Initialize a dom_element from template

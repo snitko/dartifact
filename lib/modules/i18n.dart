@@ -15,6 +15,12 @@ class I18n {
     */
   Map data;
 
+  /** When translation isn't found, print warning into the console.
+    * It sometimes may not be a good idea (for example: Component usually has 2 translators
+    * it looks into: its own and RootComponent's), thus this option.
+    */
+  bool print_console_warning = true;
+
   factory I18n([name="i18n"]) {
     var i18n_instance = new I18n._internal(name);
     if(i18n_instance.data == null)
@@ -46,8 +52,14 @@ class I18n {
     *
     *   `args` - a Map of arguments and their values to be replaced inside the returned string
     *   (see _subArgs for more information).
+    *
+    * returns `null` if translation isn't found. Be careful with this: returning null
+    * means you don't see any warning message about translation not being found on the
+    * screen (only in console). Which means it might be a good idea to not use
+    * this class directly and wrap its instances in something else (which is, in fact, the case,
+    * because `Component` has its own `#t()` method.
     */
-  String t(String key, [Map args]) {
+  t(String key, [Map args]) {
     var keys = key.split(".");
     var value = data[keys[0]];
     keys.removeAt(0);
@@ -57,8 +69,11 @@ class I18n {
       value = value[k];
     }
 
-    if(value == null)
-      return "TRANSLATION MISSING for $key";
+    if(value == null) {
+      if(print_console_warning)
+        print("WARNING: translation missing for \"$key\" in \"$name\" translator.");
+      return null;
+    }
 
     if(args != null)
       value = _subArgs(args, value);

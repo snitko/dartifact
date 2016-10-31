@@ -33,8 +33,8 @@ void main() {
     });
 
     test("returns TRANSLATION MISSING if key not found", () {
-      expect(i18n.t("hi"), equals("TRANSLATION MISSING for hi"));
-      expect(i18n.t("hi.hello.world"), equals("TRANSLATION MISSING for hi.hello.world"));
+      expect(i18n.t("hi"), isNull);
+      expect(i18n.t("hi.hello.world"), isNull);
     });
 
     test("adds new translations", () {
