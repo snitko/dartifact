@@ -49,6 +49,8 @@ class Component extends Object with observable.Subscriber,
   /// if needed. Obviously, unless a real element from DOM isn't assigned.
   HtmlElement template;
 
+  Component _root_component;
+
   /** This one is important if you intend to separate your app
     * into many parts (files). In that case, you'll need to declare a library.
     * Component then will look for its children in 'nest_ui' library as well as
@@ -79,11 +81,17 @@ class Component extends Object with observable.Subscriber,
     }
   }
 
+  /** Returns root_component by traversing the heritage tree until `#parent` property is empty.
+    * Also cached the result, so it doesn't have to do it every time. After all,
+    * in all likeihood root_component won't change.
+    */
   get root_component {
-    var prnt = this.parent;
-    while(prnt != null && !(prnt is RootComponent) && prnt.parent != null)
-      prnt = prnt.parent;
-    return prnt;
+    if(_root_component != null)
+      return _root_component;
+    _root_component = this.parent;
+    while(_root_component != null && !(_root_component is RootComponent) && _root_component.parent != null)
+      _root_component = prnt.parent;
+    return _root_component;
   }
   
   Component() {
