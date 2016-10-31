@@ -19,11 +19,25 @@ class I18n {
     loadData();
   }
 
+  /** Takes an HtmlElement defined by id=$name, reads its "data-i18n-json" attribute
+    * which, evidently, should contain JSON, decodes it and saves into the #data property.
+    * This method is called once while the instance is initialized.
+    */
   void loadData() {
     var data_holder = querySelector("#${name}_data_holder");
     data = JSON.decode(data_holder.attributes["data-i18n-json"]);
   }
 
+  /** The most important method which does the translation.
+    *
+    * Arguments:
+    *
+    *   `key`  - a String which represents a key. Could be multilevel,
+    *   for example "level1.level2.greeting"
+    *
+    *   `args` - a Map of arguments and their values to be replaced inside the returned string
+    *   (see _subArgs for more information).
+    */
   String t(String key, [Map args]) {
     var keys = key.split(".");
     var value = data[keys[0]];
@@ -42,6 +56,17 @@ class I18n {
     return value;
   }
 
+  /** Dynamically adds a new key/value pair into the `data` property. Can be
+    * useful when you want to add a translation on the go.
+    *
+    * Arguments:
+    *
+    *   `key` - a String which represents a key. Could be multilevel,
+    *   for example "level1.level2.greeting"
+    *
+    *   `value` the actual value that's going to be substituting the key
+    *   in the code.
+    */
   void add(String key, String value) {
     var keys = key.split(".");
     var keys_map = value;
