@@ -42,6 +42,8 @@ class Component extends Object with observable.Subscriber,
   // When set to false - raises a NoSuchMethodError!
   bool ignore_misbehavior = true;
 
+  /// Translation instances (not null only if HtmlElement holding translation data are found).
+  I18n i18n, i18n_root;
 
   /// Contains an element which will later be cloned and assigned to #dom_element
   /// if needed. Obviously, unless a real element from DOM isn't assigned.
@@ -87,6 +89,7 @@ class Component extends Object with observable.Subscriber,
   Component() {
     _separateDescendantValidations();
     _initTemplate();
+    _loadI18n();
   }
 
   /** Invokes behaviors which are defined in separate Behavior objects. Those objects are instantiated
@@ -327,6 +330,12 @@ class Component extends Object with observable.Subscriber,
     } on NoSuchAttributeException {
       super.noSuchMethod(i);
     }
+  }
+
+  void _loadI18n() {
+    i18n = querySelector("i18n_${getTypeName(this)}");
+    if(!(self is RootComponent))
+      i18n_root = root_component.i18n;
   }
 
 }

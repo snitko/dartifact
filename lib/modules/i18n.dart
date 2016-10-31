@@ -15,7 +15,15 @@ class I18n {
     */
   Map data;
 
-  I18n([this.name="i18n"]) {
+  factory I18n([name="i18n"]) {
+    var i18n_instance = new I18n._internal(name);
+    if(i18n_instance.data == null)
+      return null;
+    else
+      return i18n_instance;
+  }
+
+  I18n._internal([this.name="i18n"]) {
     loadData();
   }
 
@@ -25,7 +33,8 @@ class I18n {
     */
   void loadData() {
     var data_holder = querySelector("#${name}_data_holder");
-    data = JSON.decode(data_holder.attributes["data-i18n-json"]);
+    if(data_holder != null)
+      data = JSON.decode(data_holder.attributes["data-i18n-json"]);
   }
 
   /** The most important method which does the translation.

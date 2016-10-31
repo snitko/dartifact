@@ -42,6 +42,10 @@ void main() {
       expect(i18n.data, equals({ "hello" : "world", "nested" : { "hello" : "world"}, "translation" : { "with": { "args" : "hello %w"}}}));
     });
 
+    test("constructor returns null if HtmlElement data holder isn't found", () {
+      expect(new I18n("non-existent-data-holder"), equals(null));
+    });
+
   });
 
 }
