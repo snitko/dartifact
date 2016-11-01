@@ -90,7 +90,7 @@ class Component extends Object with observable.Subscriber,
       return _root_component;
     _root_component = this.parent;
     while(_root_component != null && !(_root_component is RootComponent) && _root_component.parent != null)
-      _root_component = prnt.parent;
+      _root_component = _root_component.parent;
     return _root_component;
   }
   
