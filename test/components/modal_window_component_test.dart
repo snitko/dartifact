@@ -31,23 +31,26 @@ void main() {
 
       test("displays a simple text as content", () {
         mw = new ModalWindowComponent("hello world");
-        root.addChild(mw);
         expect(mw.content_el.text, equals("hello world"));
       });
 
       test("appends HtmlElement to content_el", () {
         var content_el = new DivElement();
         mw = new ModalWindowComponent(content_el);
-        root.addChild(mw);
         expect(mw.content_el.children[0], equals(content_el));
       });
 
       test("appends child component's dom_element to content_el", () {
         var content_component = createComponent("Component");
         mw = new ModalWindowComponent(content_component);
-        root.addChild(mw);
         expect(mw.content_el.children[0], equals(content_component.dom_element));
         expect(mw.children[0], equals(content_component));
+      });
+
+      test("is added as a child of RootComponent", () {
+        mw = new ModalWindowComponent("hello world");
+        expect(RootComponent.instance.children[0], equals(mw));
+        expect(RootComponent.instance.dom_element.children, contains(mw.dom_element));
       });
       
     });
@@ -57,16 +60,14 @@ void main() {
       group("when close_button is clicked", () {
 
         test("it hides the modal window if #show_close_button is true", () {
-          mw = createModalWindowComponent(root: root);
+          mw = createModalWindowComponent();
           mw.findPart("close").click();
           verify(mw.behavior_instances[0].hide());
         });
 
         test("it does nothing if #show_close_button is false", () {
-          mw = createModalWindowComponent(root: root, attrs: { "show_close_button" : false });
+          mw = createModalWindowComponent(attrs: { "show_close_button" : false });
           mw.findPart("close").click();
-          verify(mw.behavior_instances[0].show());
-          verify(mw.behavior_instances[0].hideCloseButton());
           verifyNoMoreInteractions(mw.behavior_instances[0]);
         });
 
@@ -75,15 +76,14 @@ void main() {
       group("when when background is clicked", () {
 
         test("it hides the modal window if #close_on_background_click is true", () {
-          mw = createModalWindowComponent(root: root);
+          mw = createModalWindowComponent();
           mw.findPart("background").click();
           verify(mw.behavior_instances[0].hide());
         });
 
         test("it does nothing if #close_on_background_click is false", () {
-          mw = createModalWindowComponent(root: root, attrs: { "close_on_background_click" : false });
+          mw = createModalWindowComponent(attrs: { "close_on_background_click" : false });
           mw.findPart("background").click();
-          verify(mw.behavior_instances[0].show());
           verifyNoMoreInteractions(mw.behavior_instances[0]);
         });
 
@@ -96,15 +96,14 @@ void main() {
         }
 
         test("it hides the modal window if #close_on_escape is true", () {
-          mw = createModalWindowComponent(root: root);
+          mw = createModalWindowComponent();
           mw.prvt_processKeyDownEvent(new_key_event(KeyCode.ESC, mw.dom_element));
           verify(mw.behavior_instances[0].hide());
         });
 
         test("it does nothing if #close_on_escape is false", () {
-          mw = createModalWindowComponent(root: root, attrs: { "close_on_escape" : false });
+          mw = createModalWindowComponent(attrs: { "close_on_escape" : false });
           mw.prvt_processKeyDownEvent(new_key_event(KeyCode.ESC, mw.dom_element));
-          verify(mw.behavior_instances[0].show());
           verifyNoMoreInteractions(mw.behavior_instances[0]);
         });
 

@@ -19,7 +19,7 @@ HtmlElement createModalWindowElement({ roles: null, and: null, attr_properties: 
 
 }
 
-Component createModalWindowComponent({ content: "hello world", attrs: null, root: null}) {
+Component createModalWindowComponent({ content: "hello world", attrs: null}) {
 
   if(attrs == null)
     attrs = {};
@@ -29,7 +29,6 @@ Component createModalWindowComponent({ content: "hello world", attrs: null, root
   mw.ignore_misbehavior = false;
   var behaviors = new MockModalWindowComponentBehaviors();
   mw.behavior_instances = [behaviors];
-  root.addChild(mw);
 
   return mw;
 

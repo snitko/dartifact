@@ -17,6 +17,12 @@ void main() {
 
   group("ModalWindowComponentBehaviors", () {
 
+    test("displays dom_element on show()", () {
+    });
+
+    test("hides dom_element on hide() and removes itself from RootComponent", () {
+    });
+
   });
 
 }

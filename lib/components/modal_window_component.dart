@@ -36,18 +36,24 @@ class ModalWindowComponent extends Component {
       });
     }
 
+    // Interesting thing about this call:
+    //  1. RootComponent#addChild() gets called
+    //  2. which in turn calls ModalWindowComponent#afterInitialize()
+    //  3. Only after that, the execution returns to show() and behave("show") is called.
+    this.show();
+
   }
 
   afterInitialize() {
     super.afterInitialize();
 
     if(this.show_close_button)
-      event_handlers.add(event: 'click', role: "self.close", handler: (self,event) => self.behave("hide"));
+      event_handlers.add(event: 'click', role: "self.close", handler: (self,event) => self.hide());
     else
       this.behave("hideCloseButton");
 
     if(this.close_on_background_click)
-      event_handlers.add(event: 'click', role: "self.background", handler: (self,event) => self.behave("hide"));
+      event_handlers.add(event: 'click', role: "self.background", handler: (self,event) => self.hide());
 
     // Workaround. Dart doesn't catch keydown events on divs, only on document -
     // but, surprise, it corretly sets the target, so we can still get it!
@@ -64,8 +70,6 @@ class ModalWindowComponent extends Component {
       addChild(this.content);
     }
 
-    behave("show");
-
   }
 
   get content_el => findPart("content");
@@ -76,9 +80,22 @@ class ModalWindowComponent extends Component {
     this.content_el.text(t);
   }
 
+  /** Adds itself to RootComponent as a child, appends dom_element to it, calls show() behaviors*/
+  void show() {
+    RootComponent.instance.addChild(this);
+    this.behave("show");
+  }
+
+  /** Removes itself to RootComponent's children list, removes itself
+    * RootComponent#dom_element's children, calls hide() behavior.*/
+  void hide() {
+    this.behave("hide");
+  }
+
   void prvt_processKeyDownEvent(e) {
-    if(this.prvt_hasNode(e.target) && e.keyCode == KeyCode.ESC && close_on_escape)
+    if(this.prvt_hasNode(e.target) && e.keyCode == KeyCode.ESC && this.close_on_escape)
       this.behave("hide");
   }
+
 
 }

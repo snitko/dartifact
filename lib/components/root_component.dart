@@ -2,7 +2,8 @@ part of nest_ui;
 
 class RootComponent extends Component {
 
-  List native_events  = ["!click"];
+  List native_events = ["!click"];
+  static RootComponent instance;
 
   RootComponent() : super() {
 
@@ -15,6 +16,8 @@ class RootComponent extends Component {
         return !(child.prvt_hasNode(event.target));
       });
     });
+
+    RootComponent.instance = this;
 
   }
 
