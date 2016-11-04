@@ -41,6 +41,8 @@ part 'component.dart';
 part 'native_events_list.dart';
 part 'behaviors/base_component_behaviors.dart';
 part 'behaviors/form_field_component_behaviors.dart';
+part 'behaviors/button_component_behaviors.dart';
+part 'components/button_component.dart';
 part 'components/form_field_component.dart';
 part 'components/numeric_form_field_component.dart';
 part 'components/radio_button_component.dart';
