@@ -18,7 +18,6 @@ class BaseComponentBehaviors {
   hide() => this.dom_element.style.display="none";
 
   show() {
-
     this.dom_element.style.display = display_value;
   }
 

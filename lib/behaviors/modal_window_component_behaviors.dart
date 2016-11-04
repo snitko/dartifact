@@ -9,9 +9,13 @@ class ModalWindowComponentBehaviors extends BaseComponentBehaviors {
   }
 
   @override Future show() {
+    return this.animator.show(this.dom_element, this.show_hide_animation_speed);
   }
 
   @override Future hide() {
+    var f = this.animator.hide(this.dom_element, this.show_hide_animation_speed);
+    f.then((r) => this.dom_element.remove());
+    return f;
   }
 
   hideCloseButton() {
