@@ -67,8 +67,7 @@ void main() {
 
         test("it does nothing if #show_close_button is false", () {
           mw = createModalWindowComponent(attrs: { "show_close_button" : false });
-          mw.findPart("close").click();
-          verifyNoMoreInteractions(mw.behavior_instances[0]);
+          expect(mw.findPart("close"), isNull);
         });
 
       });
