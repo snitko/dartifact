@@ -12,7 +12,6 @@ class ModalWindowComponent extends Component {
   List behaviors = [ModalWindowComponentBehaviors];
 
   var content;
-  
 
   /** This can be replaced at will, but if we just want to display a text -
     * this is the default element in which the text is going to appear.
