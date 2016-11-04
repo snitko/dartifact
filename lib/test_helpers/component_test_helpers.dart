@@ -9,6 +9,19 @@ Component new_instance_of_component(class_name) {
   return c;
 }
 
+class KeyEventMock {
+  String type;
+  int keyCode, charCode;
+  var target;
+  KeyEventMock({ type: null, keyCode: null, charCode: null, target: null }) {
+    this.type     = type;
+    this.keyCode  = keyCode;
+    this.charCode = charCode;
+    this.target   = target;
+  }
+  preventDefault() {}
+}
+
 /** Creates a new instance of Component.
   * Arguments description:
   *

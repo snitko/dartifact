@@ -5,6 +5,7 @@ import "dart:async";
 import '../../lib/nest_ui.dart';
 part '../../lib/behaviors/select_component_behaviors.dart';
 part '../../lib/components/select_component.dart';
+part '../../lib/test_helpers/component_test_helpers.dart';
 
 @TestOn("browser")
 
@@ -30,19 +31,6 @@ class MyParentComponent extends Component {
       self.events_history.add("'change' event on select");
     });
   }
-}
-
-class KeyEventMock {
-  String type;
-  int keyCode, charCode;
-  var target;
-  KeyEventMock({ type: null, keyCode: null, charCode: null, target: null }) {
-    this.type     = type;
-    this.keyCode  = keyCode;
-    this.charCode = charCode;
-    this.target   = target;
-  }
-  preventDefault() {}
 }
 
 void main() {

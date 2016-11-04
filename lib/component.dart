@@ -341,6 +341,8 @@ class Component extends Object with observable.Subscriber,
    * and an error will be raised.
    */
   void _createBehaviors() {
+    if(this.behavior_instances.length > 0)
+      return;
     behaviors.forEach((b) {
       var behavior_instance = new_instance_of(b.toString(), [this], [Component.app_library, 'nest_ui']);
       if(behavior_instance != null)
