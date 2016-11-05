@@ -1,5 +1,23 @@
 part of nestui;
 
+/** ModalWindow is an HtmlBlock that is supposed to appear on top of all other content
+  * on a page and block the user from interacting with the page until the modal window is closed.
+  *
+  * A new ModalWindow is created by invoking the constructor. It then automatically adds itself
+  * (and, consequently, its `#dom_element`) to RootComponent. You job is to have css
+  * in place to display the ModalWindow. What you probably want is to have
+  * the `#dom_element` be a sort of background with some kind of opacity (like 0.3) and
+  * then the `#content_el` element serving as the actual window at the center of the screen.
+  *
+  * The content of such window can be anything and is contained within the `#content_el`.
+  * When creating a new ModalWindow, you just pass content to the constructor as the first argument:
+  * it can be a String, an HtmlElement or another Component.
+  *
+  * The second argument to the constructor is a Map of options. The options have self-descriptive
+  * names and determine how the window may be closed:
+  * `close_on_escape`, `close_on_background_click` and `show_close_button` - all are bool.
+  *
+  */
 class ModalWindowComponent extends Component {
 
   List native_events   = ["close.click", "background.click"];
@@ -11,11 +29,11 @@ class ModalWindowComponent extends Component {
   };
   List behaviors = [ModalWindowComponentBehaviors];
 
-  var content;
-
-  /** This can be replaced at will, but if we just want to display a text -
-    * this is the default element in which the text is going to appear.
+  /** Contains the content for the #content_el. It's actually only used once,
+    * in the constructor while setting #content_el, so changing it accomplishes nothing.
+    * You can however use the `text` setter.
     */
+  var content;
 
   /** This the text that's going to appear inside the content element.
     * Only set this property using getter `text` and only if you want to display a simple message,
@@ -29,8 +47,8 @@ class ModalWindowComponent extends Component {
     */
   ModalWindowComponent(this.content, [attrs=null]) {
 
-    // TODO: settings attrs through constructor should be a Component
-    // responsibility
+    // TODO: setting attrs through constructor should be a Component
+    // responsibility.
     if(attrs != null) {
       attrs.forEach((k,v) {
         this.attributes[k] = v;
@@ -76,6 +94,9 @@ class ModalWindowComponent extends Component {
   get content_el => findPart("content");
   get text       => _text;
 
+  /** Changes the text inside the `#content_el`. Use with caution: erases everything
+    * else inside the `#content_el`.
+    */
   set text(String t) {
     _text = t;
     this.content_el.text(t);
