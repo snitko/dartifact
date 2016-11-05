@@ -104,7 +104,12 @@ class ModalWindowComponent extends Component {
 
   /** Adds itself to RootComponent as a child, appends dom_element to it, calls show() behaviors*/
   Future show() {
-    RootComponent.instance.addChild(this);
+    var r = RootComponent.instance;
+    r.addChild(this);
+    if(r.dom_element.children.length != 1) {
+      r.dom_element.children.last.remove();
+      r.dom_element.insertBefore(this.dom_element, r.dom_element.children.first);
+    }
     return this.behave("show");
   }
 

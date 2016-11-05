@@ -55,7 +55,8 @@ class DialogWindowComponent extends ModalWindowComponent {
       button.caption = v["caption"];
       button.roles = ["option_$k"];
       addChild(button);
-      button.dom_element.classes.add(v["type"]);
+      if(v["type"] != null)
+        button.dom_element.classes.add(v["type"]);
 
       // Create click event handlers for each option button
       event_handlers.add(event: "click", role: "option_$k", handler: (self,publisher) {
