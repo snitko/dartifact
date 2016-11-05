@@ -69,6 +69,16 @@ void main() {
           mw = createModalWindowComponent(attrs: { "show_close_button" : false });
           expect(mw.findPart("close"), isNull);
         });
+        
+        test("removes itself from RootComponent", () {
+          mw = createModalWindowComponent();
+          mw.behavior_instances = [new ModalWindowComponentBehaviors(mw)];
+          expect(RootComponent.instance.dom_element.children, contains(mw.dom_element));
+          var f = mw.hide().then((r) {
+            expect(root.children, isNot(contains(mw)));
+          });
+          expect(f, completes);
+        });
 
       });
 

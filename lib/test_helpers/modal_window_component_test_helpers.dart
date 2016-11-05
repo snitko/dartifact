@@ -28,7 +28,11 @@ Component createModalWindowComponent({ content: "hello world", attrs: null, mock
 
   if(mock_behaviors) {
     mw.ignore_misbehavior = false;
+
     var behaviors = new MockModalWindowComponentBehaviors();
+    when(behaviors.show()).thenReturn(new Completer().future);
+    when(behaviors.hide()).thenReturn(new Completer().future);
+
     mw.behavior_instances = [behaviors];
   }
 

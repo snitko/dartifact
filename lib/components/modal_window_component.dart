@@ -82,15 +82,17 @@ class ModalWindowComponent extends Component {
   }
 
   /** Adds itself to RootComponent as a child, appends dom_element to it, calls show() behaviors*/
-  void show() {
+  Future show() {
     RootComponent.instance.addChild(this);
-    this.behave("show");
+    return this.behave("show");
   }
 
   /** Removes itself to RootComponent's children list, removes itself
     * RootComponent#dom_element's children, calls hide() behavior.*/
-  void hide() {
-    this.behave("hide");
+  Future hide() {
+    return this.behave("hide").then((r) {
+      this.remove();
+    });
   }
 
   void prvt_processKeyDownEvent(e) {

@@ -104,14 +104,14 @@ class Component extends Object with observable.Subscriber,
    *  when the constructor is called. If you want to define custom Behaviors, simply create
    *  a MyBehaviors class and add into the #behaviors list.
    */
-  void behave(behavior, [List attrs=null]) {
+  behave(behavior, [List attrs=null]) {
     if(attrs == null)
       attrs = [];
     for(var b in behavior_instances.reversed) {
       if(!ignore_misbehavior || methods_of(b).contains(behavior)) {
         var im = reflect(b);
-        im.invoke(new Symbol(behavior), attrs);
-        return;
+        var result = im.invoke(new Symbol(behavior), attrs).reflectee;
+        return result;
       }
     }
   }

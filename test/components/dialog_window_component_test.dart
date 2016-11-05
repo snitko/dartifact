@@ -38,8 +38,8 @@ void main() {
         "yes" : { "caption": "Yes", "type": "green", "value": "YES CLICKED" },
         "no" :  { "caption": "No",  "type": "blue",  "value": "NO CLICKED"  }
       });
-      yes_button    = dw.findFirstChildByRole("option_yes");
-      no_button = dw.findFirstChildByRole("option_no");
+      yes_button = dw.findFirstChildByRole("option_yes");
+      no_button  = dw.findFirstChildByRole("option_no");
     });
 
     test("creates an option button for each option", () {
@@ -72,7 +72,10 @@ void main() {
 
     test("closes the window then the future is completed", () {
       dw.ignore_misbehavior = false;
-      dw.behavior_instances = [new MockModalWindowComponentBehaviors()];
+      var behaviors = new MockModalWindowComponentBehaviors();
+      when(behaviors.show()).thenReturn(new Completer().future);
+      when(behaviors.hide()).thenReturn(new Completer().future);
+      dw.behavior_instances = [behaviors];
       yes_button.dom_element.click();
       verify(dw.behavior_instances[0].hide());
     });
