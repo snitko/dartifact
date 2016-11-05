@@ -31,7 +31,7 @@ void main() {
 
   group("DialogWindowComponent", () {
 
-    var yes_button, cancel_button;
+    var yes_button, no_button;
 
     setUp(() {
       dw = new DialogWindowComponent("hello world", {
@@ -39,12 +39,12 @@ void main() {
         "no" :  { "caption": "No",  "type": "blue",  "value": "NO CLICKED"  }
       });
       yes_button    = dw.findFirstChildByRole("option_yes");
-      cancel_button = dw.findFirstChildByRole("option_no");
+      no_button = dw.findFirstChildByRole("option_no");
     });
 
     test("creates an option button for each option", () {
       expect(yes_button, isNotNull);
-      expect(cancel_button, isNotNull);
+      expect(no_button, isNotNull);
     });
 
     test("button's dom_elements are added in to a special button container", () {
@@ -75,6 +75,11 @@ void main() {
       dw.behavior_instances = [new MockModalWindowComponentBehaviors()];
       yes_button.dom_element.click();
       verify(dw.behavior_instances[0].hide());
+    });
+
+    test("adds appropriate 'type' passed in the option Map as a class to the Button", () {
+      expect(yes_button.dom_element.classes, contains("green"));
+      expect(no_button.dom_element.classes, contains("blue"));
     });
 
   });
