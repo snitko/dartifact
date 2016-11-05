@@ -150,7 +150,7 @@ abstract class ComponentHeritage {
     * 1. Initialize a dom_element from template
     * 2. Append child's dom_element to the parent's dom_element.
     *
-    * Obviously, you might not always want (2), so just redefine #_appendChildDomElement()
+    * Obviously, you might not always want (2), so just redefine #prvt_appendChildDomElement()
     * method in your class to change this behavior.
     */
   void _addChild(Component child, { initialize: true }) {
@@ -159,7 +159,7 @@ abstract class ComponentHeritage {
     // We only do it if this element is clearly not in the DOM.
     if(child.dom_element == null || child.dom_element.parent == null) {
       child.initDomElementFromTemplate();
-      _appendChildDomElement(child.dom_element);
+      prvt_appendChildDomElement(child.dom_element);
     }
 
     if(initialize)

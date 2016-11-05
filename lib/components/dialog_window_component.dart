@@ -4,11 +4,12 @@ class DialogWindowComponent extends ModalWindowComponent {
 
   /** This defines Button roles and captions and the values the window's Future
     * returns when one of the buttons is pressed.
-    * Syntax:
     *
-    *   { "role" : ["caption", value_to_be_returned] }
+    * The keys in the Map are button roles, the inside of the nested map
+    * is sort of self-descriptive. Perhaps "type" should be explained:
+    * it basically adds the right kind of html class to the button.
     */
-  Map options = { "ok" : ["OK", true] };
+  Map options = { "ok" : { "caption": "OK", "type" : null, "value": true} };
 
   /** This is the Future containing the value returned by the window
     * when it closes. Depends on which button was clicked. */
@@ -26,20 +27,31 @@ class DialogWindowComponent extends ModalWindowComponent {
     if(opts != null)
       this.options = opts;
 
-    // Create a button for each option
-
-    // Create click event handlers for each option button
     this.options.forEach((k,v) {
-      event_handlers.add(event: "click", role: "option_${k}", handler: (self,publisher) {
-        this.hide();
-        _completer.complete(v[1]);
+
+      var button = new ButtonComponent();
+      button.caption = v["caption"];
+      button.roles = ["option_$k"];
+      addChild(button);
+      button.dom_element.classes.add(v["type"]);
+
+      // Create click event handlers for each option button
+      event_handlers.add(event: "click", role: "option_$k", handler: (self,publisher) {
+        self.hide();
+        _completer.complete(v["value"]);
       });
+
     });
 
   }
 
   get completed => _completer.future;
 
-  // redefine method that adds buttons as child elements
+  void prvt_appendChildDomElement(HtmlElement el) {
+    if(el.attributes["data-component-class"] == "ButtonComponent")
+      findPart("button_container").append(el);
+    else
+      this.dom_element.append(el);
+  }
 
 }

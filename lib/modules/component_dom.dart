@@ -187,6 +187,15 @@ abstract class ComponentDom {
     return false;
   }
 
+  /** This method defines a default behavior when a new child is added.
+    * Makes sense to append child dom_element to the parent's dom_element.
+    * Of course, this might not always be desirable, so this method may be
+    * redefined in descendant calasses.
+    */
+  void prvt_appendChildDomElement(HtmlElement el) {
+    this.dom_element.append(el);
+  }
+
   /** Finds the template HtmlElement in the dom and assigns it to #template */
   void _initTemplate() {
     this.template = querySelector("[data-component-template=${this.runtimeType.toString()}");
@@ -210,15 +219,6 @@ abstract class ComponentDom {
         component_children.add(c);
     });
     return component_children;
-  }
-
-  /** This method defines a default behavior when a new child is added.
-    * Makes sense to append child dom_element to the parent's dom_element.
-    * Of course, this might not always be desirable, so this method may be
-    * redefined in descendant calasses.
-    */
-  void _appendChildDomElement(HtmlElement el) {
-    this.dom_element.append(el);
   }
 
   /** Defines behavior for removal of the #dom_element
