@@ -39,10 +39,10 @@ class KeyEventMock {
   *                         children of the component being created with this method.
   *
   */
-Component createComponent(String class_name, { and: null, el: null, part: null, roles: "", property: "", attr_properties: "", parent: null}) {
+Component createComponent(String class_name, { and: null, el: null, part: null, roles: "", property: "", attr_properties: "", parent: null, attrs: null}) {
 
   if(el == null)
-    el = createDomEl(class_name, roles: roles, part: part, property: property, attr_properties: attr_properties);
+    el = createDomEl(class_name, roles: roles, part: part, property: property, attr_properties: attr_properties, attrs: attrs);
 
   var c = new_instance_of_component(class_name);
   if(parent != null)
