@@ -56,12 +56,14 @@ abstract class ComponentDom {
     */
   List<HtmlElement> allDomDescendants(node) {
     List elements = [];
-    node.children.forEach((c) {
-      if(c.getAttribute('data-component-class') == null) {
-        elements.add(c);
-        elements.addAll(allDomDescendants(c));
-      }
-    });
+    if(node != null) {
+      node.children.forEach((c) {
+        if(c.getAttribute('data-component-class') == null) {
+          elements.add(c);
+          elements.addAll(allDomDescendants(c));
+        }
+      });
+    }
     return elements;
   }
 

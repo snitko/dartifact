@@ -350,20 +350,20 @@ class Component extends Object with observable.Subscriber,
     });
   }
 
+  void _loadI18n() {
+    var i18n = new I18n("i18n_${getTypeName(this)}");
+    if(i18n != null) {
+      i18n.print_console_warning = false;
+      Component.i18n[getTypeName(this)] = i18n;
+    }
+  }
+
   // So far this is only required for Attributable module to work on this class.
   noSuchMethod(Invocation i) {  
     try {
       return prvt_noSuchGetterOrSetter(i);
     } on NoSuchAttributeException {
       super.noSuchMethod(i);
-    }
-  }
-
-  void _loadI18n() {
-    var i18n = new I18n("i18n_${getTypeName(this)}");
-    if(i18n != null) {
-      i18n.print_console_warning = false;
-      Component.i18n[getTypeName(this)] = i18n;
     }
   }
 
