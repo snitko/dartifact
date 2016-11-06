@@ -27,7 +27,7 @@ HtmlElement createFormFieldElement(class_name, { input_el: null, roles: null, va
 
 Component createFormFieldComponent({ roles: null, value: null }) {
 
-  var el = createFormFieldElement("FormFieldComponent", value: value);
+  var el = createFormFieldElement("FormFieldComponent", value: value, roles: roles);
   var component = createComponent("FormFieldComponent", el: el, roles: roles);
 
   return component;
