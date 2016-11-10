@@ -23,7 +23,8 @@ class Component extends Object with observable.Subscriber,
    *  "self.part_name" where part_name is identical to the value of the data-component-part
    *  html attribute of the descendant element.
    */
-  List native_events = []; // native_events_list;
+  List native_events                = []; // native_events_list;
+  List no_propagation_native_events = [];
 
   /** This is where Dart listeners for native events are stored, so we can cance
     * a listenere later, for example
@@ -147,9 +148,9 @@ class Component extends Object with observable.Subscriber,
 
     super.captureEvent(e, publisher_roles, data: data);
 
-    // Only publish if event is the actual event of the dom_element, and
-    // is not a native event on one of the component parts.
-    if(publisher_roles.contains(#self)) {
+    // Only publish if event is the actual event of the dom_element, IS NOT
+    // in non-propagate list, and is not a native event on one of the component parts.
+    if(publisher_roles.contains(#self) && !no_propagation_native_events.contains(e)) {
       this.publishEvent(e, data);
       return;
     }

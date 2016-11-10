@@ -161,6 +161,12 @@ void main() {
         expect(c.events_history[0], equals("MyComponent.role1#clicked"));
       });
 
+      test("doesn't propagate from child to parent if event is on the non-propagation list", () {
+        c.children[0].no_propagation_native_events = ["click"];
+        child_component_el.click();
+        expect(c.events_history[0], isNot(equals("MyComponent.role1#clicked")));
+      });
+
       test("lock and do not allow a similar event to be handled twice", () {
         // First event
         child_component_el.click();
