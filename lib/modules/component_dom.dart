@@ -154,7 +154,7 @@ abstract class ComponentDom {
         // use attribute-based properties instead.
         s = s.replaceFirst(new RegExp(r"^\s+"), "");
         s = s.replaceFirst(new RegExp(r"\s+$"), "");
-        this.attributes[property_name] = s;
+        _assignPropertyFromNodeStringValue(property_name, s);
       }
       else {
         var attr_property_name = prvt_getHtmlAttributeNameForProperty(pa, property_name);
@@ -165,7 +165,7 @@ abstract class ComponentDom {
             v = double.parse(v);
           else if(new RegExp(r"^\d+$").hasMatch(v)) // it's an integer!
             v = int.parse(v);
-        this.attributes[property_name] = v;
+        _assignPropertyFromNodeStringValue(property_name, v);
       }
       if(this.attributes[property_name] is String && this.attributes[property_name].isEmpty)
         this.attributes[property_name] = null;
@@ -229,6 +229,14 @@ abstract class ComponentDom {
     */
   void _removeDomElement() {
     this.dom_element.remove();
+  }
+
+  void _assignPropertyFromNodeStringValue(property_name, s) {
+    if(["true", "false"].contains(s))
+      // converting string true or false into bool
+      this.attributes[property_name] = (s == "true");
+    else
+      this.attributes[property_name] = s;
   }
 
 }
