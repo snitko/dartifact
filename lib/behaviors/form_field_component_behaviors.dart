@@ -8,12 +8,14 @@ class FormFieldComponentBehaviors extends BaseComponentBehaviors {
   }
 
   showErrors() {
+    this.component.children.forEach((c) => c.behave("showErrors"));
     this.dom_element.classes.add('errors');
     if(this.validation_errors_summary_element != null)
       this.validation_errors_summary_element.style.display = 'block';
   }
 
   hideErrors() {
+    this.component.children.forEach((c) => c.behave("hideErrors"));
     this.dom_element.classes.remove('errors');
     if(this.validation_errors_summary_element != null)
       this.validation_errors_summary_element.style.display = 'none';
