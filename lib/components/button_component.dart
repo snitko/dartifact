@@ -18,6 +18,7 @@ class ButtonComponent extends Component {
   }
 
   afterInitialize() {
+    super.afterInitialize();
     updatePropertiesFromNodes(attrs: ["lockable", "click_lock"], invoke_callbacks: true);
     if(this.click_lock == false) {
       event_lock_for.remove("click");
