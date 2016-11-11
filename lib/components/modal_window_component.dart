@@ -71,8 +71,12 @@ class ModalWindowComponent extends Component {
     else
       this.behave("hideCloseButton");
 
-    if(this.close_on_background_click)
-      event_handlers.add(event: 'click', role: "self.background", handler: (self,event) => self.hide());
+    if(this.close_on_background_click) {
+      event_handlers.add(event: 'click', role: "self.background", handler: (self,event) {
+        if(event.target == findPart("background"))
+          self.hide();
+      });
+    }
 
     // Workaround. Dart doesn't catch keydown events on divs, only on document -
     // but, surprise, it corretly sets the target, so we can still get it!
