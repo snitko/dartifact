@@ -78,8 +78,6 @@ class ModalWindowComponent extends Component {
     // but, surprise, it corretly sets the target, so we can still get it!
     document.onKeyDown.listen((e) => prvt_processKeyDownEvent(e));
 
-    // create event_handler for ESC press
-
     if(this.content is String)
       content_el.text = this.content;
     else if(this.content is HtmlElement)
@@ -122,8 +120,8 @@ class ModalWindowComponent extends Component {
   }
 
   void prvt_processKeyDownEvent(e) {
-    if(this.prvt_hasNode(e.target) && e.keyCode == KeyCode.ESC && this.close_on_escape)
-      this.behave("hide");
+    if(this.prvt_hasNode(e.target, skip_components: false) && e.keyCode == KeyCode.ESC && this.close_on_escape)
+      this.hide();
   }
 
 

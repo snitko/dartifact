@@ -54,13 +54,13 @@ abstract class ComponentDom {
   /** Gets a list of all DOM-descendants of the #dom_element that are not included
     * into other child Component DOM-structures. The returned List lacks proper hierarchy.
     */
-  List<HtmlElement> allDomDescendants(node) {
+  List<HtmlElement> allDomDescendants(node, { skip_components: true }) {
     List elements = [];
     if(node != null) {
       node.children.forEach((c) {
-        if(c.getAttribute('data-component-class') == null) {
+        if(c.getAttribute('data-component-class') == null || !skip_components) {
           elements.add(c);
-          elements.addAll(allDomDescendants(c));
+          elements.addAll(allDomDescendants(c, skip_components: skip_components));
         }
       });
     }
@@ -178,15 +178,16 @@ abstract class ComponentDom {
     return attr_list_regexp.firstMatch(attr_list)[0].split(':')[1];
   }
 
-  /** Finds whether the dom_element's descendants has a particular node
+  /** Finds whether the dom_element's descendants have a particular node
     * or if it itself is this node.
     */
-  bool prvt_hasNode(node) {
+  bool prvt_hasNode(node, { skip_components: true }) {
     if(node == this.dom_element)
       return true;
-    for(final descendant in allDomDescendants(this.dom_element))
+    for(final descendant in allDomDescendants(this.dom_element, skip_components: skip_components)) {
       if(node == descendant)
         return true;
+    }
     return false;
   }
 
