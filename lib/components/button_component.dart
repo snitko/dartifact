@@ -17,7 +17,7 @@ class ButtonComponent extends Component {
     });
   }
 
-  afterInitialize() {
+  @override void afterInitialize() {
     super.afterInitialize();
     updatePropertiesFromNodes(attrs: ["lockable", "click_lock"], invoke_callbacks: true);
     if(this.click_lock == false) {
