@@ -29,4 +29,10 @@ class ButtonComponentBehaviors extends BaseComponentBehaviors {
     }
     super.lock();
   }
+
+  unlock() {
+    if(this.ajax_indicator != null)
+      this.ajax_indicator.remove();
+    super.unlock();
+  }
 }
