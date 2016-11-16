@@ -2,11 +2,11 @@ part of nest_ui;
 
 class ButtonComponent extends Component {
 
-  final List attribute_names = ["caption", "disabled", "lockable", "click_lock"];
+  final List attribute_names = ["caption", "disabled", "lockable"];
         List native_events   = ["!click"];
         List event_lock_for  = ["click"];
 
-  Map default_attribute_values = { "lockable" : true, "click_lock": true };
+  Map default_attribute_values = { "lockable" : true };
 
   List behaviors = [ButtonComponentBehaviors];
 
@@ -19,8 +19,8 @@ class ButtonComponent extends Component {
 
   @override void afterInitialize() {
     super.afterInitialize();
-    updatePropertiesFromNodes(attrs: ["lockable", "click_lock"], invoke_callbacks: true);
-    if(this.click_lock == false) {
+    updatePropertiesFromNodes(attrs: ["lockable"], invoke_callbacks: true);
+    if(this.lockable == false) {
       event_lock_for.remove("click");
     }
   }
