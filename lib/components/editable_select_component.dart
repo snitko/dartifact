@@ -102,7 +102,7 @@ class EditableSelectComponent extends SelectComponent {
         this.behave("disable");
         
         // TODO: have an easy way to update attrs without invoking callbacks!
-        this.updateAttributes({ "display_value": "", "input_value": ""}, () => false);
+        this.updateAttributes({ "display_value": "", "input_value": ""}, callback: () => false);
         findPart("display_input").value = "";
         findPart("input").value = "";
       }
