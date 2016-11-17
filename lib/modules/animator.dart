@@ -2,9 +2,9 @@ part of nest_ui;
 
 class Animator {
 
-  Future show(el, ms) {
+  Future show(el, ms, { display_value: "block" }) {
     el.style.opacity = "0";
-    el.style.display = "block";
+    el.style.display = display_value;
     var f = animate(el, properties: { "opacity": 1 }, duration: ms).onComplete.first;
     return f;
   }
@@ -15,9 +15,9 @@ class Animator {
     return f;
   }
 
-  Future scrollDown(el, ms) {
+  Future scrollDown(el, ms, { display_value: "block" }) {
     el.style.opacity = "0";
-    el.style.display = "block";
+    el.style.display = display_value;
     var original_height = el.getBoundingClientRect().height;
     el.style.height = "0px";
     el.style.opacity = "1";
