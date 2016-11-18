@@ -22,6 +22,11 @@ abstract class ComponentHeritage {
         if(recursive)
           component.initChildComponents();
         component.afterInitialize();
+        // This is similar to the event below, except that we signal that this current component is done initializing.
+        // Publishing of this event is here (and not directly in afterInitialize() because afterInitialize() may
+        // actually consist of several calls in ancestor/descendant class hierarchy and we only want to
+        // signal that parent is initialized after ALL those afterInitalize() methods complete.
+        component.publishEvent("initialized");
       }
     });
     // When all children are initialized, we can safely call this event, to which some components -
