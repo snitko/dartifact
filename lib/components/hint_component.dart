@@ -57,10 +57,8 @@ class HintComponent extends Component with AutoShowHide {
     // If we tried adding event handlers outside of "initialized" handler,
     // chances are, anchor_object might have been nil.
     //-------------------------------------------------------------------------------/
-    this.parent.roles.add("${this.hint_id}_parent");
-    this.parent.addObservingSubscriber(this);
 
-    event_handlers.add(event: "initialized", role: "${this.hint_id}_parent", handler: (self,publisher) {
+    afterParentInitialized("${this.hint_id}_parent", (self, publisher) {
 
       if(this.anchor_object is HtmlElement) {
 

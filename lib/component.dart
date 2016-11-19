@@ -220,6 +220,16 @@ class Component extends Object with observable.Subscriber,
     _createBehaviors();
   }
 
+  /** A convenience method for creating an event handler for when parent is done initializing itself and all of its
+    * children. `my_role` argument is used to uniquely identify a component. Could be dynamically generated
+    * so that only this particular instance of Component is tracked by the parent. See `HintComponent` for example
+    * of the usage. */
+  afterParentInitialized(my_role, handler) {
+    this.parent.roles.add(my_role);
+    this.parent.addObservingSubscriber(this);
+    event_handlers.add(event: "initialized", role: my_role, handler: handler);
+  }
+
   void afterChildrenInitialize() {}
 
   /** Sometimes we need to re-create all or some event listeners for native events. This
