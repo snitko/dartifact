@@ -52,15 +52,15 @@ class HintComponent extends Component with AutoShowHide {
     //-------------------------------------------------------------------------------/
     // This piece of code makes sure we only start adding event handlers once ALL
     // of the child components of the parent(!) component are loaded. A special
-    // "children_initialized" event is published by parent, which we make use of here.
+    // "initialized" event is published by parent, which we make use of here.
 
-    // If we tried adding event handlers outside of "children_initialized" handler,
+    // If we tried adding event handlers outside of "initialized" handler,
     // chances are, anchor_object might have been nil.
     //-------------------------------------------------------------------------------/
     this.parent.roles.add("${this.hint_id}_parent");
     this.parent.addObservingSubscriber(this);
 
-    event_handlers.add(event: "children_initialized", role: "${this.hint_id}_parent", handler: (self,publisher) {
+    event_handlers.add(event: "initialized", role: "${this.hint_id}_parent", handler: (self,publisher) {
 
       if(this.anchor_object is HtmlElement) {
 

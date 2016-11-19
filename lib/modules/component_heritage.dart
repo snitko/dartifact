@@ -15,27 +15,16 @@ abstract class ComponentHeritage {
       var component = new_instance_of(el.getAttribute('data-component-class'), [], [Component.app_library, 'nest_ui']);
       if(component != null) {
         // The order is very important here: we want to first assign dom_element, add
-        // component as a child to its parent and init its own children. Only then we
-        // call afterInitialize() giving users access to everything we possible can.
+        // component as a child to its parent and init its own children.
         component.dom_element = el;
         this.addChild(component, initialize: false);
         if(recursive)
           component.initChildComponents();
-        component.afterInitialize();
-        // This is similar to the event below, except that we signal that this current component is done initializing.
-        // Publishing of this event is here (and not directly in afterInitialize() because afterInitialize() may
-        // actually consist of several calls in ancestor/descendant class hierarchy and we only want to
-        // signal that parent is initialized after ALL those afterInitalize() methods complete.
-        component.publishEvent("initialized");
       }
     });
-    // When all children are initialized, we can safely call this event, to which some components -
-    // the ones that require all its children to be initialized before proceeding with their initialization code - are subscribed.
-    //
-    // The idea is that you can add an event handler into afterInitialize() or the constructor.
-    // The event handler, of course, won't be executed until all children are initialized, but it will
-    // still be automatic execution/initialization - just slightly delayed.
-    this.publishEvent("children_initialized");
+
+    afterInitialize();
+    publishEvent("initialized");
   }
 
   /** Finds immediate children with a specific role */
