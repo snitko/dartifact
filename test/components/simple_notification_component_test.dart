@@ -22,11 +22,13 @@ void main() {
 
     setUp((){
       document.body.children.clear();
-      document.body.append(createDomEl("", attrs: { "id" : "simple_notifications_container" }));
       root = createComponent("RootComponent", el: document.body, and: (c) {
-        return [createSimpleNotificationElement(attrs: { "data-autohide-delay" : "0" })];
+        return [
+          createDomEl("Component", roles: "simple_notifications_container"),
+          createSimpleNotificationElement(attrs: { "data-autohide-delay" : "0" })
+        ];
       });
-      sn = root.children.first;
+      sn = root.children.last;
       behaviors = new MockSimpleNotificationComponentBehaviors();
       sn.behavior_instances = [behaviors];
       sn.ignore_misbehavior = false;

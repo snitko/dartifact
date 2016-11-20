@@ -23,7 +23,10 @@ part of nest_ui;
   *   * `permanent` - If you want to completely disallow closing the notification, you'll need to set the permanent property to true.
   *   Then it becomes impossible to close the notification and even the close part HTML element gets hidden.
   *
-  *   * `container_selector` - All notifications will appear in a special DOM element called notifications container.
+  *   * `container_role` - All notifications will appear in a special DOM element called notifications container,
+  *      which is a DOM element for the component identified by `container_role` property and used,
+  *      which must be found in children of RootComponent.
+  *   
   *   Normally, you'd want to style it in such a way, so that its position is fixed and it appears somewhere on top.
   *   This property defines a selector by which such a container is identified.
   *
@@ -35,10 +38,10 @@ part of nest_ui;
   */
 class SimpleNotificationComponent extends Component with AutoShowHide {
 
-  final List attribute_names = ["message", "autohide_delay", "permanent", "container_selector", "message_type", "ignore_duplicates"];
+  final List attribute_names = ["message", "autohide_delay", "permanent", "container_role", "message_type", "ignore_duplicates"];
         List native_events   = ["close.click"];
         Map default_attribute_values = {
-          "container_name": "#simple_notifications_container",
+          "container_role": "simple_notifications_container",
           "permanent": false,   // will not allow this notification to be closed
           "autohide_delay": 10, // will hide the notification
           "message_type": "neutral", // adds css class "message-type-neutral"
@@ -49,22 +52,52 @@ class SimpleNotificationComponent extends Component with AutoShowHide {
 
   List behaviors = [SimpleNotificationComponentBehaviors];
   bool visible   = false;
-  HtmlElement container;
+  Component container;
 
-  SimpleNotificationComponent({ attrs: null }) {
-    updateAttributes(attrs);
-    this.container = querySelector("#simple_notifications_container");
+  SimpleNotificationComponent([attrs=null]) {
+
+    var on_demand = false;
+    if(attrs != null) {
+      updateAttributes(attrs);
+      on_demand = true;
+    }
+      
     event_handlers.add(event: "click", role: "self.close", handler: (self, event) => self.hide());
+    if(on_demand) afterInitialize();
+
   }
 
   @override void afterInitialize() {
+
+    if(this.dom_element == null)
+      initDomElementFromTemplate();
+
     super.afterInitialize();
     updatePropertiesFromNodes();
 
     if(this.permanent == true)
       this.behave("hideCloseButton");
 
-    this.show();
+    var container = RootComponent.instance.findFirstChildByRole("simple_notifications_container");
+    //************************************************************************************
+    // An explanation is needed for this piece of code. It may seem odd, why don't we just
+    // use a regular addChild() method on container? The problem is that `addChild()` tries to
+    // makes use of parent setter which leads to stack overflow if the parent is already set
+    // (as would be the case with notifications alredy loaded into DOM and not created on deamand).
+    //
+    // And so, we have to manually add this component as a child to container, then manually append its
+    // DOM element to the container's DOM element and then manually set `this.parent` to container.
+    //
+    // All this is done for the sake of giving users of this class freedom to either create
+    // notifications on demand from code or include them into DOM and let nestui parse and create
+    // notifications for you.
+    container.children.add(this);
+    this.parent = container;
+    container.dom_element.append(this.dom_element);
+    //************************************************************************************
+
+    show();
+
   }
 
   /** Before actually displaying the notification, this method checks whether there are duplicates

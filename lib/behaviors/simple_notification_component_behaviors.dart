@@ -10,7 +10,6 @@ class SimpleNotificationComponentBehaviors extends BaseComponentBehaviors {
 
   @override Future show() {
     this.dom_element.classes.add("message-type-${this.component.message_type}");
-    this.component.container.append(this.dom_element);
     return this.animator.show(this.dom_element, this.show_hide_animation_speed);
   }
 
