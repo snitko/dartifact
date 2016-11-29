@@ -8,12 +8,12 @@ class I18n {
     * to just have on global i18n dom_element as a container for all kinds
     * of values.
     */
-  String name;
+  var names;
 
   /** An Map (with multiple levels) that contains all they key/value pairs
     * with the translations.
     */
-  Map data;
+  Map data = {};
 
   /** When translation isn't found, print warning into the console.
     * It sometimes may not be a good idea (for example: Component usually has 2 translators
@@ -21,15 +21,19 @@ class I18n {
     */
   bool print_console_warning = true;
 
-  factory I18n([name="i18n"]) {
-    var i18n_instance = new I18n._internal(name);
-    if(i18n_instance.data == null)
+  factory I18n([names="i18n"]) {
+    var i18n_instance = new I18n._internal(names);
+    if(i18n_instance.data.isEmpty)
       return null;
     else
       return i18n_instance;
   }
 
-  I18n._internal([this.name="i18n"]) {
+  I18n._internal([n="i18n"]) {
+    if(n is String)
+      this.names = [n];
+    else
+      this.names = n;
     loadData();
   }
 
@@ -38,9 +42,11 @@ class I18n {
     * This method is called once while the instance is initialized.
     */
   void loadData() {
-    var data_holder = querySelector("#${name}_data_holder");
-    if(data_holder != null)
-      data = JSON.decode(data_holder.attributes["data-i18n-json"]);
+    this.names.forEach((n) {
+      var data_holder = querySelector("#${n}_data_holder");
+      if(data_holder != null)
+        this.data = mergeMaps(this.data, JSON.decode(data_holder.attributes["data-i18n-json"]));
+    });
   }
 
   /** The most important method which does the translation.
@@ -71,7 +77,7 @@ class I18n {
 
     if(value == null) {
       if(print_console_warning)
-        print("WARNING: translation missing for \"$key\" in \"$name\" translator.");
+        print("WARNING: translation missing for \"$key\" in \"$names\" translator.");
       return null;
     }
 

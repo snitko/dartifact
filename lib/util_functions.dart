@@ -18,3 +18,7 @@ Map mergeMaps(map1, map2, { deep: false }) {
   });
   return map1;
 }
+
+String symToString(sym) {
+  return MirrorSystem.getName(sym);
+}

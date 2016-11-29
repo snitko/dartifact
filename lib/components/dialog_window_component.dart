@@ -31,7 +31,7 @@ class DialogWindowComponent extends ModalWindowComponent {
     * is sort of self-descriptive. Perhaps "type" should be explained:
     * it basically adds the right kind of html class to the button.
     */
-  Map options = { "ok" : { "caption": "OK", "type" : null, "value": true} };
+  Map options = { "ok" : { "caption": "OK", "type" : null, "value": true}};
 
   /** This is the Future containing the value returned by the window
     * when it closes. Depends on which button was clicked. */

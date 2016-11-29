@@ -431,20 +431,29 @@ void main() {
       setUp(() {
         var root_data_holder = new InputElement();
         var component_data_holder = new InputElement();
-        component_data_holder.attributes["data-i18n-json"] = '{ "hello" : "world", "nested" : { "hello" : "world"}}';
+        var my_component_data_holder = new InputElement();
+        component_data_holder.attributes["data-i18n-json"] = '{ "hello" : "world", "welcome": "home", "nested" : { "hello" : "world"}}';
         component_data_holder.attributes["id"] = "i18n_Component_data_holder";
+        my_component_data_holder.attributes["data-i18n-json"] = '{ "welcome" : "home2" }';
+        my_component_data_holder.attributes["id"] = "i18n_MyComponent_data_holder";
         root_data_holder.attributes["data-i18n-json"] = '{ "root_hello" : "root_world" }';
         root_data_holder.attributes["id"] = "i18n_data_holder";
         document.body.append(root_data_holder);
         document.body.append(component_data_holder);
+        document.body.append(my_component_data_holder);
         r = createComponent("RootComponent", and: (r) {
-          c = createComponent("Component");
+          c = createComponent("MyComponent");
           return [c];
         });
       });
 
       test("translates they key using Component's i18n instance", () {
         expect(c.t("hello"), equals("world"));
+      });
+
+      test("translates they key using Component's ancestors i18n dictionary", () {
+        expect(c.t("welcome"), equals("home2"));
+        expect(c.t("nested.hello"), equals("world"));
       });
 
       test("translates they key using RootComponent's i18n instance when key not found in Component's i18n instance", () {

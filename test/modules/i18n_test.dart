@@ -12,7 +12,11 @@ void main() {
     var data_holder = new InputElement();
     data_holder.attributes["data-i18n-json"] = '{ "hello" : "world", "nested" : { "hello" : "world"}}';
     data_holder.attributes["id"] = "i18n_data_holder";
+    var data_holder2 = new InputElement();
+    data_holder2.attributes["data-i18n-json"] = '{ "hello" : "world2", "hi": "yo"}';
+    data_holder2.attributes["id"] = "i18n-2_data_holder";
     document.body.append(data_holder);
+    document.body.append(data_holder2);
     i18n = new I18n();
   });
 
@@ -20,6 +24,11 @@ void main() {
 
     test("loads data from an HTML element", () {
       expect(i18n.data, equals({ "hello" : "world", "nested" : { "hello" : "world"}}));
+    });
+
+    test("loads data from several HTML elements", () {
+      i18n = new I18n(["i18n", "i18n-2"]);
+      expect(i18n.data, equals({ "hello" : "world2", "hi" : "yo", "nested" : { "hello" : "world"}}));
     });
 
     test("translates a particular key's value", () {

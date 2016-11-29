@@ -362,11 +362,27 @@ class Component extends Object with observable.Subscriber,
   }
 
   void _loadI18n() {
-    var i18n = new I18n("i18n_${getTypeName(this)}");
+    var class_names = [];
+    class_names.add("i18n_${getTypeName(this)}");
+
+    var parent_class_name;
+    var parent_class = _class;
+    do {
+      parent_class  = parent_class.superclass;
+      parent_class_name = symToString(parent_class.simpleName);
+      if(parent_class_name.endsWith("Component"))
+        class_names.add("i18n_${parent_class_name}");
+    } while(parent_class_name.endsWith("Component"));
+
+    var i18n = new I18n(class_names.reversed);
     if(i18n != null) {
       i18n.print_console_warning = false;
       Component.i18n[getTypeName(this)] = i18n;
     }
+  }
+
+  get _class {
+   return class_from_string(getTypeName(this), [Component.app_library, 'nest_ui']);
   }
 
   // So far this is only required for Attributable module to work on this class.
