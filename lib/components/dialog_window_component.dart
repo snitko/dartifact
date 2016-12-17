@@ -54,6 +54,7 @@ class DialogWindowComponent extends ModalWindowComponent {
       var button = new ButtonComponent();
       button.caption = v["caption"];
       button.roles = ["option_$k"];
+      button.lockable = false;
       addChild(button);
       if(v["type"] != null)
         button.dom_element.classes.add(v["type"]);

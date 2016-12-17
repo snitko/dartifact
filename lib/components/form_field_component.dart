@@ -14,7 +14,7 @@ part of nest_ui;
   */
 class FormFieldComponent extends Component {
 
-  List   native_events                = ["value_holder.change", "change", "!value_holder.keyup"];
+  List   native_events                = ["value_holder.change", "change", "!value_holder.keyup", "keyup", "keypress", "keydown"];
   List   no_propagation_native_events = ["change"];
   String value_property  = 'value';
   List   attribute_names = ["validation_errors_summary", "name", "disabled"];

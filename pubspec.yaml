@@ -11,7 +11,7 @@ dependencies:
   heritage_tree: '>=0.1.0 <0.2.0'
   attributable: '>=0.1.0 <0.2.0'
   validatable: '>=0.1.2 <0.2.0'
-  logmaster: '>=0.1.0 <0.2.0'
+  logmaster: '>=0.1.1 <0.2.0'
   queries:
   cookie:
   animation:
