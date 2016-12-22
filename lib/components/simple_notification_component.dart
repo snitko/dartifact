@@ -39,7 +39,7 @@ part of nest_ui;
 class SimpleNotificationComponent extends Component with AutoShowHide {
 
   final List attribute_names = ["message", "autohide_delay", "permanent", "container_role", "message_type", "ignore_duplicates"];
-        List native_events   = ["close.click"];
+        List native_events   = ["close.click", "message.click"];
         Map default_attribute_values = {
           "container_role": "simple_notifications_container",
           "permanent": false,   // will not allow this notification to be closed

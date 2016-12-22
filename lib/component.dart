@@ -256,8 +256,8 @@ class Component extends Object with observable.Subscriber,
     if(i18n != null)
       translation = i18n.t(key);
     if(translation == null && i18n_root != null)
-        translation = i18n_root.t(key);
-    
+      translation = i18n_root.t(key);
+
     if(translation == null)
       translation = "WARNING: Translation missing for \"$key\"";
 
