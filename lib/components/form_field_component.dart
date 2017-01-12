@@ -29,13 +29,12 @@ class FormFieldComponent extends Component {
     };
 
     event_handlers.addForEvent('change', {
-        #self:               (self,event) => self.prvt_updateValueFromDom(),
-        'self.value_holder': (self,event) => self.prvt_updateValueFromDom()
-      }
-    );
+      #self:               (self,event) => self.prvt_updateValueFromDom(),
+      'self.value_holder': (self,event) => self.prvt_updateValueFromDom()
+    });
 
     event_handlers.add(event: 'keyup', role: 'self.value_holder', handler: (self,event) {
-      prvt_updateValueFromDom();
+      prvt_updateValueFromDom(event: "keyup");
     });
 
   }
@@ -74,13 +73,17 @@ class FormFieldComponent extends Component {
   prvt_setValueForValueHolderElement(v) {
     attributes["value"] = v;
     v == null ? v = "" : v = v.toString();
-    this.value_holder_element.value = v;
     if(this.value_holder_element is TextAreaElement)
-      this.value_holder_element.text = v;
+      if(this.value_holder_element.text != v) this.value_holder_element.text = v;
+    else
+      if(this.value_holder_element.value != v) this.value_holder_element.value = v;
   }
 
-  void prvt_updateValueFromDom() {
-    this.updateAttributes({ "$value_property" : (value_holder_element.value == "" ? null : value_holder_element.value)});
+  void prvt_updateValueFromDom({ event: null }) {
+    // Callback is set to `false` here because we don't need to update the value_property
+    // of the value_holder element after we've just read the actual value from it. That results in a loop
+    // we don't want to have!
+    this.updateAttributes({ "$value_property" : (value_holder_element.value == "" ? null : value_holder_element.value)}, callback: false);
   }
 
 }

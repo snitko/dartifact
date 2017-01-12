@@ -367,6 +367,9 @@ class Component extends Object with observable.Subscriber,
 
     var parent_class_name;
     var parent_class = _class;
+    if(parent_class == null)
+      return;
+
     do {
       parent_class  = parent_class.superclass;
       parent_class_name = symToString(parent_class.simpleName);
