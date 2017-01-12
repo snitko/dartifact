@@ -84,6 +84,7 @@ class FormFieldComponent extends Component {
     // of the value_holder element after we've just read the actual value from it. That results in a loop
     // we don't want to have!
     this.updateAttributes({ "$value_property" : (value_holder_element.value == "" ? null : value_holder_element.value)}, callback: false);
+    publishEvent("change", this);
   }
 
 }
