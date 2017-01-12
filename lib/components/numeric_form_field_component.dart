@@ -55,7 +55,7 @@ class NumericFormFieldComponent extends FormFieldComponent {
     }
   }
 
-  @override void prvt_updateValueFromDom() {
+  @override void prvt_updateValueFromDom({ event: null }) {
     this.value = value_holder_element.value;
   }
 
