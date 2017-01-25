@@ -99,6 +99,10 @@ class SelectComponent extends Component {
     }
 
     prvt_listenToOptionClickEvents();
+
+    if(this.input_value == null)
+      behave("hideNoValueOption");
+    
   }
 
   /** Does what it says. Parses those options from DOM and puts both input values and
@@ -180,12 +184,17 @@ class SelectComponent extends Component {
     setValueByInputValue(getPrevValue(this.input_value));
   }
   void setValueByInputValue(ip) {
-    if(ip == 'null')
+    if(ip == "null") {
       ip = null;
+      behave("hideNoValueOption");
+    } else {
+      behave("showNoValueOption");
+    }
     this.input_value    = ip;
     this.focused_option = ip;
     this.display_value  = (ip == null ? "" : this.options[ip]);
     this.publishEvent("change", this);
+
   }
 
   /** Using `input_value` as a key, simply pulls a new value
@@ -356,6 +365,10 @@ class SelectComponent extends Component {
     */
   void _setOptionsFromFetchedJson(json) {
     var parsed_json = {};
+
+    if(options.containsKey(null))
+      parsed_json[null] = options[null];
+
     JSON.decode(json).forEach((k,v) {
       if(v is String)
         parsed_json[k] = v;

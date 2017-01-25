@@ -6,11 +6,13 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
   HtmlElement options_container;
   HtmlElement selectbox;
   int         scroll_pos_bottom = 0;
+  HtmlElement null_option_el;
 
   SelectComponentBehaviors(Component c) : super(c) {
     this.component = c;
     this.options_container = this.component.findPart("options_container");
     this.selectbox         = this.component.findPart("selectbox");
+    this.null_option_el    = this.options_container.querySelector("[data-option-value=\"null\"");
   }
 
   showAjaxIndicator()  => prvt_switchBlockVisibilityIfExists(".ajaxIndicator", #show, display: "inline");
@@ -44,6 +46,16 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
     var current_option = this.options_container.querySelector("[data-option-value=\"${this.component.focused_option}\"");
     current_option.classes.add("focused");
     _scroll();
+  }
+
+  hideNoValueOption() {
+    if(this.null_option_el != null)
+      this.null_option_el.remove();
+  }
+  
+  showNoValueOption() {
+    if(this.null_option_el != null && this.options_container.querySelector("[data-option-value=\"null\"") == null)
+      this.options_container.insertBefore(this.null_option_el, this.options_container.children.first);
   }
 
   _removeFocusFromOptions() {
