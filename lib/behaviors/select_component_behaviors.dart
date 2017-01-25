@@ -54,7 +54,7 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
   }
   
   showNoValueOption() {
-    if(this.null_option_el != null && this.options_container.querySelector("[data-option-value=\"null\"") == null)
+    if(this.null_option_el != null && this.options_container.querySelector("[data-option-value=\"null\"") == null && !this.options_container.children.isEmpty)
       this.options_container.insertBefore(this.null_option_el, this.options_container.children.first);
   }
 
