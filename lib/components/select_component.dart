@@ -202,6 +202,7 @@ class SelectComponent extends Component {
     */
   void setDisplayValueFromInputValue() {
     this.display_value = this.options[this.input_value.toString()];
+    behave("showNoValueOption");
     if(this.input_value == null) {
       this.display_value = "";
       behave("hideNoValueOption");
@@ -371,9 +372,6 @@ class SelectComponent extends Component {
   void _setOptionsFromFetchedJson(json) {
     var parsed_json = {};
 
-    if(options.containsKey(null))
-      parsed_json[null] = options[null];
-
     JSON.decode(json).forEach((k,v) {
       if(v is String)
         parsed_json[k] = v;
@@ -385,6 +383,15 @@ class SelectComponent extends Component {
       else
         print("Warning: cannot parse the fetched json!");
     });
+
+    // Workaround for dart2js compiler: always keep the `null` option
+    // as a first element.
+    if(parsed_json["null"] != null) {
+      var null_option = parsed_json["null"];
+      parsed_json.remove("null");
+      parsed_json = mergeMaps({ "null": null_option }, parsed_json);
+    }
+
     this.options = new LinkedHashMap.from(parsed_json);
   }
   
