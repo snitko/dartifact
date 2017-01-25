@@ -12,7 +12,6 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
     this.component = c;
     this.options_container = this.component.findPart("options_container");
     this.selectbox         = this.component.findPart("selectbox");
-    this.null_option_el    = this.options_container.querySelector("[data-option-value=\"null\"");
   }
 
   showAjaxIndicator()  => prvt_switchBlockVisibilityIfExists(".ajaxIndicator", #show, display: "inline");
@@ -49,6 +48,7 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
   }
 
   hideNoValueOption() {
+    this.null_option_el = this.options_container.querySelector("[data-option-value=\"null\"");
     if(this.null_option_el != null)
       this.null_option_el.remove();
   }

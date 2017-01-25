@@ -202,8 +202,10 @@ class SelectComponent extends Component {
     */
   void setDisplayValueFromInputValue() {
     this.display_value = this.options[this.input_value.toString()];
-    if(this.display_value == null)
+    if(this.input_value == null) {
       this.display_value = "";
+      behave("hideNoValueOption");
+    }
   }
   /**************************************************************************/
 
@@ -309,6 +311,9 @@ class SelectComponent extends Component {
 
       prvt_listenToOptionClickEvents();
       this.fetching_options = false;
+
+      if(this.input_value == null)
+        behave("hideNoValueOption");
     });
   }
 
