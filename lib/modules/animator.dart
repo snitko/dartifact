@@ -3,6 +3,9 @@ part of nest_ui;
 class Animator {
 
   Future show(el, ms, { display_value: "block" }) {
+    if(el.offsetHeight > 0 && el.offsetParent == null)
+      return;
+
     el.style.opacity = "0";
     el.style.display = display_value;
     var f = animate(el, properties: { "opacity": 1 }, duration: ms).onComplete.first;
