@@ -102,7 +102,9 @@ class SelectComponent extends Component {
 
     if(this.input_value == null)
       behave("hideNoValueOption");
-    
+
+    this.focused_option = this.input_value;
+
   }
 
   /** Does what it says. Parses those options from DOM and puts both input values and
@@ -194,7 +196,7 @@ class SelectComponent extends Component {
     this.focused_option = ip;
     this.display_value  = (ip == null ? "" : this.options[ip]);
     this.publishEvent("change", this);
-
+    this.focused_option = ip;
   }
 
   /** Using `input_value` as a key, simply pulls a new value
@@ -353,7 +355,7 @@ class SelectComponent extends Component {
 
   /** Sometimes we need an index of the option (int), not its input_value */
   get focused_option_id {
-    var result = options.keys.toList().indexOf(this.focused_option);
+    var result = options.keys.toList().indexOf(this.focused_option.toString());
     if(result == -1)
       result = null;
     return result;

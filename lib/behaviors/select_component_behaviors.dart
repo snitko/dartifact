@@ -32,6 +32,10 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
     this.options_container.style.minWidth = "${pos.getDimensions(this.selectbox)['x'] - 2}px";
     this.options_container.style.display = 'block';
     _applyLinesToShow();
+    if(this.component.input_value != null) {
+      this.component.focused_option = this.component.input_value;
+      focusCurrentOption();
+    }
   }
 
   close() {
@@ -43,8 +47,10 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
   focusCurrentOption() {
     _removeFocusFromOptions();
     var current_option = this.options_container.querySelector("[data-option-value=\"${this.component.focused_option}\"");
-    current_option.classes.add("focused");
-    _scroll();
+    if(current_option != null) {
+      current_option.classes.add("focused");
+      _scroll();
+    }
   }
 
   hideNoValueOption() {
