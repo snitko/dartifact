@@ -92,7 +92,7 @@ class EditableSelectComponent extends SelectComponent {
       // This is a special case of publishing a "change" event. Normally, the change
       // event is published by the code in SelectComponent (parent class), but
       // parent class doesn't know how to set input_value to null or custom_value,
-      // this we need to handle it here.
+      // thus we need to handle it here.
       if(self.input_value == null || self.input_value == self.display_value)
         self.publishEvent("change", self);
     };
@@ -203,7 +203,10 @@ class EditableSelectComponent extends SelectComponent {
         clearCustomValue(true);
         return;
       case KeyCode.ENTER:
-        clearCustomValue();
+        if(this.input_value != null)
+          setValueByInputValue(this.input_value);
+        else
+          clearCustomValue();
         return;
       case KeyCode.UP:
         return;
