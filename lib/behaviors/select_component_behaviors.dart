@@ -32,9 +32,9 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
     this.options_container.style.minWidth = "${pos.getDimensions(this.selectbox)['x'] - 2}px";
     this.options_container.style.display = 'block';
     _applyLinesToShow();
-    if(this.component.input_value != null) {
-      this.component.focused_option = this.component.input_value;
+    if(!(isBlank(this.component.input_value))) {
       focusCurrentOption();
+      this.component.focused_option = this.component.input_value;
     }
   }
 

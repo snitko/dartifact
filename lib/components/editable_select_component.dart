@@ -163,7 +163,7 @@ class EditableSelectComponent extends SelectComponent {
 
   /** Filters options by the value typed in by user.
     * This method is used when we don't want to fetch any options from
-    * the server and simply want to allow a more flexibler SelectComponent
+    * the server and simply want to allow a more flexible SelectComponent
     * with the ability to enter value and see explicitly which values match.
     */
   void filterOptions() {
@@ -189,28 +189,37 @@ class EditableSelectComponent extends SelectComponent {
   /** Cleares the select box input and sets it to the previous value. Usually
     * called when user presses ESC key or focus is lost on the select element.
     */
-  void clearCustomValue([force=false]) {
-    if((!this.options.containsKey(this.input_value) && this.allow_custom_value == false) || force) {
-      this.display_value = this.display_value;
-    } else {
+  void clearCustomValue() {
+    this.display_value = this.display_value;
+  }
+
+  /** Sets value after user hits ENTER. If value is in #options, then input_value is set to option's key
+    * If not, then intpu_value is set to what the user typed into the field.
+    */
+  void setValueFromManualInput() {
+    if(this.options.containsValue(this.current_input_value))
+      setValueByInputValue(optionKeyForValue(this.current_input_value));
+    else if(this.allow_custom_value) {
       this.input_value = this.current_input_value;
+      this.behave("close");
+      this.opened = false;
     }
   }
 
   void prvt_processInputKeyUpEvent(e) {
     switch(e.keyCode) {
       case KeyCode.ESC:
-        clearCustomValue(true);
+        clearCustomValue();
         return;
       case KeyCode.ENTER:
-        if(this.input_value != null)
-          setValueByInputValue(this.input_value);
-        else
-          clearCustomValue();
+        setValueFromManualInput();
         return;
       case KeyCode.UP:
         return;
       case KeyCode.DOWN:
+        return;
+      case KeyCode.BACKSPACE:
+        this.focused_option = null;
         return;
     }
 
@@ -230,7 +239,18 @@ class EditableSelectComponent extends SelectComponent {
   void externalClickCallback() {
     super.externalClickCallback();
     if(this.current_input_value != this.display_value)
-      clearCustomValue(true);
+      clearCustomValue();
+  }
+
+  /** Diff from super method --> this.options.keys.contains(this.focused_option)
+   *  This prevents from setting input_value if user types in custom value.
+   */
+  @override
+  void setFocusedAndToggle() {
+    if(this.opened && this.focused_option != null && this.options.keys.contains(this.focused_option))
+      setValueByInputValue(this.focused_option);
+    this.behave('toggle');
+    _toggleOpenedStatus();
   }
 
 }

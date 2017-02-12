@@ -277,11 +277,8 @@ class SelectComponent extends Component {
     * that the user is navigating it with keys and whichever option currently has focus
     * should be set as current. */
   void setFocusedAndToggle() {
-    if(this.opened) {
-      if(this.focused_option != null)
-        setValueByInputValue(this.focused_option);
-      this.focused_option = null;
-    }
+    if(this.opened && this.focused_option != null)
+      setValueByInputValue(this.focused_option);
     this.behave('toggle');
     _toggleOpenedStatus();
   }
@@ -359,6 +356,12 @@ class SelectComponent extends Component {
     if(result == -1)
       result = null;
     return result;
+  }
+
+  optionKeyForValue(v) {
+    var keys   = options.keys.toList();
+    var values = options.values.toList();
+    return keys[values.indexOf(v)];
   }
 
   get value => this.input_value;

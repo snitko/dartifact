@@ -98,7 +98,7 @@ void main() {
     
     test("clears value from the input", () {
       display_input_el.value = "ab";
-      select_comp.prvt_processInputKeyUpEvent(new_key_event(KeyCode.ENTER));
+      select_comp.prvt_processInputKeyUpEvent(new_key_event(KeyCode.ESC));
       expect(input_el.value, equals(""));
     });
 
