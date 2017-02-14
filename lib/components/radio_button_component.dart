@@ -25,13 +25,15 @@ class RadioButtonComponent extends Component {
       self.setValueFromOptions(event.target);
     });
 
-    attribute_callbacks["value"] = (self, name) => selectOptionFromValue();
+    attribute_callbacks["value"]    = (self, name) => selectOptionFromValue();
+    attribute_callbacks["disabled"] = (self, name) => toggleDisabled();
   
   }
 
   void afterInitialize() {
     super.afterInitialize();
-    updatePropertiesFromNodes(attrs: ["disabled", "name", "value"], invoke_callbacks: false);
+    updatePropertiesFromNodes(attrs: ["name", "value"], invoke_callbacks: false);
+    updatePropertiesFromNodes(attrs: ["disabled"], invoke_callbacks: true);
     findAllParts("option").forEach((p) => this.options[p.value] = p);
     if(isBlank(this.value))
       setValueFromSelectedOption();
@@ -69,6 +71,16 @@ class RadioButtonComponent extends Component {
     options.values.forEach((o) {
       if(o.checked)
         this.value = o.value;
+    });
+  }
+
+  /* TODO: should instead be in behaviors */
+  void toggleDisabled() {
+    findAllParts("option").forEach((option) {
+      if(this.disabled)
+        option.attributes["disabled"] = "disabled";
+      else
+        option.attributes.remove("disabled");
     });
   }
 
