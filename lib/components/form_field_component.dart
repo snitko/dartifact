@@ -73,10 +73,7 @@ class FormFieldComponent extends Component {
   prvt_setValueForValueHolderElement(v) {
     attributes["value"] = v;
     v == null ? v = "" : v = v.toString();
-    if(this.value_holder_element is TextAreaElement)
-      if(this.value_holder_element.text != v) this.value_holder_element.text = v;
-    else
-      if(this.value_holder_element.value != v) this.value_holder_element.value = v;
+    if(this.value_holder_element.value != v) this.value_holder_element.value = v;
   }
 
   void prvt_updateValueFromDom({ event: null }) {

@@ -68,7 +68,6 @@ void main() {
   test("sets value to the DOM element after the attribute has been changed", () {
     c.value = 'some text';
     expect(c.dom_element.value, equals("some text"));
-    expect(c.dom_element.text,  equals("some text"));
   });
 
   test("loads existing value from DOM upon initialization", () {
