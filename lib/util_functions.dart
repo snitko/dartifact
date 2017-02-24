@@ -22,3 +22,10 @@ Map mergeMaps(map1, map2, { deep: false }) {
 String symToString(sym) {
   return MirrorSystem.getName(sym);
 }
+
+firstOrNull(List list) {
+  if(list.isEmpty)
+    return null;
+  else
+    return list.first;
+}

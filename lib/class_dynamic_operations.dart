@@ -93,6 +93,17 @@ callMethod(String method_name, Object object, args) {
   return im.invoke(new Symbol(method_name), args);
 }
 
+callMethodIfExists(String method_name, Object object, args) {
+  if(methodExists(method_name, object))
+    return callMethod(method_name, object, args);
+}
+
+bool methodExists(String method_name, Object object) {
+  InstanceMirror im = reflect(object);
+  Symbol fn = new Symbol('$method_name');
+  return im.type.instanceMembers.keys.contains(fn);
+}
+
 getTypeName(dynamic obj) {
  return reflect(obj).type.reflectedType.toString();
 }

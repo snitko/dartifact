@@ -15,11 +15,19 @@ class ButtonComponent extends Component {
       if(self.lockable == true)
         self.behave('lock');
     });
+
+    this.attribute_callbacks["disabled"] = (attr_name,self) {
+      if(self.disabled)
+        behave("disable");
+      else
+        behave("enable");
+    };
   }
+
 
   @override void afterInitialize() {
     super.afterInitialize();
-    updatePropertiesFromNodes(attrs: ["lockable"], invoke_callbacks: true);
+    updatePropertiesFromNodes(attrs: ["lockable", "disabled"], invoke_callbacks: true);
     if(this.lockable == false) {
       event_lock_for.remove("click");
     }
