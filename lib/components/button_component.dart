@@ -6,7 +6,7 @@ class ButtonComponent extends Component {
         List native_events   = ["!click"];
         List event_lock_for  = ["click"];
 
-  Map default_attribute_values = { "lockable" : true };
+  Map default_attribute_values = { "lockable" : true, "disabled" : false };
 
   List behaviors = [ButtonComponentBehaviors];
 
@@ -18,9 +18,9 @@ class ButtonComponent extends Component {
 
     this.attribute_callbacks["disabled"] = (attr_name,self) {
       if(self.disabled)
-        behave("disable");
+        this.behave("disable");
       else
-        behave("enable");
+        this.behave("enable");
     };
   }
 
