@@ -15,6 +15,7 @@ class RadioButtonComponent extends Component {
 
   List native_events   = ["option.change"];
   List attribute_names = ["validation_errors_summary", "disabled", "value"];
+  Map default_attribute_values = { "disabled" : false };
 
   /** Stores all options and their values. Filled with data from the DOM-structure upon initialization. */
   Map options = {};
