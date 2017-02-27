@@ -14,9 +14,14 @@ class PositionManager {
     return { 'x': pos.width, 'y': pos.height };
   }
   
-  void placeAt(el,x,y) {
-    el.style..top  = ((y + document.body.scrollTop).toString() + 'px')
-            ..left = ((x + document.body.scrollLeft).toString() + 'px');
+  void placeAt(el,x,y, { use_scroll_offset: true }) {
+
+    var scroll_offset = { "x": 0, "y" : 0 };
+    if(use_scroll_offset)
+      scroll_offset = { "x": document.body.scrollLeft, "y" : document.body.scrollTop };
+
+    el.style..top  = ((y + scroll_offset["y"]).toString() + 'px')
+            ..left = ((x + scroll_offset["x"]).toString() + 'px');
   }
 
   void placeBy(
@@ -45,7 +50,17 @@ class PositionManager {
       base_offset_for_el["y"] = -base_offset_for_el["y"];
     new_pos = { "x" : new_pos["x"] + base_offset_for_el["x"], "y" : new_pos["y"] + base_offset_for_el["y"] };
 
-    placeAt(el1, new_pos['x'], new_pos['y']);
+    // Find out whether any of the ancestors of the el2 have "position: fixed".
+    // If we don't do it, el1 might appear displaced.
+    var parent_el2        = el2;
+    var use_scroll_offset = true;
+    while(parent_el2 != null && use_scroll_offset) {
+      if(parent_el2.getComputedStyle().position == "fixed")
+        use_scroll_offset = false;
+      parent_el2 = parent_el2.parent;
+    }
+
+    placeAt(el1, new_pos['x'], new_pos['y'], use_scroll_offset: use_scroll_offset);
 
   }
 
