@@ -250,6 +250,7 @@ class SelectComponent extends Component {
         return;
       if(v.toLowerCase().startsWith(this.keypress_stack.toLowerCase())) {
         this.setValueByInputValue(k);
+        behave("focusCurrentOption");
         found = true;
       }
     });
