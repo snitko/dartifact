@@ -4,7 +4,7 @@ class Animator {
 
   Future show(elements, ms, { display_value: "block" }) {
     return _applyToCollection(elements, (el) {
-      if(el.offsetHeight > 0 && el.offsetParent == null)
+      if((el.offsetHeight > 0 && el.offsetParent == null) || (el.style.opacity == "1" && el.style.display == display_value))
         return;
       el.style.opacity = "0";
       el.style.display = display_value;
