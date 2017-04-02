@@ -30,6 +30,11 @@ class RadioButtonComponent extends Component {
     attribute_callbacks["disabled"] = (self, name) => toggleDisabled();
   
   }
+  
+  get value {
+    if(this.attributes["value"] != null)
+      return this.attributes["value"].toString();
+  }
 
   void afterInitialize() {
     super.afterInitialize();
@@ -48,7 +53,7 @@ class RadioButtonComponent extends Component {
   void selectOptionFromValue() {
     if(this.options.keys.contains(this.value)) {
       this.options.values.forEach((el) => el.checked = false);
-      this.options[this.value].checked = true;
+      this.options[this.value.toString()].checked = true;
       this.publishEvent("change", this);
     } else if(!isBlank(this.value)) {
       throw new NoOptionWithSuchValue("No option found with value `${this.value}`. You can't set a value that's not in the this.options.keys List.");
