@@ -31,16 +31,11 @@ class RadioButtonComponent extends Component {
   
   }
   
-  get value {
-    if(this.attributes["value"] != null)
-      return this.attributes["value"].toString();
-  }
-
   void afterInitialize() {
     super.afterInitialize();
     updatePropertiesFromNodes(attrs: ["name", "value"], invoke_callbacks: false);
     updatePropertiesFromNodes(attrs: ["disabled"], invoke_callbacks: true);
-    findAllParts("option").forEach((p) => this.options[p.value] = p);
+    findAllParts("option").forEach((p) => this.options[_convertStringValueToType(p.value)] = p);
     if(isBlank(this.value))
       setValueFromSelectedOption();
     else
@@ -53,7 +48,7 @@ class RadioButtonComponent extends Component {
   void selectOptionFromValue() {
     if(this.options.keys.contains(this.value)) {
       this.options.values.forEach((el) => el.checked = false);
-      this.options[this.value.toString()].checked = true;
+      this.options[this.value].checked = true;
       this.publishEvent("change", this);
     } else if(!isBlank(this.value)) {
       throw new NoOptionWithSuchValue("No option found with value `${this.value}`. You can't set a value that's not in the this.options.keys List.");
@@ -67,7 +62,7 @@ class RadioButtonComponent extends Component {
     */
   void setValueFromOptions(HtmlElement option_el) {
     if(option_el.checked) {
-      this.attributes["value"] = option_el.value;
+      _assignPropertyFromNodeStringValue("value", option_el.value);
       this.publishEvent("change", this);
     }
   }
@@ -76,7 +71,7 @@ class RadioButtonComponent extends Component {
   void setValueFromSelectedOption() {
     options.values.forEach((o) {
       if(o.checked)
-        this.value = o.value;
+        _assignPropertyFromNodeStringValue("value", o.value);
     });
   }
 

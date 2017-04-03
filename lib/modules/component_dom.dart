@@ -158,7 +158,7 @@ abstract class ComponentDom {
       }
       else {
         var attr_property_name = prvt_getHtmlAttributeNameForProperty(pa, property_name);
-        var v = property_el.getAttribute(attr_property_name);
+        var v = property_el.attributes[attr_property_name];
 
         if(v != null)
           _assignPropertyFromNodeStringValue(property_name, v);
@@ -229,13 +229,19 @@ abstract class ComponentDom {
   }
 
   void _assignPropertyFromNodeStringValue(property_name, s) {
-    if(["true", "false"].contains(s))
-      // converting string true or false into bool
-      this.attributes[property_name] = (s == "true");
-    else if(new RegExp(r"^\d+\.?\d*$").hasMatch(s)) // it's a double!
-      this.attributes[property_name] = num.parse(s);
-    else
-      this.attributes[property_name] = s;
+    this.attributes[property_name] = _convertStringValueToType(s);
   }
+
+  _convertStringValueToType(s) {
+    if(["true", "false"].contains(s))
+      return s == "true";
+    else if(new RegExp(r"^\d+\.\d*$").hasMatch(s)) // it's a double!
+      return double.parse(s);
+    else if(new RegExp(r"^\d+$").hasMatch(s)) // it's an integer!
+      return int.parse(s);
+    else
+      return s;
+  }
+
 
 }
