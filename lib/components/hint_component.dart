@@ -1,4 +1,4 @@
-part of nest_ui;
+part of dartifact;
 
 /** The purpose of this component is rather simple - display popup hints over other elements on the page
   * whenever an event happens to this element: user clicks the element or hovers over it or something else.

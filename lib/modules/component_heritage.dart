@@ -1,8 +1,8 @@
-part of nest_ui;
+part of dartifact;
 
 abstract class ComponentHeritage {
 
-  /** Very important! This is why the library is called nest_ui. Components are nested.
+  /** Very important! This is why the library is called dartifact. Components are nested.
    *  This method goes through the #dom_element descendants looking for elements which
    *  have data-component-class attribute. If found, a new Component is created with the class
    *  specified in this attribute. Obviously, you should define such a class beforehand and
@@ -12,7 +12,7 @@ abstract class ComponentHeritage {
 
     var elements = _findChildComponentDomElements(this.dom_element);
     elements.forEach((el) {
-      var component = new_instance_of(el.getAttribute('data-component-class'), [], [Component.app_library, 'nest_ui']);
+      var component = new_instance_of(el.getAttribute('data-component-class'), [], [Component.app_library, 'dartifact']);
       if(component != null) {
         // The order is very important here: we want to first assign dom_element, add
         // component as a child to its parent and init its own children.
@@ -100,7 +100,7 @@ abstract class ComponentHeritage {
 
   List<Component> findAllDescendantInstancesOf(String class_name) {
     var descendants = [];
-    var condition_class_mirror = class_from_string(class_name, [Component.app_library, 'nest_ui']);
+    var condition_class_mirror = class_from_string(class_name, [Component.app_library, 'dartifact']);
 
     if(condition_class_mirror == null)
       return [];

@@ -1,10 +1,10 @@
-part of nest_ui;
+part of dartifact;
 
-class NestUIApp {
+class DartifactApp {
 
   RootComponent root_component;
 
-  NestUIApp({root_element_selector: "body", app_library: ''}) {
+  DartifactApp({root_element_selector: "body", app_library: ''}) {
     Component.app_library = app_library;
     root_component = new RootComponent();
     root_component.dom_element = querySelector(root_element_selector);

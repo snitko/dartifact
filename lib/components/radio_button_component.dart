@@ -1,7 +1,7 @@
-part of nest_ui;
+part of dartifact;
 
 /** RadioButton is a widely used UI element and this component simply provides a wrapper in the
-  * the form of Component for NestUI. There are methods to set value from the current value of the
+  * the form of Component for Dartifact. There are methods to set value from the current value of the
   * radio element & set radio element value from RadioButtonComponent#value (a backwards operation).
   * 
   * It extends Component and NOT FormFieldComponent, because there isn't any value holder element.

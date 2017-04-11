@@ -1,4 +1,4 @@
-part of nest_ui;
+part of dartifact;
 
 /** The purpose of this component is to display user notifications, such as when a user successfully logs in or incorrectly fills the form.
   * Such notifications usually appear on top of the page and disappear after some time. This component if flexible enough to
@@ -89,7 +89,7 @@ class SimpleNotificationComponent extends Component with AutoShowHide {
     // DOM element to the container's DOM element and then manually set `this.parent` to container.
     //
     // All this is done for the sake of giving users of this class freedom to either create
-    // notifications on demand from code or include them into DOM and let nestui parse and create
+    // notifications on demand from code or include them into DOM and let dartifact parse and create
     // notifications for you.
     container.children.add(this);
     this.parent = container;

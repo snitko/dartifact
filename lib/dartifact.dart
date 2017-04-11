@@ -1,4 +1,4 @@
-library nest_ui;
+library dartifact;
 
 // vendor libs
 import 'dart:html'   ;
@@ -18,7 +18,7 @@ import 'package:queries/collections.dart';
 import 'package:cookie/cookie.dart' as cookie;
 import 'package:animation/animation.dart';
 
-// nest_ui satellite libs
+// dartifact satellite libs
 import 'package:observable_roles/observable_roles.dart' as observable;
 import 'package:heritage_tree/heritage_tree.dart';
 import 'package:attributable/attributable.dart';
@@ -70,4 +70,4 @@ part 'components/root_component.dart';
 //part 'test_helpers/simple_notification_component_test_helpers.dart';
 /*********************************************************************/
 
-part 'nest_ui_app.dart';
+part 'dartifact_app.dart';

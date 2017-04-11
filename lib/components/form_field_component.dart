@@ -1,4 +1,4 @@
-part of nest_ui;
+part of dartifact;
 
 /** This is a basic component for form fields, from which most other form field components should inherit.
   * The important thing that it does, it defines a `value_holder` concept - a part inside the DOM-structure

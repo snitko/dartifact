@@ -1,7 +1,7 @@
 import "package:test/test.dart";
 import "dart:html";
 import "dart:async";
-import '../../lib/nest_ui.dart';
+import '../../lib/dartifact.dart';
 part '../../lib/test_helpers/component_test_helpers.dart';
 part '../../lib/test_helpers/radio_button_component_test_helpers.dart';
 
@@ -10,7 +10,7 @@ part '../../lib/test_helpers/radio_button_component_test_helpers.dart';
 void main() {
 
   var radio;
-  Component.app_library = "nest_ui";
+  Component.app_library = "dartifact";
 
   setUp(() {
     // values in option elements are: value1, value2, value3

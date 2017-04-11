@@ -1,4 +1,4 @@
-part of nest_ui;
+part of dartifact;
 
 HtmlElement createDialogWindowElement({ roles: null, and: null, attr_properties: null, attrs: null }) {
 

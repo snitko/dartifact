@@ -1,4 +1,4 @@
-part of nest_ui;
+part of dartifact;
 
 HtmlElement createRadioButtonElement({ roles: null, and: null, options: null, attr_properties: null }) {
 

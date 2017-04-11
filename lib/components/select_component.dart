@@ -1,4 +1,4 @@
-part of nest_ui;
+part of dartifact;
 
 /** SelectComponent does is it emulates native browser experience for <select> tags including the following:
   *

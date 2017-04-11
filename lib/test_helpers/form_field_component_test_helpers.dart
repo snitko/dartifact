@@ -1,4 +1,4 @@
-part of nest_ui;
+part of dartifact;
 
 HtmlElement createFormFieldElement(class_name, { input_el: null, roles: null, value: null, and: null }) {
 

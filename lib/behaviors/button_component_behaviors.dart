@@ -1,4 +1,4 @@
-part of nest_ui;
+part of dartifact;
 
 class ButtonComponentBehaviors extends BaseComponentBehaviors {
 

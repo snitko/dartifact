@@ -1,6 +1,6 @@
 import "package:test/test.dart";
 import "dart:html";
-import '../../lib/nest_ui.dart';
+import '../../lib/dartifact.dart';
 import 'package:mockito/mockito.dart';
 
 part '../../lib/components/modal_window_component.dart';

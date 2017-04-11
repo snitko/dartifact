@@ -1,4 +1,4 @@
-part of nest_ui;
+part of dartifact;
 
 /** Sometimes you want to allow users to enter values for the select field manually. Perhaps, you want to give them a more explicit way to filter the options.
   * Or, perhaps, you actually want to allow them to enter custom values into the select box. This is what this component is designed to do.

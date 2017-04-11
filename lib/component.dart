@@ -1,4 +1,4 @@
-part of nest_ui;
+part of dartifact;
 
 class Component extends Object with observable.Subscriber,
                                     observable.Publisher,
@@ -54,7 +54,7 @@ class Component extends Object with observable.Subscriber,
 
   /** This one is important if you intend to separate your app
     * into many parts (files). In that case, you'll need to declare a library.
-    * Component then will look for its children in 'nest_ui' library as well as
+    * Component then will look for its children in 'dartifact' library as well as
     * app_library. Due to how Dart works, it's impossible to lookup for class names
     * without knowing which library do they belong. Thus, it's either '' (top level)
     * or your app_library name.
@@ -348,14 +348,14 @@ class Component extends Object with observable.Subscriber,
   /**
    * Creates behaviors by instantiation Behavior objects added into #behaviors list.
    * Called on Component intialization. Remember that Behavior objects must either
-   * belong to the "nest_ui" library or be top level, otherwise the won't be found
+   * belong to the "dartifact" library or be top level, otherwise the won't be found
    * and an error will be raised.
    */
   void _createBehaviors() {
     if(this.behavior_instances.length > 0)
       return;
     behaviors.forEach((b) {
-      var behavior_instance = new_instance_of(b.toString(), [this], [Component.app_library, 'nest_ui']);
+      var behavior_instance = new_instance_of(b.toString(), [this], [Component.app_library, 'dartifact']);
       if(behavior_instance != null)
         behavior_instances.add(behavior_instance);
     });
@@ -385,7 +385,7 @@ class Component extends Object with observable.Subscriber,
   }
 
   get _class {
-   return class_from_string(getTypeName(this), [Component.app_library, 'nest_ui']);
+    return class_from_string(getTypeName(this), [Component.app_library, 'dartifact']);
   }
 
   // So far this is only required for Attributable module to work on this class.

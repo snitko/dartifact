@@ -1,4 +1,4 @@
-part of nestui;
+part of dartifact;
 
 abstract class AutoShowHide {
 

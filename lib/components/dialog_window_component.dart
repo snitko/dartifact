@@ -1,4 +1,4 @@
-part of nest_ui;
+part of dartifact;
 
 /** This component is almost like ModalWindowComponent with one major difference:
   * the `#completed` property returns a Future which may later be used

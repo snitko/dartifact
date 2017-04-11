@@ -1,7 +1,7 @@
 import "package:test/test.dart";
 import 'package:mockito/mockito.dart';
 import "dart:html";
-import '../../lib/nest_ui.dart';
+import '../../lib/dartifact.dart';
 
 part '../../lib/components/form_field_component.dart';
 part '../../lib/behaviors/form_field_component_behaviors.dart';

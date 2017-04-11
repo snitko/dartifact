@@ -1,4 +1,4 @@
-part of nest_ui;
+part of dartifact;
 
 /** Numeric field can only contain digits and a period (.) character.
   * All other characters are automatically erased.

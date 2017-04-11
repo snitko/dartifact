@@ -1,4 +1,4 @@
-part of nestui;
+part of dartifact;
 
 /** ModalWindow is an HtmlBlock that is supposed to appear on top of all other content
   * on a page and block the user from interacting with the page until the modal window is closed.

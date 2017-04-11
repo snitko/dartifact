@@ -2,7 +2,7 @@ import "package:test/test.dart";
 import 'package:mockito/mockito.dart';
 import "dart:html";
 import "dart:async";
-import '../../lib/nest_ui.dart';
+import '../../lib/dartifact.dart';
 part '../../lib/behaviors/select_component_behaviors.dart';
 part '../../lib/components/select_component.dart';
 part '../../lib/test_helpers/component_test_helpers.dart';

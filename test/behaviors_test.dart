@@ -1,4 +1,4 @@
-import '../lib/nest_ui.dart';
+import '../lib/dartifact.dart';
 import "package:test/test.dart";
 import "dart:html";
 part '../lib/test_helpers/component_test_helpers.dart';
