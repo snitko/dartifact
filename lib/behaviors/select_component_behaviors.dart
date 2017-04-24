@@ -46,7 +46,7 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
 
   focusCurrentOption() {
     _removeFocusFromOptions();
-    var current_option = this.options_container.querySelector("[data-option-value=\"${this.component.focused_option}\"");
+    var current_option = this.options_container.querySelector("[data-option-value=\"${this.component.focused_option}\"]");
     if(current_option != null) {
       current_option.classes.add("focused");
       _scroll();
@@ -54,13 +54,13 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
   }
 
   hideNoValueOption() {
-    this.null_option_el = this.options_container.querySelector("[data-option-value=\"null\"");
+    this.null_option_el = this.options_container.querySelector("[data-option-value=\"null\"]");
     if(this.null_option_el != null)
       this.null_option_el.remove();
   }
   
   showNoValueOption() {
-    if(this.null_option_el != null && this.options_container.querySelector("[data-option-value=\"null\"") == null && !this.options_container.children.isEmpty)
+    if(this.null_option_el != null && this.options_container.querySelector("[data-option-value=\"null\"]") == null && !this.options_container.children.isEmpty)
       this.options_container.insertBefore(this.null_option_el, this.options_container.children.first);
   }
 

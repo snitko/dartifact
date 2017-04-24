@@ -7,7 +7,7 @@ class RootComponent extends Component {
 
   RootComponent() : super() {
 
-    event_handlers.add(event: Component.click_event, role: #self, handler: (self, event) {
+    event_handlers.add(event: "click", role: #self, handler: (self, event) {
       var attrs = event.target.attributes.keys;
       self.applyToChildren('externalClickCallback', null, #recursive, (child) {
         // Prevents calling the method if component contains the click target AND
