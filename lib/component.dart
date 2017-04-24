@@ -94,7 +94,7 @@ class Component extends Object with observable.Subscriber,
       _root_component = _root_component.parent;
     return _root_component;
   }
-  
+
   Component() {
     _separateDescendantValidations();
     _initTemplate();

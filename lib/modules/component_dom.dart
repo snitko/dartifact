@@ -197,7 +197,7 @@ abstract class ComponentDom {
 
   /** Finds the template HtmlElement in the dom and assigns it to #template */
   void _initTemplate() {
-    this.template = querySelector("[data-component-template=${this.runtimeType.toString()}");
+    this.template = querySelector("[data-component-template=${this.runtimeType}]");
   }
 
   void _assignRolesFromDomElement() {
