@@ -27,10 +27,10 @@ packages:
     version: "1.11.1"
   attributable:
     description:
-      path: "../attributable"
-      relative: true
-    source: path
-    version: "0.1.1"
+      name: attributable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   barback:
     description:
       name: barback
@@ -120,7 +120,7 @@ packages:
       name: http_parser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.2"
+    version: "3.1.1"
   isolate:
     description:
       name: isolate
@@ -162,7 +162,7 @@ packages:
       name: observable_roles
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.3"
+    version: "0.1.41"
   package_config:
     description:
       name: package_config

@@ -101,7 +101,7 @@ class Component extends Object with observable.Subscriber,
 
     // Replace all native click events with touchstart if it's supported.
     if(TouchEvent.supported)
-      Component.click_event = "touchend";
+      Component.click_event = ["touchend", "click"];
 
     _separateDescendantValidations();
     _initTemplate();
@@ -281,6 +281,8 @@ class Component extends Object with observable.Subscriber,
    *  html attribute of the descendant element.
    */
   void _listenToNativeEvents() {
+    _flattenNativeEvents();
+
     this.native_events.forEach((e) {
 
       bool prevent_default = true;
@@ -389,6 +391,47 @@ class Component extends Object with observable.Subscriber,
       i18n.print_console_warning = false;
       Component.i18n[getTypeName(this)] = i18n;
     }
+  }
+
+  /**
+    * This method takes care of the case when #native_events item may look like this: part_name.[click, touchend]
+    * Right now it happens when Component#click_event is set to ["click", "touchend"].
+    * This method splits such item into two items properly, so that the resulting native_events List is flat.
+    * Example:
+    * 
+    *   Original native_events list: ["mouseover", "!submit.[click, touchend]", "![keypress, keydown]", "[event1, event3]"]
+    *   will be converted into:      ["mouseover", "!submit.click", "!submit.touchend", "!keypress", "!keydown", "event1", "event3"]
+    */
+  void _flattenNativeEvents() {
+    var flattened_native_events = [];
+    for(var event in this.native_events) {
+      if((new RegExp(r'\[.*?\]')).hasMatch(event)) {
+
+        var sub_events;
+        var prefix      = "";
+        var exclamation = "";
+
+        if(event.startsWith("!")) {
+          event = event.replaceFirst("!", "");
+          exclamation = "!";
+        }
+          
+
+        if((new RegExp(r'^[^.]+\.\[.*?\]')).hasMatch(event)) {
+          var event_arr = event.split(".");
+          prefix = "${event_arr[0]}.";
+          sub_events = event_arr[1].replaceAll(new RegExp(r"(\[|\])"), "").split(",");
+        } else {
+          sub_events = event.replaceAll(new RegExp(r"(\[|\])"), "").split(",");
+        }
+        sub_events.forEach((e) {
+          flattened_native_events.add("$exclamation$prefix${e.trimLeft()}");
+        });
+      } else {
+        flattened_native_events.add(event);
+      }
+    }
+    this.native_events = flattened_native_events;
   }
 
   get _class {
