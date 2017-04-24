@@ -27,7 +27,7 @@ class EditableSelectComponent extends SelectComponent {
   List attribute_names = ["display_value", "input_value", "disabled", "name", "fetch_url", "allow_custom_value", "query_param_name"];
   Map default_attribute_values = { "query_param_name": "q", "allow_custom_value": false, "disabled": false };
 
-  List native_events   = ["arrow.click", "option.click", "!display_input.keyup", "!display_input.keydown", "!display_input.change", "!display_input.blur"];
+  List native_events   = ["arrow.${Component.click_event}", "option.${Component.click_event}", "!display_input.keyup", "!display_input.keydown", "!display_input.change", "!display_input.blur"];
   List behaviors       = [FormFieldComponentBehaviors, SelectComponentBehaviors, EditableSelectComponentBehaviors];
 
   int keypress_stack_timeout = 500;
@@ -46,7 +46,7 @@ class EditableSelectComponent extends SelectComponent {
 
   EditableSelectComponent() {
   
-    event_handlers.remove(event: 'click', role: 'self.selectbox');
+    event_handlers.remove(event: Component.click_event, role: 'self.selectbox');
     event_handlers.remove(event: 'keypress', role: #self);
 
     event_handlers.addForRole("self.display_input", {
@@ -71,7 +71,7 @@ class EditableSelectComponent extends SelectComponent {
 
     // Instead of catchig a click on any part of the select component,
     // we're only catching it on arrow, because the rest of it is actually an input field.
-    event_handlers.add(event: 'click', role: 'self.arrow', handler: (self,event) {
+    event_handlers.add(event: Component.click_event, role: 'self.arrow', handler: (self,event) {
       if(this.disabled)
         return;
       if(self.opened) {

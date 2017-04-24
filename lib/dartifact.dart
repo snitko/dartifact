@@ -4,6 +4,7 @@ library dartifact;
 import 'dart:html'   ;
 import 'dart:convert';
 import 'dart:mirrors';
+import 'dart:js' as js;
 
 // Collection is used by SelectComponent, which is not necessarily loaded
 // (use decides wether to load it or not). Exporting us required in such cases.
@@ -38,7 +39,6 @@ part 'modules/auto_show_hide.dart';
 part 'modules/i18n.dart';
 
 part 'component.dart';
-part 'native_events_list.dart';
 part 'behaviors/base_component_behaviors.dart';
 part 'behaviors/form_field_component_behaviors.dart';
 part 'behaviors/button_component_behaviors.dart';

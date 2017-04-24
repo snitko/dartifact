@@ -2,12 +2,12 @@ part of dartifact;
 
 class RootComponent extends Component {
 
-  List native_events = ["!click"];
+  List native_events = ["!${Component.click_event}"];
   static RootComponent instance;
 
   RootComponent() : super() {
 
-    event_handlers.add(event: 'click', role: #self, handler: (self, event) {
+    event_handlers.add(event: Component.click_event, role: #self, handler: (self, event) {
       var attrs = event.target.attributes.keys;
       self.applyToChildren('externalClickCallback', null, #recursive, (child) {
         // Prevents calling the method if component contains the click target AND

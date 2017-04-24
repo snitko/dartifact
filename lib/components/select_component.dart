@@ -22,7 +22,7 @@ class SelectComponent extends Component {
 
   List attribute_names = ["display_value", "input_value", "disabled", "name", "fetch_url"];
 
-  List native_events   = ["selectbox.click", "keypress", "keydown", "option.click"];
+  List native_events   = ["selectbox.${Component.click_event}", "keypress", "keydown", "option.${Component.click_event}"];
   List behaviors       = [FormFieldComponentBehaviors, SelectComponentBehaviors];
 
   LinkedHashMap options = new LinkedHashMap();
@@ -71,10 +71,11 @@ class SelectComponent extends Component {
     // but, surprise, it corretly sets the target, so we can still get it!
     document.onKeyDown.listen((e) => prvt_processKeyDownEvent(e));
 
-    event_handlers.add(event: 'click', role: 'self.selectbox', handler: (self,event) {
+    event_handlers.add(event: Component.click_event, role: 'self.selectbox', handler: (self,event) {
       self.behave('toggle');
       _toggleOpenedStatus();
     });
+
     event_handlers.add(event: 'keypress', role: #self, handler: (self,event) {
       var char = new String.fromCharCodes([event.charCode]);
       updateKeypressStackWithChar(char);
@@ -406,8 +407,8 @@ class SelectComponent extends Component {
     * created listener.
    */
   prvt_listenToOptionClickEvents() {
-    this.event_handlers.remove(event: 'click', role: 'self.option');
-    this.event_handlers.add(event: 'click', role: 'self.option', handler: (self,event) {
+    this.event_handlers.remove(event: Component.click_event, role: 'self.option');
+    this.event_handlers.add(event: Component.click_event, role: 'self.option', handler: (self,event) {
       var t = event.target;
       setValueByInputValue(t.getAttribute('data-option-value'));
       this.behave('close');

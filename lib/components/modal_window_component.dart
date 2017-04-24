@@ -20,7 +20,7 @@ part of dartifact;
   */
 class ModalWindowComponent extends Component {
 
-  List native_events   = ["close.click", "background.click"];
+  List native_events   = ["close.${Component.click_event}", "background.${Component.click_event}"];
   List attribute_names = ["close_on_escape", "close_on_background_click", "show_close_button"];
   Map default_attribute_values = {
     "close_on_escape"           : true,
@@ -67,12 +67,12 @@ class ModalWindowComponent extends Component {
     super.afterInitialize();
 
     if(this.show_close_button)
-      event_handlers.add(event: 'click', role: "self.close", handler: (self,event) => self.hide());
+      event_handlers.add(event: Component.click_event, role: "self.close", handler: (self,event) => self.hide());
     else
       this.behave("hideCloseButton");
 
     if(this.close_on_background_click) {
-      event_handlers.add(event: 'click', role: "self.background", handler: (self,event) {
+      event_handlers.add(event: Component.click_event, role: "self.background", handler: (self,event) {
         if(event.target == findPart("background"))
           self.hide();
       });

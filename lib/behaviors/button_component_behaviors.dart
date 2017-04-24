@@ -33,7 +33,7 @@ class ButtonComponentBehaviors extends BaseComponentBehaviors {
   unlock() {
     if(this.ajax_indicator != null)
       this.ajax_indicator.remove();
-    this.component.event_locks.remove("click");
+    this.component.event_locks.remove(Component.click);
     super.unlock();
   }
 }

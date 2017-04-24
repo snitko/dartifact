@@ -3,15 +3,15 @@ part of dartifact;
 class ButtonComponent extends Component {
 
   final List attribute_names = ["caption", "disabled", "lockable"];
-        List native_events   = ["!click"];
-        List event_lock_for  = ["click"];
+        List native_events   = ["!${Component.click_event}"];
+        List event_lock_for  = [Component.click_event];
 
   Map default_attribute_values = { "lockable" : true, "disabled" : false };
 
   List behaviors = [ButtonComponentBehaviors];
 
   ButtonComponent() {
-    event_handlers.add(event: 'click', role: #self, handler: (self,event) {
+    event_handlers.add(event: Component.click_event, role: #self, handler: (self,event) {
       if(self.lockable == true)
         self.behave('lock');
     });
@@ -29,7 +29,7 @@ class ButtonComponent extends Component {
     super.afterInitialize();
     updatePropertiesFromNodes(attrs: ["lockable", "disabled"], invoke_callbacks: true);
     if(this.lockable == false) {
-      event_lock_for.remove("click");
+      event_lock_for.remove(Component.click_event);
     }
   }
 

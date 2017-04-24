@@ -27,7 +27,7 @@ part of dartifact;
   */
 class HintComponent extends Component with AutoShowHide {
 
-  List native_events   = ["close.click", "close_and_never_show.click"];
+  List native_events   = ["close.${Component.click_event}", "close_and_never_show.${Component.click_event}"];
   List attribute_names = ["anchor", "show_events", "force_show_events", "autoshow_delay",
                           "autohide_delay", "display_limit", "hint_id"];
 
@@ -39,7 +39,7 @@ class HintComponent extends Component with AutoShowHide {
 
   Map default_attribute_values = {
     "display_limit": null,
-    "show_events": "click"
+    "show_events": Component.click_event
   };
 
   HintComponent() {}
@@ -81,7 +81,7 @@ class HintComponent extends Component with AutoShowHide {
 
     });
 
-    event_handlers.addForEvent("click", {
+    event_handlers.addForEvent(Component.click_event, {
       "self.close":                (self,event) => self.hide(),
       "self.close_and_never_show": (self,event) => self.hide(never_show_again: true)
     });

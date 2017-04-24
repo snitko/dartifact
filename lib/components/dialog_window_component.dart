@@ -60,7 +60,7 @@ class DialogWindowComponent extends ModalWindowComponent {
         button.dom_element.classes.add(v["type"]);
 
       // Create click event handlers for each option button
-      event_handlers.add(event: "click", role: "option_$k", handler: (self,publisher) {
+      event_handlers.add(event: Component.click_event, role: "option_$k", handler: (self,publisher) {
         self.hide();
         _completer.complete(v["value"]);
       });

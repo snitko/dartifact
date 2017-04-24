@@ -39,7 +39,7 @@ part of dartifact;
 class SimpleNotificationComponent extends Component with AutoShowHide {
 
   final List attribute_names = ["message", "autohide_delay", "permanent", "container_role", "message_type", "ignore_duplicates"];
-        List native_events   = ["close.click", "message.click"];
+        List native_events   = ["close.${Component.click_event}", "message.${Component.click_event}"];
         Map default_attribute_values = {
           "container_role": "simple_notifications_container",
           "permanent": false,   // will not allow this notification to be closed
@@ -62,7 +62,7 @@ class SimpleNotificationComponent extends Component with AutoShowHide {
       on_demand = true;
     }
       
-    event_handlers.add(event: "click", role: "self.close", handler: (self, event) => self.hide());
+    event_handlers.add(event: Component.click_event, role: "self.close", handler: (self, event) => self.hide());
     if(on_demand) afterInitialize();
 
   }

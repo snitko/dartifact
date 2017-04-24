@@ -1,5 +1,5 @@
 name: dartifact
-version: 0.6.7
+version: 0.6.8
 description: >
   a Web-UI framework with nestable components.
 author: Roman Snitko <roman.snitko@gmail.com>
@@ -20,6 +20,6 @@ dev_dependencies:
   test: '>=0.12.0'
   mockito: '>=0.11.0'
 
-dependency_overrides:
-  attributable:
-    path: "../attributable"
+#dependency_overrides:
+  #attributable:
+    #path: "../attributable"
