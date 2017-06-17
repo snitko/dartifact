@@ -225,6 +225,7 @@ class Component extends Object with observable.Subscriber,
   void afterInitialize() {
     this.setDefaultAttributeValues();
     _createBehaviors();
+    _i18nize_validation_messages();
   }
 
   /** A convenience method for creating an event handler for when parent is done initializing itself and all of its
@@ -256,8 +257,12 @@ class Component extends Object with observable.Subscriber,
 
   /** Finds the translation for the provided key using either its own translator or
     * RootComponent's translator. */
-  String t(String key) {
-    var i18n      = Component.i18n[getTypeName(this)];
+  String t(String key, [component_name=null]) {
+
+    if(component_name == null)
+      component_name = getTypeName(this);
+
+    var i18n      = Component.i18n[component_name];
     var i18n_root = Component.i18n["RootComponent"];
     var translation;
     if(i18n != null)

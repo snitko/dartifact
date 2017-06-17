@@ -12,10 +12,12 @@ class MyComponent extends Component {
     'role1.role3.property1': { 'isNotNull' : true },
     'role1.property1':       { 'isNotNull' : true },
     'property1':             { 'isNotNull' : true },
-    'role1.value':           { "function": { "name": "customValidation", "message": "custom validation failed" }}
+    'role1.value':           { "function": { "name": "customValidation1", "message": "custom validation failed" }},
+    'role2.value':           { "function": { "name": "customValidation2", "i18n_message": "custom_i18n_message" }}
   };
 
-  prvt_customValidation() => this.children[0].value == "value";
+  prvt_customValidation1() => this.children[0].value == "value";
+  prvt_customValidation2() => this.children[0].value == "value";
 
 }
 
@@ -61,20 +63,25 @@ void main() {
 
       test("collect validation errors in validation_errors_summary as a String", () {
         c.validate(deep: false);
-        expect(c.validation_errors_summary, startsWith('property1: should not be null'));
+        expect(c.validation_errors_summary, startsWith('should not be null'));
         // Not deep validation!
         expect(c.children[0].validation_errors, isEmpty);
       });
 
       test("run validations on children too", () {
         c.validate(deep: true);
-        expect(c.children[0].validation_errors_summary, startsWith('property1: should not be null'));
-        expect(c.children[0].children[0].validation_errors_summary, equals('property1: should not be null'));
+        expect(c.children[0].validation_errors_summary, startsWith('should not be null'));
+        expect(c.children[0].children[0].validation_errors_summary, equals('should not be null'));
       });
 
       test("runs custom validation function from the parent, but adds error to the child", () {
         c.validate(deep: true);
         expect(c.children[0].validation_errors["value"], isNot(isNull));
+      });
+
+      test("replaces validation messages with i18n translated messages", () {
+        c.validate(deep: true);
+        expect(c.children[0].validation_errors["value"], equals(['WARNING: Translation missing for "validations."']));
       });
 
       test("shows the validation errors summary block if invalid after validation", () {
