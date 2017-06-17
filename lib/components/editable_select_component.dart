@@ -108,7 +108,6 @@ class EditableSelectComponent extends SelectComponent {
       }
       else
         this.behave("enable");
-      
     };
 
   }
@@ -122,7 +121,7 @@ class EditableSelectComponent extends SelectComponent {
 
   void afterInitialize() {
     super.afterInitialize();
-    updatePropertiesFromNodes(attrs: ["allow_custom_value"], invoke_callbacks: false);
+    updatePropertiesFromNodes(attrs: ["allow_custom_value", "query_param_name"], invoke_callbacks: false);
     this.original_options = options;
   }
 
