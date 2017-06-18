@@ -113,6 +113,7 @@ class EditableSelectComponent extends SelectComponent {
   }
 
   get current_input_value => findPart("display_input").value;
+  get name => findPart("input").name;
 
   /** Determines whether we allow custom options to be set as the value of the select
     * when we type something in, but no matches were fetched.
