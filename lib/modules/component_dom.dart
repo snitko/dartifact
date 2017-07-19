@@ -24,6 +24,19 @@ abstract class ComponentDom {
       return elements[0];
   }
 
+  /** Finds first DOM ancestor with a certain combination of attribute and its value,
+   *  or returns the same node if that node has that combination.
+   * 
+   *  There's no easy way in dart to traverse ancestors to find the one you need.
+   */
+  HtmlElement ancestorOrSelfWithAttr(node, { attr_name: null, attr_value: null }) {
+    var ancestor = node;
+    while(ancestor != null && ancestor.getAttribute(attr_name) != attr_value) {
+      ancestor = ancestor.parent;
+    }
+    return ancestor;
+  }
+
   /** Same as firstDomDescendantOrSelfWithAttr, but finds all dom elements
     * and returns a List
     */

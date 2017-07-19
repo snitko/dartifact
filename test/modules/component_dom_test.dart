@@ -22,8 +22,9 @@ void main() {
       d1 = new DivElement();
       d2 = new DivElement();
       d3 = new DivElement();
-      d1.attributes["test-attr"] = "test";
-      d2.attributes["test-attr"] = "test";
+      d1.attributes["test-attr"]     = "test";
+      d1.attributes["ancestor-attr"] = "ancestor";
+      d2.attributes["test-attr"]     = "test";
       d3.append(d2);
       el.append(d1);
       el.append(d3);
@@ -67,6 +68,19 @@ void main() {
       expect(c.findPart("some_part"), equals(part1));
       expect(c.findAllParts("some_other_part"), isEmpty);
       expect(c.findPart("some_other_part"), equals(null));
+    });
+
+    test("finds ancestor with a particular attribute", () {
+
+      var d4 = new DivElement();
+      var d5 = new DivElement();
+      d4.append(d5);
+      d1.append(d4);
+
+      var ancestor = c.ancestorOrSelfWithAttr(d2, attr_name: "test-attr", attr_value: "test");
+      expect(ancestor, equals(d2));
+      ancestor = c.ancestorOrSelfWithAttr(d5, attr_name: "ancestor-attr", attr_value: "ancestor");
+      expect(ancestor, equals(d1));
     });
     
     
