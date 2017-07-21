@@ -158,7 +158,9 @@ class Component extends Object with observable.Subscriber,
     // Only publish if event is the actual event of the dom_element, IS NOT
     // in non-propagate list, and is not a native event on one of the component parts.
     if(publisher_roles.contains(#self) && !no_propagation_native_events.contains(e)) {
-      this.publishEvent(e, data);
+      this.publishEvent(e, this); // passing `this` in second argument because when event is
+                                  // non-native we need to pass the publisher to the event handler instead of
+                                  // the Event object.
       return;
     }
 
