@@ -158,13 +158,28 @@ class Component extends Object with observable.Subscriber,
     // Only publish if event is the actual event of the dom_element, IS NOT
     // in non-propagate list, and is not a native event on one of the component parts.
     if(publisher_roles.contains(#self) && !no_propagation_native_events.contains(e)) {
-      this.publishEvent(e, this); // passing `this` in second argument because when event is
-                                  // non-native we need to pass the publisher to the event handler instead of
-                                  // the Event object.
+      this.publishEvent(e, { "component": this, "event": event_obj });
       return;
     }
 
     return true;
+  }
+
+  /**
+    * Reloading obervable_roles.Subscriber's method.
+    * We need to check whether "pass_native_event_object" option exists
+    * and if it does - we're passing the native event instead of Component
+    * itself (which is the default when a descendant component publishes an event).
+    */
+  handleEvent(handler_and_options,[data=null]) {
+    if(handler_and_options["options"] != null) {
+      if(handler_and_options["options"]["pass_native_event_object"] == true)
+        data = data["event"];
+      else
+        data = data["component"];
+    }
+
+    handler_and_options["handler"](reflect(this).reflectee, data);
   }
 
   /** Reloading the obervable_roles.Subscriber's method because

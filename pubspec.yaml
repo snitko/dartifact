@@ -7,7 +7,7 @@ homepage: http://dartifact.org
 documentation: http://dartifact.org
 
 dependencies:
-  observable_roles: '>=0.1.41 <0.2.0'
+  observable_roles: '>=0.1.42 <0.2.0'
   heritage_tree: '>=0.1.0 <0.2.0'
   attributable: '>=0.1.1 <0.2.0'
   validatable: '>=0.1.2 <0.2.0'
@@ -20,6 +20,6 @@ dev_dependencies:
   test: '>=0.12.0'
   mockito: '>=0.11.0'
 
-#dependency_overrides:
-  #attributable:
-    #path: "../attributable"
+dependency_overrides:
+  observable_roles:
+    path: "../observable_roles"

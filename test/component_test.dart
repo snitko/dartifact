@@ -27,8 +27,11 @@ class MyComponent extends Component {
         #self:             (self,event) => self.events_history.add(["MyComponent.self#clicked", event]),
         'self.text_field': (self,event) => self.events_history.add("MyComponent.text_field#clicked"),
         'role1':           (self,publisher) => self.events_history.add("MyComponent.role1#clicked")
-      }
+      },
     );
+
+    event_handlers.add(event: "click", role: "role1", options: { "pass_native_event_object" : true }, handler: (self,event) =>
+      self.events_history.add("MyComponent.role1(native event)#${event.type}"));
     
     // This event is not preventing default...
     event_handlers.add(event: 'mouseout', role: #self, handler: (self,event) => self.events_history.add("self#mouseout"));
@@ -176,7 +179,12 @@ void main() {
         // Second event, not supposed to be handled:
         child_component_el.click();
         expect(c.events_history, isNot(contains("MyComponent.role1#clicked")));
-      });      
+      });
+
+      test("passes native event object if pass_native_event_object option is passed when adding an event", () {
+        child_component_el.click();
+        expect(c.events_history, contains("MyComponent.role1(native event)#click"));
+      });
 
     });
     
