@@ -171,15 +171,14 @@ class Component extends Object with observable.Subscriber,
     * and if it does - we're passing the native event instead of Component
     * itself (which is the default when a descendant component publishes an event).
     */
-  handleEvent(handler_and_options,[data=null]) {
-    if(handler_and_options["options"] != null) {
-      if(handler_and_options["options"]["pass_native_event_object"] == true)
+  @override handleEvent(handler_and_options,[data=null]) {
+    if(data is Map) {
+      if(handler_and_options["options"] != null && handler_and_options["options"]["pass_native_event_object"] == true)
         data = data["event"];
       else
         data = data["component"];
     }
-
-    handler_and_options["handler"](reflect(this).reflectee, data);
+    super.handleEvent(handler_and_options, data);
   }
 
   /** Reloading the obervable_roles.Subscriber's method because
