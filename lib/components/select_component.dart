@@ -55,8 +55,8 @@ class SelectComponent extends Component {
   Map attribute_callbacks = {
     'default'  : (attr_name, self) => self.attribute_callbacks_collection['write_property_to_dom'](attr_name, self),
     'disabled' : (attr_name, self) {
-      if(self.disabled == 'disabled') {
-        self.event_locks.add(#any); 
+      if(self.disabled) {
+        self.event_locks.add(#any);
         self.behave('disable');
       } else {
         self.behave('enable');
@@ -238,7 +238,7 @@ class SelectComponent extends Component {
     * it should then be possible to press letter keys to navigate the options list without
     * opening the selectbox. That's native browser behavior for <select> element and that's
     * what's being emulated here.
-    * 
+    *
     * Note the use of keypress_stack. If user presses "a" and "b" within 1 second of each other
     * then the stack is going to contain "ab" and we'll be looking for the first option
     * which has display_value that starts with "ab", then setting it as current option
@@ -401,7 +401,7 @@ class SelectComponent extends Component {
 
     this.options = new LinkedHashMap.from(parsed_json);
   }
-  
+
   /** This methd is called not once, but every time we fetch new options from the server,
     * because the newly added option elements are not being monitored by the previously
     * created listener.
@@ -440,7 +440,7 @@ class SelectComponent extends Component {
           break;
       }
       e.preventDefault();
-    } 
+    }
   }
 
   void _addFetchUrlParam(String name, String value) {
