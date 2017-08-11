@@ -46,9 +46,10 @@ class BaseComponentBehaviors {
 
   /** Sometimes, we need to display an element with "display: [type];" to calculate its
     * dimensions, but actually keep it hidden. This is exactly what this method does. */
-  displayHidden() {
-    this.dom_element.style.opacity = "0";
-    this.dom_element.style.display = this.display_value;
+  displayHidden([el=null]) {
+    if(el == null) el = this.dom_element;
+    el.style.opacity = "0";
+    el.style.display = this.display_value;
   }
 
   _toggle(behaviors, condition) {
