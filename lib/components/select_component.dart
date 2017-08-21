@@ -420,7 +420,7 @@ class SelectComponent extends Component {
   void prvt_processKeyDownEvent(e) {
     if(this.event_locks.contains("keydown") || this.event_locks.contains(#any))
       return;
-    if(this.prvt_hasNode(e.target) && this.disabled != 'disabled' && special_keys.contains(e.keyCode)) {
+    if(this.prvt_hasNode(e.target) && this.disabled != true && special_keys.contains(e.keyCode)) {
       switch(e.keyCode) {
         case KeyCode.ESC:
           _toggleOpenedStatus();
