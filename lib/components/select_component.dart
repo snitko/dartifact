@@ -55,7 +55,7 @@ class SelectComponent extends Component {
   Map attribute_callbacks = {
     'default'  : (attr_name, self) => self.attribute_callbacks_collection['write_property_to_dom'](attr_name, self),
     'disabled' : (attr_name, self) {
-      if(self.disabled) {
+      if(self.disabled == null || self.disabled == false) {
         self.event_locks.add(#any);
         self.behave('disable');
       } else {

@@ -52,7 +52,7 @@ class Component extends Object with observable.Subscriber,
 
   Component _root_component;
 
-  static String click_event = "click";
+  static var click_event = "click";
 
   /** This one is important if you intend to separate your app
     * into many parts (files). In that case, you'll need to declare a library.
