@@ -24,6 +24,8 @@ class ButtonComponentBehaviors extends BaseComponentBehaviors {
     if(this.ajax_indicator != null) {
       this.dom_element.parent.insertBefore(this.ajax_indicator, this.dom_element);
       this.ajax_indicator.style.display = 'block';
+      this.ajax_indicator.style.position = 'absolute';
+      pos.placeBy(this.ajax_indicator, this.dom_element, top: 0.5, left: 0, gravity_top: 0.5, gravity_left: 0.5 );
     }
     super.lock();
   }
