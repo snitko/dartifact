@@ -18,7 +18,7 @@ class PositionManager {
 
     var scroll_offset = { "x": 0, "y" : 0 };
     if(use_scroll_offset)
-      scroll_offset = { "x": document.body.scrollLeft, "y" : document.body.scrollTop };
+      scroll_offset = { "x": window.scrollX, "y" : window.scrollY };
 
     el.style..top  = ((y + scroll_offset["y"]).toString() + 'px')
             ..left = ((x + scroll_offset["x"]).toString() + 'px');
