@@ -197,12 +197,14 @@ class EditableSelectComponent extends SelectComponent {
     * If not, then intpu_value is set to what the user typed into the field.
     */
   void setValueFromManualInput() {
-    if(this.options.containsValue(this.current_input_value))
+    if(this.options.containsValue(this.current_input_value)) {
       setValueByInputValue(optionKeyForValue(this.current_input_value));
-    else if(this.allow_custom_value) {
+    } else if(this.allow_custom_value) {
       this.input_value = this.current_input_value;
       this.behave("close");
       this.opened = false;
+    } else if(this.current_input_value == "") {
+      this.input_value = null;
     }
   }
 
@@ -220,6 +222,7 @@ class EditableSelectComponent extends SelectComponent {
         return;
       case KeyCode.BACKSPACE:
         this.focused_option = null;
+        setValueFromManualInput();
         return;
     }
 
