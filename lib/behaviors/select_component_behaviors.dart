@@ -64,6 +64,16 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
       this.options_container.insertBefore(this.null_option_el, this.options_container.children.first);
   }
 
+  disable() {
+    this.dom_element.attributes["disabled"] = "disabled";
+    this.component.event_locks.add(#any);
+  }
+
+  enable() {
+    this.dom_element.attributes.remove("disabled");
+    this.component.event_locks.remove(#any);
+  }
+
   _removeFocusFromOptions() {
     this.options_container.querySelectorAll('.option').forEach((el) => el.classes.remove("focused"));
   }

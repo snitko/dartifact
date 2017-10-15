@@ -27,8 +27,8 @@ class FormFieldComponentBehaviors extends BaseComponentBehaviors {
   }
 
   enable() {
-    this.component.value_holder_element.attributes.remove("disabled");
     this.component.disabled = false;
+    this.component.value_holder_element.attributes.remove("disabled");
   }
 
   get validation_errors_summary_element {

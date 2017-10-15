@@ -9,6 +9,7 @@ class EditableSelectComponentBehaviors extends BaseComponentBehaviors {
   }
 
   disable() {
+    this.dom_element.attributes["disabled"] = "disabled";
     this.input.attributes["disabled"] = "disabled";
     if(!isBlank(this.input.attributes["placeholder"])) {
       this.input.attributes["data-placeholder"] = input.attributes["placeholder"];
@@ -17,6 +18,7 @@ class EditableSelectComponentBehaviors extends BaseComponentBehaviors {
   }
 
   enable() {
+    this.dom_element.attributes.remove("disabled");
     this.input.attributes.remove("disabled");
     if(input.attributes["data-placeholder"] != null)
       this.input.attributes["placeholder"] = input.attributes["data-placeholder"];
