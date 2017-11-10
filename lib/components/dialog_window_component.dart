@@ -14,7 +14,7 @@ part of dartifact;
   * the DialogWindow Future complete with `true`, while clicking the second
   * one makes it complete with `false`.
   *
-  * Which buttons return what is determined by the `#options` property - 
+  * Which buttons return what is determined by the `#options` property -
   * read documentation on it to understand how to have the buttons you want to.
   * You can pass a value for this property as a second argument to the constructor.
   *
@@ -32,10 +32,6 @@ class DialogWindowComponent extends ModalWindowComponent {
     * it basically adds the right kind of html class to the button.
     */
   Map options = { "ok" : { "caption": "OK", "type" : null, "value": true}};
-
-  /** This is the Future containing the value returned by the window
-    * when it closes. Depends on which button was clicked. */
-  Completer _completer = new Completer();
 
   DialogWindowComponent(content, [opts=null]) : super(content) {
 
@@ -68,10 +64,6 @@ class DialogWindowComponent extends ModalWindowComponent {
     });
 
   }
-
-  /** Returs a Future that will complete when one of the buttons
-    * are pressed and the window is closed */
-  get completed => _completer.future;
 
   void prvt_appendChildDomElement(HtmlElement el) {
     if(el.attributes["data-component-class"] == "ButtonComponent")

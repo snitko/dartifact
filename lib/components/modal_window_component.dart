@@ -29,6 +29,10 @@ class ModalWindowComponent extends Component {
   };
   List behaviors = [ModalWindowComponentBehaviors];
 
+  /** This is the Future containing the value returned by the window
+    * when it closes. Depends on which button was clicked. */
+  Completer _completer = new Completer();
+
   /** Contains the content for the #content_el. It's actually only used once,
     * in the constructor while setting #content_el, so changing it accomplishes nothing.
     * You can however use the `text` setter.
@@ -73,8 +77,10 @@ class ModalWindowComponent extends Component {
 
     if(this.close_on_background_click) {
       event_handlers.add(event: Component.click_event, role: "self.background", handler: (self,event) {
-        if(event.target == findPart("background"))
+        if(event.target == findPart("background")) {
           self.hide();
+          _completer.complete(false);
+        }
       });
     }
 
@@ -92,6 +98,11 @@ class ModalWindowComponent extends Component {
     }
 
   }
+
+
+  /** Returs a Future that will complete when one of the buttons
+    * are pressed and the window is closed */
+  get completed => _completer.future;
 
   get content_el => findPart("content");
   get text       => _text;
