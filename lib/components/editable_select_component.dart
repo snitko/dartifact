@@ -45,14 +45,14 @@ class EditableSelectComponent extends SelectComponent {
   List special_keys = [38,40,27,13];
 
   EditableSelectComponent() {
-  
+
     event_handlers.remove(event: Component.click_event, role: 'self.selectbox');
     event_handlers.remove(event: 'keypress', role: #self);
 
     event_handlers.addForRole("self.display_input", {
 
       "keyup": (self,event) => self.prvt_processInputKeyUpEvent(event),
-      
+
       "keydown": (self,event) {
         if(event.keyCode == KeyCode.ENTER)
           event.preventDefault();
@@ -100,7 +100,7 @@ class EditableSelectComponent extends SelectComponent {
     attribute_callbacks["disabled"] = (attr_name, self) {
       if(self.disabled) {
         this.behave("disable");
-        
+
         // TODO: have an easy way to update attrs without invoking callbacks!
         this.updateAttributes({ "display_value": "", "input_value": ""}, callback: () => false);
         findPart("display_input").value = "";
@@ -176,14 +176,15 @@ class EditableSelectComponent extends SelectComponent {
       behave("showNoOptionsFound");
     else
       behave("hideNoOptionsFound");
-      
+
     updateOptionsInDom();
     prvt_listenToOptionClickEvents();
   }
 
-  @override Future fetchOptions() {
-    updateFetchUrlParams({ this.query_param_name : this.current_input_value });
-    return super.fetchOptions();
+  @override Future fetchOptions([String fetch_url = null]) {
+    if (fetch_url == null)
+      updateFetchUrlParams({ this.query_param_name: this.current_input_value });
+    return super.fetchOptions(fetch_url);
   }
 
   /** Cleares the select box input and sets it to the previous value. Usually
