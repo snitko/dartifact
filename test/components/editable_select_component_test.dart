@@ -96,10 +96,10 @@ void main() {
       expect(select_comp.options.keys, isEmpty);
     });
     
-    test("clears value from the input", () {
+    test("does not clear value from the input", () {
       display_input_el.value = "ab";
       select_comp.prvt_processInputKeyUpEvent(new_key_event(KeyCode.ESC));
-      expect(input_el.value, equals(""));
+      expect(input_el.value, equals("ab"));
     });
 
     test("re-creates even listeners for options when they're loaded or filtered", () {
@@ -131,7 +131,7 @@ void main() {
       expect(select_comp.input_value, equals("custom value"));
     });
 
-    test("resets the value to the previous one if on ESC keypress or on external click", () {
+    test("sets custom value to input_value on ESC keypress or on external click", () {
       select_comp.allow_custom_value = true;
       select_comp.input_value = "ab";
 
@@ -143,9 +143,9 @@ void main() {
 
       select_comp.findPart("display_input").value = "abc";
       select_comp.prvt_processInputKeyUpEvent(new_key_event(KeyCode.ESC));
-      expect(select_comp.input_value, equals("ab"));
-      expect(select_comp.display_value, equals("ab"));
-      expect(select_comp.current_input_value, equals("ab"));
+      expect(select_comp.input_value, equals("abc"));
+      expect(select_comp.display_value, equals("abc"));
+      expect(select_comp.current_input_value, equals("abc"));
     });
 
     test("sets custom value when it's allowed", () {
