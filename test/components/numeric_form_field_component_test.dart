@@ -45,6 +45,21 @@ void main() {
       c.value = 1.5432;
       expect(c.value, equals(1.5432));
     });
+
+    test("doesn't allow more than 1 decimal point", () {
+      c.value = "1";
+      expect(c.value, equals(1));
+      c.value = "1.1";
+      expect(c.value, equals(1.1));
+      c.value = "1.1.1";
+      expect(c.value, equals(1.1));
+      c.value = "1.12323.12313";
+      expect(c.value, equals(1.1));
+      c.value = ".1.1";
+      expect(c.value, equals(1.1));
+      c.value = "..";
+      expect(c.value, equals(1.1));
+    });
     
     
 

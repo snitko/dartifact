@@ -32,14 +32,24 @@ class NumericFormFieldComponent extends FormFieldComponent {
 
       var numeric_regexp = new RegExp(r"^(\d|\.)*$");
       if(numeric_regexp.hasMatch(v) && (max_length == null || v.length <= max_length)) {
-        if(v.endsWith(".") || v.startsWith("."))
+
+        // handling the case with two decimal points (let's not allow that)
+        var decimal_points_regexp = new RegExp(r"\.");
+        if(decimal_points_regexp.allMatches(v).length >= 2) {
+          v = this.attributes["value"];
+          this.value_holder_element.value = v.toString();
+        }
+
+        else if(v.endsWith(".") || v.startsWith(".")) {
           v = null;
-        else if(v != null && v.length > 0)
+        } else if(v != null && v.length > 0) {
           v = double.parse(v);
-        else
+          this.attributes["value"] = v;
+          this.publishEvent("change", this);
+        } else {
           v = null;
-        this.attributes["value"] = v;
-        this.publishEvent("change", this);
+        }
+
       } else {
         if(this.value != null)
           this.value_holder_element.value = this.value.toString().replaceFirst(new RegExp(r"\.0$"), "");
