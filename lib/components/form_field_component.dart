@@ -19,12 +19,13 @@ class FormFieldComponent extends Component {
   String value_property  = 'value';
   List   attribute_names = ["validation_errors_summary", "name", "disabled"];
   List   behaviors       = [FormFieldComponentBehaviors];
+  var    previous_value;
 
   FormFieldComponent() {
 
     attribute_names.add(this.value_property);
     attribute_callbacks[this.value_property] = (attr_name, self) {
-      prvt_setValueForValueHolderElement(self.attributes[self.value_property]);
+      setValueForValueHolderElement(self.attributes[self.value_property]);
       self.publishEvent("change", self);
     };
 
@@ -70,7 +71,8 @@ class FormFieldComponent extends Component {
     return value_holder;
   }
 
-  prvt_setValueForValueHolderElement(v) {
+  setValueForValueHolderElement(v) {
+    this.previous_value = this.attributes[value_property];
     attributes["value"] = v;
     v == null ? v = "" : v = v.toString();
     if(this.value_holder_element.value != v) this.value_holder_element.value = v;
@@ -80,6 +82,7 @@ class FormFieldComponent extends Component {
     // Callback is set to `false` here because we don't need to update the value_property
     // of the value_holder element after we've just read the actual value from it. That results in a loop
     // we don't want to have!
+    this.previous_value = this.attributes[value_property];
     this.updateAttributes({ "$value_property" : (value_holder_element.value == "" ? null : value_holder_element.value)}, callback: false);
     publishEvent("change", this);
   }

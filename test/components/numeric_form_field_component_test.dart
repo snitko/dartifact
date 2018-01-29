@@ -37,9 +37,9 @@ void main() {
       c.value = ".";
       expect(c.value, isNull);
       c.value = ".0";
-      expect(c.value, isNull);
+      expect(c.value, 0);
       c.value = "1.";
-      expect(c.value, isNull);
+      expect(c.value, 1);
       c.value = "1.2345";
       expect(c.value, equals(1.2345));
       c.value = 1.5432;

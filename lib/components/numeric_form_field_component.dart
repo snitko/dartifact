@@ -33,21 +33,29 @@ class NumericFormFieldComponent extends FormFieldComponent {
       var numeric_regexp = new RegExp(r"^(\d|\.)*$");
       if(numeric_regexp.hasMatch(v) && (max_length == null || v.length <= max_length)) {
 
-        // handling the case with two decimal points (let's not allow that)
+        // Handling the case with two decimal points - let's not allow that
+        // and revert to the previous value.
         var decimal_points_regexp = new RegExp(r"\.");
         if(decimal_points_regexp.allMatches(v).length >= 2) {
-          v = this.attributes["value"];
-          this.value_holder_element.value = v.toString();
+          setValueForValueHolderElement(this.previous_value);
+        }
+        // Ingore if there's just a decimal point an nothing else.
+        else if(v == ".") {
+          this.attributes["value"] = null;
         }
 
-        else if(v.endsWith(".") || v.startsWith(".")) {
-          v = null;
-        } else if(v != null && v.length > 0) {
-          v = double.parse(v);
-          this.attributes["value"] = v;
+        else {
+          if(v.startsWith(".")) {
+            this.value_holder_element.value = "0$v";
+            this.attributes["value"] = double.parse("0$v");
+          } else if(v != null && v.length > 0) {
+            this.attributes["value"] = double.parse(v);
+          } else {
+            this.value_holder_element.value = "";
+            this.attributes["value"] = null;
+          }
+          this.previous_value = this.attributes["value"];
           this.publishEvent("change", this);
-        } else {
-          v = null;
         }
 
       } else {
@@ -59,6 +67,7 @@ class NumericFormFieldComponent extends FormFieldComponent {
 
     } else if (v is num) {
 
+      this.previous_value = v;
       this.attributes["value"] = v;
       this.publishEvent("change", this);
 
@@ -66,6 +75,7 @@ class NumericFormFieldComponent extends FormFieldComponent {
   }
 
   @override void prvt_updateValueFromDom({ event: null }) {
+    this.previous_value = this.value;
     this.value = value_holder_element.value;
   }
 
