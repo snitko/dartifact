@@ -64,7 +64,6 @@ class ModalWindowComponent extends Component {
     //  2. which in turn calls ModalWindowComponent#afterInitialize()
     //  3. Only after that, the execution returns to show() and behave("show") is called.
     this.show();
-
   }
 
   afterInitialize() {
@@ -135,7 +134,7 @@ class ModalWindowComponent extends Component {
   }
 
   void prvt_processKeyDownEvent(e) {
-    if(this.prvt_hasNode(e.target, skip_components: false) && e.keyCode == KeyCode.ESC && this.close_on_escape)
+    if(e is KeyboardEvent && this.prvt_hasNode(e.target, skip_components: false) && e.keyCode == KeyCode.ESC && this.close_on_escape)
       this.hide();
   }
 
