@@ -53,8 +53,6 @@ class EditableSelectComponent extends SelectComponent {
 
       "keyup": (self,event) => self.prvt_processInputKeyUpEvent(event),
 
-      "blur":  (self,event) => self.setValueFromManualInput(),
-
       "keydown": (self,event) {
         if(event.keyCode == KeyCode.ENTER)
           event.preventDefault();
