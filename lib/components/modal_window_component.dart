@@ -133,8 +133,11 @@ class ModalWindowComponent extends Component {
     });
   }
 
-  void prvt_processKeyDownEvent(e) {
-    if(e is KeyboardEvent && this.prvt_hasNode(e.target, skip_components: false) && e.keyCode == KeyCode.ESC && this.close_on_escape)
+  // Having 'test' argument is not a great idea, but for now there's no way
+  // around this: we need KeyboardEvent which is very hard to pass from tests,
+  // so it actually passes a mock (KeytEventMock) which fails the `is KeyboardEvent` test.
+  void prvt_processKeyDownEvent(e, { test: false }) {
+    if((e is KeyboardEvent || test == true) && this.prvt_hasNode(e.target, skip_components: false) && e.keyCode == KeyCode.ESC && this.close_on_escape)
       this.hide();
   }
 

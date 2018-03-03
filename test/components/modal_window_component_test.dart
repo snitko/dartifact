@@ -106,13 +106,13 @@ void main() {
 
         test("it hides the modal window if #close_on_escape is true", () {
           mw = createModalWindowComponent();
-          mw.prvt_processKeyDownEvent(new_key_event(KeyCode.ESC, mw.dom_element));
+          mw.prvt_processKeyDownEvent(new_key_event(KeyCode.ESC, mw.dom_element), test: true);
           verify(mw.behavior_instances[0].hide());
         });
 
         test("it does nothing if #close_on_escape is false", () {
           mw = createModalWindowComponent(attrs: { "close_on_escape" : false });
-          mw.prvt_processKeyDownEvent(new_key_event(KeyCode.ESC, mw.dom_element));
+          mw.prvt_processKeyDownEvent(new_key_event(KeyCode.ESC, mw.dom_element), test: true);
           verifyNoMoreInteractions(mw.behavior_instances[0]);
         });
 
