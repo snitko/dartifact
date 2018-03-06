@@ -137,9 +137,9 @@ void main() {
 
       select_comp.findPart("display_input").value = "abc";
       select_comp.externalClickCallback();
-      expect(select_comp.input_value, equals("ab"));
-      expect(select_comp.display_value, equals("ab"));
-      expect(select_comp.current_input_value, equals("ab"));
+      expect(select_comp.input_value, equals("abc"));
+      expect(select_comp.display_value, equals("abc"));
+      expect(select_comp.current_input_value, equals("abc"));
 
       select_comp.findPart("display_input").value = "abc";
       select_comp.prvt_processInputKeyUpEvent(new_key_event(KeyCode.ESC));

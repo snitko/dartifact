@@ -243,7 +243,7 @@ class EditableSelectComponent extends SelectComponent {
   void externalClickCallback() {
     super.externalClickCallback();
     if(this.current_input_value != this.display_value)
-      clearCustomValue();
+      this.input_value = this.current_input_value;
   }
 
   /** Diff from super method --> this.options.keys.contains(this.focused_option)
