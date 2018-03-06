@@ -21,6 +21,11 @@ class BaseComponentBehaviors {
     this.dom_element.style.display = display_value;
   }
 
+  // Show nested element with data-component-part="<part_name>"
+  showPart(part_name, delay) {
+    this.animator.show(this.component.findPart(part_name), delay);
+  }
+
   toggleDisplay() => _toggle(
     [show, hide],
     this.dom_element.style.display == 'none'

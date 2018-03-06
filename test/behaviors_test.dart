@@ -1,6 +1,7 @@
 import '../lib/dartifact.dart';
 import "package:test/test.dart";
 import "dart:html";
+
 part '../lib/test_helpers/component_test_helpers.dart';
 
 @TestOn("browser")
@@ -41,7 +42,7 @@ main() {
     });
 
     group("visibility", () {
-      
+
       test("hides an element", () {
         c.behave('hide');
         expect(el.style.display, equals('none'));
@@ -51,6 +52,16 @@ main() {
         c.dom_element.style.display="none";
         c.behave('show');
         expect(el.style.display, equals('block'));
+      });
+
+      test("shows part element within element", () {
+        var child_component_el = new DivElement();
+        child_component_el.setAttribute('data-component-part', 'my_child_component_part');
+        el.append(child_component_el);
+        c.initChildComponents();
+        child_component_el.style.display="none";
+        c.behave('showPart', ["my_child_component_part", 0]);
+        expect(child_component_el.style.display, equals('block'));
       });
 
       test("shows an element with the specified display value", () {
@@ -70,7 +81,7 @@ main() {
     });
 
     group("locking/unlocking", () {
-      
+
       test("adds 'locked' class to a locked element", () {
         c.behave('lock');
         expect(el.classes, contains('locked'));
@@ -92,7 +103,7 @@ main() {
     });
 
     group("disabling/enabling", () {
-      
+
       test("adds 'disabled' class and attribute to a locked element", () {
         c.behave('disable');
         expect(el.classes,    contains('disabled'));
@@ -117,7 +128,7 @@ main() {
       });
 
     });
-    
+
   });
 
 }
