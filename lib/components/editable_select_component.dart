@@ -56,6 +56,9 @@ class EditableSelectComponent extends SelectComponent {
       "keydown": (self,event) {
         if(event.keyCode == KeyCode.ENTER)
           event.preventDefault();
+
+        if(event.keyCode == KeyCode.TAB)
+          self.prvt_processInputKeyUpEvent(event);
       }
 
       /* I don't want to listen to the change event. First, it creates a loop,
@@ -215,6 +218,9 @@ class EditableSelectComponent extends SelectComponent {
         setValueFromManualInput();
         return;
       case KeyCode.ENTER:
+        setValueFromManualInput();
+        return;
+      case KeyCode.TAB:
         setValueFromManualInput();
         return;
       case KeyCode.UP:

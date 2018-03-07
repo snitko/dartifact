@@ -131,7 +131,7 @@ void main() {
       expect(select_comp.input_value, equals("custom value"));
     });
 
-    test("sets custom value to input_value on ESC keypress or on external click", () {
+    test("sets custom value to input_value on ESC, TAB keypress or on external click", () {
       select_comp.allow_custom_value = true;
       select_comp.input_value = "ab";
 
@@ -143,6 +143,12 @@ void main() {
 
       select_comp.findPart("display_input").value = "abc";
       select_comp.prvt_processInputKeyUpEvent(new_key_event(KeyCode.ESC));
+      expect(select_comp.input_value, equals("abc"));
+      expect(select_comp.display_value, equals("abc"));
+      expect(select_comp.current_input_value, equals("abc"));
+
+      select_comp.findPart("display_input").value = "abc";
+      select_comp.prvt_processInputKeyUpEvent(new_key_event(KeyCode.TAB));
       expect(select_comp.input_value, equals("abc"));
       expect(select_comp.display_value, equals("abc"));
       expect(select_comp.current_input_value, equals("abc"));
