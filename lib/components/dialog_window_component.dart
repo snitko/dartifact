@@ -38,9 +38,9 @@ class DialogWindowComponent extends ModalWindowComponent {
     // Some sane settings for the Dialog window that are not supposed to be changed:
     // (at least for now) - user shouldn't be able to close it in any other way,
     // than by clicking the presented option buttons.
-    this.close_on_escape           = false;
-    this.close_on_background_click = false;
-    this.show_close_button         = false;
+    this.close_on_escape           = true;
+    this.close_on_background_click = true;
+    this.show_close_button         = true;
 
     if(opts != null)
       this.options = opts;

@@ -70,7 +70,10 @@ class ModalWindowComponent extends Component {
     super.afterInitialize();
 
     if(this.show_close_button)
-      event_handlers.add(event: Component.click_event, role: "self.close", handler: (self,event) => self.hide());
+      event_handlers.add(event: Component.click_event, role: "self.close", handler: (self,event) {
+        self.hide();
+        _completer.complete(false);
+      });
     else
       this.behave("hideCloseButton");
 
