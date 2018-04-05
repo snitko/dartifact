@@ -248,7 +248,7 @@ class EditableSelectComponent extends SelectComponent {
   @override
   void externalClickCallback() {
     super.externalClickCallback();
-    if(this.current_input_value != this.display_value)
+    if(this.current_input_value != '' && this.display_value != null && this.current_input_value != this.display_value)
       this.input_value = this.current_input_value;
   }
 
