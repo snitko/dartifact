@@ -154,6 +154,17 @@ void main() {
       expect(select_comp.current_input_value, equals("abc"));
     });
 
+    test("doesn't set custom value to input_value on external click when display_input is blank", () {
+      select_comp.allow_custom_value = true;
+      select_comp.input_value = null;
+
+      select_comp.findPart("display_input").value = "";
+      select_comp.externalClickCallback();
+      expect(select_comp.input_value, equals(null));
+      expect(select_comp.display_value, equals(null));
+      expect(select_comp.current_input_value, equals(''));
+    });
+
     test("sets custom value when it's allowed", () {
       select_comp.allow_custom_value = true;
       select_comp.findPart("display_input").value = "hello world";
