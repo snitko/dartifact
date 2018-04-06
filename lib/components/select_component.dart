@@ -128,7 +128,7 @@ class SelectComponent extends Component {
     this.options.forEach((k,v) {
       var option = this.findPart("option_template").clone(true);
       option.attributes["data-component-part"] = "option";
-      option.attributes["data-option-value"]   = k;
+      option.attributes["data-option-value"]   = k.toString();
       option.text = v;
       options_container.append(option);
     });
@@ -290,11 +290,9 @@ class SelectComponent extends Component {
     * text presented to the user.
     */
   Future fetchOptions([String fetch_url = null]) {
-
     this.fetching_options = true;
     this.behave('showAjaxIndicator');
     return this.ajax_request(fetch_url ?? this.fetch_url).then((String response) {
-
       _setOptionsFromFetchedJson(response);
       this.behave('hideAjaxIndicator');
 
@@ -375,18 +373,34 @@ class SelectComponent extends Component {
     */
   void _setOptionsFromFetchedJson(json) {
     var parsed_json = {};
-
-    JSON.decode(json).forEach((k,v) {
-      if(v is String)
-        parsed_json[k] = v;
-      else if(v is Map) {
-        parsed_json[k] = v["display_value"];
-        v.remove("display_value");
-        this.options_data[k] = v;
-      }
-      else
-        print("Warning: cannot parse the fetched json!");
-    });
+    var json_obj = JSON.decode(json);
+    if(json_obj is List){
+      json_obj.forEach((el) {
+        if(el[1] is String)
+          parsed_json[el[0]] = el[1];
+        else if(el[1] is Map) {
+          parsed_json[el[0]] = el[1]["display_value"];
+          el[1].remove("display_value");
+          this.options_data[el[0]] = el[1];
+        }
+        else
+          print("Warning: cannot parse the fetched json!");
+      });
+    } else if(json_obj is Map) {
+      json_obj.forEach((k,v) {
+        if(v is String)
+          parsed_json[k] = v;
+        else if(v is Map) {
+          parsed_json[k] = v["display_value"];
+          v.remove("display_value");
+          this.options_data[k] = v;
+        }
+        else
+          print("Warning: cannot parse the fetched json!");
+      });
+    }
+    else
+      print("Warning: cannot parse the fetched json!");
 
     // Workaround for dart2js compiler: always keep the `null` option
     // as a first element.
@@ -395,7 +409,6 @@ class SelectComponent extends Component {
       parsed_json.remove("null");
       parsed_json = mergeMaps({ "null": null_option }, parsed_json);
     }
-
     this.options = new LinkedHashMap.from(parsed_json);
   }
 

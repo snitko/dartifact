@@ -26,6 +26,7 @@ import 'package:attributable/attributable.dart';
 import 'package:validatable/validatable.dart';
 export 'package:logmaster/logmaster.dart';
 
+
 // parts of the current lib
 part 'class_dynamic_operations.dart';
 part 'util_functions.dart';
