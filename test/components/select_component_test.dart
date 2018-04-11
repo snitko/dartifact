@@ -184,7 +184,28 @@ void main() {
       });
       select_comp.http_request_completer.complete("{ \"hello\": \"world\"}");
     });
-    
+
+    test("fetches options from a remote server passed as a List/Array", () {
+      createOptionsInDom();
+      select_comp.fetch_url = "/locations";
+      select_comp.fetchOptions();
+      select_comp.http_request_completer.future.then((response) {
+        expect(select_comp.options.keys, equals(["hello"]));
+        expect(select_comp.options["hello"], equals("world"));
+      });
+      select_comp.http_request_completer.complete("[[\"hello\",\"world\"]]");
+    });
+
+    test("fetches options from a remote server passed as a List/Array with nested Map/Hash", () {
+      createOptionsInDom();
+      select_comp.fetch_url = "/locations";
+      select_comp.fetchOptions();
+      select_comp.http_request_completer.future.then((response) {
+        expect(select_comp.options_data["hello"], equals({ "some_numbers": [1,2,3]}));
+      });
+      select_comp.http_request_completer.complete("[[\"hello\",{\"display_value\":\"world\",\"some_numbers\": [1,2,3]}]]");
+    });
+
     test("re-assigns native click events for newly fetched options in DOM", () {
       createOptionsInDom();
       select_comp.fetch_url = "/locations";
@@ -206,11 +227,11 @@ void main() {
         expect(select_comp.options_data["hello"], equals({ "some_numbers": [1,2,3]}));
       });
       select_comp.http_request_completer.complete("{ \"hello\": { \"display_value\": \"world\", \"some_numbers\": [1,2,3]}}");
-      
+
     });
 
     group("character keypresses", () {
-      
+
       test("updates keypress_stack with a new character", () {
         for(var i=0; i < 3; i++)
           select_comp.updateKeypressStackWithChar("a");
