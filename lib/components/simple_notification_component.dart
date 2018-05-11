@@ -38,15 +38,16 @@ part of dartifact;
   */
 class SimpleNotificationComponent extends Component with AutoShowHide {
 
-  final List attribute_names = ["message", "autohide_delay", "permanent", "container_role", "message_type", "ignore_duplicates"];
-        List native_events   = ["close.${Component.click_event}", "message.${Component.click_event}"];
-        Map default_attribute_values = {
-          "container_role": "simple_notifications_container",
-          "permanent": false,   // will not allow this notification to be closed
-          "autohide_delay": 10, // will hide the notification
-          "message_type": "neutral", // adds css class "message-type-neutral"
-          "ignore_duplicates": true  // if set to false, allows duplicate notifications to be displayed in the same container
-        };
+  final List attribute_names = ["message", "autohide_delay", "permanent", "message_id", "never_show_again", "container_role", "message_type", "ignore_duplicates"];
+  List native_events   = ["close.${Component.click_event}", "message.${Component.click_event}"];
+  Map default_attribute_values = {
+    "container_role": "simple_notifications_container",
+    "permanent": false,   // will not allow this notification to be closed
+    "autohide_delay": 10, // will hide the notification
+    "message_type": "neutral", // adds css class "message-type-neutral"
+    "never_show_again": false, // saves a cookie if true indicating that we shouldn't display the message next time, message_id is required in this case
+    "ignore_duplicates": true  // if set to false, allows duplicate notifications to be displayed in the same container
+  };
 
   Future autohide_future;
 
@@ -101,9 +102,13 @@ class SimpleNotificationComponent extends Component with AutoShowHide {
   }
 
   /** Before actually displaying the notification, this method checks whether there are duplicates
-    * of the notification in the specified container. It also launches autohide() if applicable.
-    */
+   * of the notification in the specified container. It also launches autohide() if applicable.
+   */
   void show() {
+
+    // Don't show notification if `never_show_again` is true, `message_id` is passed and a cookie exists
+    if(this.never_show_again && (this.message_id != null) && cookie.get("message_${this.message_id}_never_show_again") == "1")
+      return;
 
     // Don't do anything if a similar message has been displayed before.
     if(this.ignore_duplicates && this.parent != null) {
@@ -129,6 +134,8 @@ class SimpleNotificationComponent extends Component with AutoShowHide {
       behave("hide");
       this.visible = false;
       this.parent.removeChild(this);
+      if(this.never_show_again && (this.message_id != null))
+        cookie.set("message_${message_id}_never_show_again", "1", expires: 10000, path: '/', domain: window.location.hostname);
     }
   }
 

@@ -2,6 +2,7 @@ import "package:test/test.dart";
 import "dart:html";
 import "dart:async";
 import '../../lib/dartifact.dart';
+import 'package:cookie/cookie.dart' as cookie;
 import 'package:mockito/mockito.dart';
 
 part '../../lib/components/simple_notification_component.dart';
@@ -49,6 +50,16 @@ void main() {
 
     test("hides itself when close button is clicked", () {
       sn.findPart("close").click();
+      expect(sn.visible, isFalse);
+    });
+
+    test("closes and never shows the notification again", () {
+      sn.message_id = 'test';
+      sn.never_show_again = true;
+      sn.findPart("close").click();
+      expect(sn.visible, isFalse);
+      verify(behaviors.hide());
+      sn.show();
       expect(sn.visible, isFalse);
     });
 
