@@ -38,7 +38,7 @@ part of dartifact;
   */
 class SimpleNotificationComponent extends Component with AutoShowHide {
 
-  final List attribute_names = ["message", "autohide_delay", "permanent", "message_id", "never_show_again", "container_role", "message_type", "ignore_duplicates"];
+  final List attribute_names = ["message", "autohide_delay", "permanent", "message_id", "never_show_again", "cookie_options", "container_role", "message_type", "ignore_duplicates"];
   List native_events   = ["close.${Component.click_event}", "message.${Component.click_event}"];
   Map default_attribute_values = {
     "container_role": "simple_notifications_container",
@@ -130,12 +130,15 @@ class SimpleNotificationComponent extends Component with AutoShowHide {
 
   /** Hides the notification and removes it from the parent component. */
   void hide() {
+    Map default_cookie_options = {"domain": window.location.hostname, "path": '/', "expires": 10000};
+    Map cookie_options = {}..addAll(default_cookie_options)..addAll(this.cookie_options);
+
     if(this.permanent == null || this.permanent == false) {
       behave("hide");
       this.visible = false;
       this.parent.removeChild(this);
       if(this.never_show_again && (this.message_id != null))
-        cookie.set("message_${message_id}_never_show_again", "1", expires: 10000, path: '/', domain: window.location.hostname);
+        cookie.set("message_${message_id}_never_show_again", "1", expires: cookie_options["expires"], path: cookie_options["path"], domain: cookie_options["domain"]);
     }
   }
 
