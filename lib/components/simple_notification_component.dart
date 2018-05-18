@@ -46,6 +46,7 @@ class SimpleNotificationComponent extends Component with AutoShowHide {
     "autohide_delay": 10, // will hide the notification
     "message_type": "neutral", // adds css class "message-type-neutral"
     "never_show_again": false, // saves a cookie if true indicating that we shouldn't display the message next time, message_id is required in this case
+    "cookie_options": {}, // options for the cookie above
     "ignore_duplicates": true  // if set to false, allows duplicate notifications to be displayed in the same container
   };
 
