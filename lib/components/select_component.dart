@@ -402,14 +402,18 @@ class SelectComponent extends Component {
     else
       print("Warning: cannot parse the fetched json!");
 
+    // We add this because JSON.decode breaks original hash sorting
+    var sorted_keys = parsed_json.keys.toList(growable:false)..sort((k1, k2) => parsed_json[k1].compareTo(parsed_json[k2]));
+    Map sorted_json = new Map.fromIterable(sorted_keys, key: (k) => k, value: (k) => parsed_json[k]);
+
     // Workaround for dart2js compiler: always keep the `null` option
     // as a first element.
-    if(parsed_json["null"] != null) {
-      var null_option = parsed_json["null"];
-      parsed_json.remove("null");
-      parsed_json = mergeMaps({ "null": null_option }, parsed_json);
+    if(sorted_json["null"] != null) {
+      var null_option = sorted_json["null"];
+      sorted_json.remove("null");
+      sorted_json = mergeMaps({ "null": null_option }, sorted_json);
     }
-    this.options = new LinkedHashMap.from(parsed_json);
+    this.options = new LinkedHashMap.from(sorted_json);
   }
 
   /** This methd is called not once, but every time we fetch new options from the server,
