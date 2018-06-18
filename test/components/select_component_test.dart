@@ -206,6 +206,17 @@ void main() {
       select_comp.http_request_completer.complete("[[\"hello\",{\"display_value\":\"world\",\"some_numbers\": [1,2,3]}]]");
     });
 
+    test("sorts fetched json alphabetically", () {
+      createOptionsInDom();
+      select_comp.fetch_url = "/locations";
+      select_comp.fetchOptions();
+      select_comp.http_request_completer.future.then((response) {
+        expect(select_comp.options.keys, equals(["2","3","1"]));
+        expect(select_comp.options.values, equals(["A","B","C"]));
+      });
+      select_comp.http_request_completer.complete("{\"1\":\"C\",\"2\":\"A\",\"3\":\"B\"}");
+    });
+
     test("re-assigns native click events for newly fetched options in DOM", () {
       createOptionsInDom();
       select_comp.fetch_url = "/locations";
