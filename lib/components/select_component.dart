@@ -17,10 +17,12 @@ part of dartifact;
   *   * `input_value`                   - the value that's sent to the server
   *   * `fetch_url`                     - if set, this is where an ajax request is made to fetch options
   *                                       which is used to send the value typed into the field.
+  *   * `separators_below`              - if set, you can dynamically add class to option
+  *                                       (eg: in order to show separation line)
   */
 class SelectComponent extends Component {
 
-  List attribute_names = ["display_value", "input_value", "disabled", "name", "fetch_url"];
+  List attribute_names = ["display_value", "input_value", "disabled", "name", "fetch_url", "separators_below"];
 
   List native_events   = ["selectbox.${Component.click_event}", "keypress", "keydown", "option.${Component.click_event}"];
   List behaviors       = [FormFieldComponentBehaviors, SelectComponentBehaviors];
@@ -85,7 +87,7 @@ class SelectComponent extends Component {
     super.afterInitialize();
     readOptionsFromDom();
 
-    updatePropertiesFromNodes(attrs: ["display_value", "name", "fetch_url"], invoke_callbacks: false);
+    updatePropertiesFromNodes(attrs: ["display_value", "name", "fetch_url", "separators_below"], invoke_callbacks: false);
     updatePropertiesFromNodes(attrs: ["disabled"], invoke_callbacks: true);
 
     if(isBlank(this.display_value)) {

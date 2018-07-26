@@ -53,7 +53,7 @@ void main() {
       behaviors.open();
       expect(options_container.style.display, equals('block'));
     });
-    
+
     test("makes the option container disappear when closing", () {
       behaviors.open();
       behaviors.close();
@@ -67,11 +67,18 @@ void main() {
       behaviors.toggle();
       expect(options_container.style.display, equals('none'));
     });
-    
+
     test("marks currently focused option DOM element with a .focused class", () {
       select_comp.focused_option = "option_3";
       behaviors.focusCurrentOption();
       expect(option_els[2].classes, contains('focused'));
+    });
+
+    test("adds `optionSeparator` class to an option specified in `separators_below`", () {
+      select_comp.separators_below = "option1";
+      behaviors.addSeparationLine();
+      expect(option_els.last.classes, equals([]));
+      expect(option_els.first.classes, contains("optionSeparator"));
     });
 
     group("ajax indicator", () {
@@ -95,7 +102,7 @@ void main() {
         behaviors.hideAjaxIndicator();
         expect(ai.style.display, equals("none"));
       });
-      
+
     });
 
     group("no options found warning", () {
@@ -119,9 +126,9 @@ void main() {
         behaviors.hideNoOptionsFound();
         expect(warning.style.display, equals("none"));
       });
-      
+
     });
-    
+
   });
 
 }
