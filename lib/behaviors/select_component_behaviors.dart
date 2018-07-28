@@ -58,7 +58,7 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
     if(this.null_option_el != null)
       this.null_option_el.remove();
   }
-  
+
   showNoValueOption() {
     if(this.null_option_el != null && this.options_container.querySelector("[data-option-value=\"null\"]") == null && !this.options_container.children.isEmpty)
       this.options_container.insertBefore(this.null_option_el, this.options_container.children.first);
@@ -72,6 +72,17 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
   enable() {
     this.dom_element.attributes.remove("disabled");
     this.component.event_locks.remove(#any);
+  }
+
+  /** Adds an `optionSeparator` class to option set in `separators_below` parameter, e.g.:
+    * `<div data-component-class="SelectComponent" data-separators-below="JPY">`
+    * `<div data-component-part="option" class="option optionSeparator">JPY</div>`
+    * So, you need just to specify css styles for `optionSeparator` class.
+    */
+  addSeparationLine() {
+    this.component.findAllParts("option").forEach((el) {
+      if (this.component.separators_below.contains(el.text.trim())) el.classes.add("optionSeparator");
+    });
   }
 
   _removeFocusFromOptions() {
@@ -88,7 +99,7 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
     else
       this.options_container.style.height = "${option_height*this.component.lines_to_show}px";
   }
-  
+
   _scroll() {
     var option_height = pos.getDimensions(this.component.findPart("option"))['y'];
     scrollDown() => this.options_container.scrollTop = option_height.toInt()*this.component.focused_option_id;
