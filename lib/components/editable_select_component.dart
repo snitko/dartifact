@@ -230,6 +230,9 @@ class EditableSelectComponent extends SelectComponent {
       case KeyCode.BACKSPACE:
         this.focused_option = null;
         setValueFromManualInput();
+
+        if(e.target.value.length == 0)
+          prepareOptions();
         return;
     }
 
