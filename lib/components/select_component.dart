@@ -205,6 +205,11 @@ class SelectComponent extends Component {
   void setDisplayValueFromInputValue() {
     this.display_value = this.options[this.input_value.toString()];
     behave("showNoValueOption");
+
+    if(this.display_value == null && this.input_value != null) {
+      this.reset();
+    }
+
     if(this.input_value == null) {
       this.display_value = "";
       behave("hideNoValueOption");
