@@ -85,6 +85,33 @@ class SelectComponentBehaviors extends BaseComponentBehaviors {
     });
   }
 
+  /** Moves values in `top_values` attribute to the top of the options list
+    */
+  setTopValues() {
+    var top_values_list = this.component.top_values.split(",");
+    var options = this.component.findAllParts("option");
+
+    var final_hash = new LinkedHashMap();
+
+    for (final top_value in top_values_list) {
+      options.forEach((el) {
+        if (top_value == el.text) {
+          final_hash[el.attributes["data-option-value"]] = top_value;
+          el.remove();
+        }
+      });
+    }
+
+    options.forEach((el) {
+      final_hash[el.attributes["data-option-value"]] = el.text;
+      el.remove();
+    });
+
+    this.component.options = final_hash;
+    this.component.updateOptionsInDom();
+    this.component.prvt_listenToOptionClickEvents();
+  }
+
   _removeFocusFromOptions() {
     this.options_container.querySelectorAll('.option').forEach((el) => el.classes.remove("focused"));
   }

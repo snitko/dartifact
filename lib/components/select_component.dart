@@ -19,10 +19,11 @@ part of dartifact;
   *                                       which is used to send the value typed into the field.
   *   * `separators_below`              - if set, you can dynamically add class to option
   *                                       (eg: in order to show separation line)
+  *   * `top_values`                    - if set, you can dynamically change top values in options list
   */
 class SelectComponent extends Component {
 
-  List attribute_names = ["display_value", "input_value", "disabled", "name", "fetch_url", "separators_below"];
+  List attribute_names = ["display_value", "input_value", "disabled", "name", "fetch_url", "separators_below", "top_values"];
 
   List native_events   = ["selectbox.${Component.click_event}", "keypress", "keydown", "option.${Component.click_event}"];
   List behaviors       = [FormFieldComponentBehaviors, SelectComponentBehaviors];
@@ -87,7 +88,7 @@ class SelectComponent extends Component {
     super.afterInitialize();
     readOptionsFromDom();
 
-    updatePropertiesFromNodes(attrs: ["display_value", "name", "fetch_url", "separators_below"], invoke_callbacks: false);
+    updatePropertiesFromNodes(attrs: ["display_value", "name", "fetch_url", "separators_below", "top_values"], invoke_callbacks: false);
     updatePropertiesFromNodes(attrs: ["disabled"], invoke_callbacks: true);
 
     if(isBlank(this.display_value)) {
