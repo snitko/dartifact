@@ -132,7 +132,8 @@ class ModalWindowComponent extends Component {
     * RootComponent#dom_element's children, calls hide() behavior.*/
   Future hide() {
     return this.behave("hide").then((r) {
-      this.remove();
+      if (r)
+        this.remove();
     });
   }
 
