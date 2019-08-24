@@ -25,7 +25,7 @@ class SelectComponent extends Component {
 
   List attribute_names = ["display_value", "input_value", "disabled", "name", "fetch_url", "separators_below", "top_values"];
 
-  List native_events   = ["selectbox.${Component.click_event}", "keypress", "keydown", "option.${Component.click_event}"];
+  List native_events   = ["selectbox.click", "keypress", "keydown", "option.click"];
   List behaviors       = [FormFieldComponentBehaviors, SelectComponentBehaviors];
 
   LinkedHashMap options = new LinkedHashMap();

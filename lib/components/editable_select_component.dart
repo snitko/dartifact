@@ -27,7 +27,7 @@ class EditableSelectComponent extends SelectComponent {
   List attribute_names = ["display_value", "input_value", "disabled", "name", "fetch_url", "allow_custom_value", "query_param_name"];
   Map default_attribute_values = { "query_param_name": "q", "allow_custom_value": false, "disabled": false };
 
-  List native_events   = ["arrow.${Component.click_event}", "option.${Component.click_event}", "!display_input.keyup", "!display_input.keydown", "!display_input.change", "!display_input.blur"];
+  List native_events   = ["arrow.click", "option.click", "!display_input.keyup", "!display_input.keydown", "!display_input.change", "!display_input.blur"];
   List behaviors       = [FormFieldComponentBehaviors, SelectComponentBehaviors, EditableSelectComponentBehaviors];
 
   int keypress_stack_timeout = 500;
