@@ -3,7 +3,7 @@ part of dartifact;
 class ButtonComponent extends Component {
 
   final List attribute_names = ["caption", "disabled", "lockable"];
-        List native_events   = ["!${Component.click_event}", "touchstart"];
+        List native_events   = ["!${Component.click_event}"];
         List event_lock_for  = [Component.click_event];
 
   Map default_attribute_values = { "lockable" : true, "disabled" : false };
@@ -15,26 +15,14 @@ class ButtonComponent extends Component {
       if(self.lockable == true) { self.behave('lock'); }
     });
 
-    event_handlers.add(event: "touchend", role: #self, handler: (self,event) {
-
-      var pos = new PositionManager();
-      var el_start = pos.getPosition(event.target);
-      var el_end   = pos.getDimensions(event.target);
-      var point    = event.changedTouches[0].page;
-
-      if(point.x >= el_start["x"] && point.x <= el_end["x"] &&
-         point.y >= el_start["y"] && point.y <= el_end["y"] &&
-         self.lockable == true) { self.behave('lock'); }
-    });
-
     this.attribute_callbacks["disabled"] = (attr_name,self) {
       if(self.disabled)
         this.behave("disable");
       else
         this.behave("enable");
     };
-  }
 
+  }
 
   @override void afterInitialize() {
     super.afterInitialize();

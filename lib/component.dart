@@ -101,7 +101,7 @@ class Component extends Object with observable.Subscriber,
 
     // Replace all native click events with touchstart if it's supported.
     if(TouchEvent.supported)
-      Component.click_event = ["touchend", "click"];
+      Component.click_event = ["click"];
 
     _separateDescendantValidations();
     _initTemplate();
